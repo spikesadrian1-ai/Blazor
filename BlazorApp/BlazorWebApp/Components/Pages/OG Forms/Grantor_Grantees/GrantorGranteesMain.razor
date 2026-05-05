@@ -1,0 +1,72 @@
+﻿@page "/GrantorsGrantees"
+@page "/GrantorsGrantees/{EntityID}/{IdFromListView}"
+
+@inherits GrantorGranteeBase
+
+<GrantorGrantees 
+    EntityID="@EntityID"
+    IdFromListView="@IdFromListView"
+    GrantorID="@GrantorID"
+    InitialState="InitialState">
+</GrantorGrantees>
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        // if (!string.IsNullOrWhiteSpace(EntityID))
+        // {
+        //     InitialState = false;
+        // }
+        // if (string.IsNullOrWhiteSpace(EntityID))
+        // {
+        //     InitialState = true;
+        // }
+
+        //  NEW TRACT ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        // else
+        // if ((EntityID > 0) && (string.IsNullOrEmpty(IdFromListView)))
+        // {
+        //     InitialState = false;
+        // }
+        else
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            // TractModel.Id = int.Parse(EntityID);
+            //
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE
+            //  else
+            if (InitialState == false)
+            {
+                if ((ID != null))
+                //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+                {
+
+                }
+                //EntityID = FilingID.ToString();
+                ID = EntityID;
+
+            }
+            grantorsGrantees.Id = int.Parse(ID);
+            grantorsGrantees.GrantorId = IdFromListView;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {
+            EntityID.ToString();
+            ID.ToString();
+            grantorsGrantees.Id.ToString();
+            grantorsGrantees.GrantorId?.ToString();
+        }
+    }
+
+}
+

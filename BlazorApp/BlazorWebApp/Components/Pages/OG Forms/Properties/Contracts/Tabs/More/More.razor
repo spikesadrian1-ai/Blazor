@@ -1,0 +1,315 @@
+﻿@using ApplicationLayer.Entities.Contracts
+@using ApplicationLayer.Entities.Owners
+
+@inherits ContractMainBase
+
+@{
+    // if (!string.IsNullOrEmpty(NewContractID))
+    // {
+    //     contractMain.Responsible = string.Empty;
+    //     contractMain.MainCompany = string.Empty;
+    //     contractMain.Buyer = string.Empty;
+    //     contractMain.Seller = string.Empty;
+    //     contractMain.Gatherer = string.Empty;
+    //     contractMain.Treater = string.Empty;
+    //     contractMain.Processor = string.Empty;
+    //     contractMain.Compressor = string.Empty;
+    //     contractMain.RecordingInformation = string.Empty;
+    // }
+    // else
+    // {
+    //     //contractMain.Responsible.ToList();
+    // }
+}
+
+<EditForm Model="@contractMain">
+    <div class="container border border-top border-bottom m-1 auto">
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Main Parties</div>
+                    <div class="border p-1 nt-4">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Responsible</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Responsible Party</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Responsible" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Main Co</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select Main Company</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.MainCompany" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.MainCompany" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Status)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Buyer</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Buyer</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Buyer" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Buyer" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Acquisition)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Seller</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Seller</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Seller" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Seller" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Gatherer</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Gatherer</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Gatherer" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Gatherer" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Treater</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Treater</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Treater" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Treater" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Acquisition)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Processor</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Processor</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Processor" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Processor" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect> *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Compressor</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Compressor</option>
+                                        @foreach (var item in businessAssociatesList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Compressor" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @* <InputSelect @bind-Value="contractMain.Compressor" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control" style="padding-bottom:1rem;">Recording Information</div>
+                    <div class="border p-1 nt-4">
+                                <InputTextArea @bind-Value="contractMain.RecordingInformation" class="form-control text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00)"></InputTextArea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    // [Parameter] public string? EntityID { get; set; } = string.Empty;
+    // [Parameter] public string? NewContractID { get; set; } = string.Empty;
+    // [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //wellModel.WellIdNo = EntityID;
+
+        await PopulateMorePageDropdowns();
+    }
+}

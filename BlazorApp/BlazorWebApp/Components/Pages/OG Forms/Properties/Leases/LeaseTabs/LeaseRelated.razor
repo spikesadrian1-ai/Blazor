@@ -1,0 +1,24 @@
+﻿@page "/LeaseRelated"
+@page "/LeaseRelated/{LeaseID}"
+
+@inherits LeaseMainBase
+@* 
+@using BlazorWebApp.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage
+ *@
+
+@{
+   
+}
+
+<LeaseRelatedTracts 
+    LeaseID="@IdFromListView"
+    IdFromListView="@IdFromListView"
+    InitialState="@InitialState"
+    fromLeaseFormState="fromLeaseFormState"
+>
+</LeaseRelatedTracts>
+
+@code
+{
+
+}

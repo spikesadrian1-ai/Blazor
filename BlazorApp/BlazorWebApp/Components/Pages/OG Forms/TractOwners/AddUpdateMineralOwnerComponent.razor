@@ -1,0 +1,458 @@
+﻿@page "/AddUpdateMineralOwnerInfo"
+@page "/AddUpdateMineralOwnerInfo/{OwnerID}/{TractID}/{Formation}"
+
+@using ApplicationLayer.Entities.SpecialObligation
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities.Locations.States
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits TractOwnerBase
+
+@{
+    //TractOwnership Ownership = new TractOwnership();
+    LeaseMainForm2? LeaseModel = new LeaseMainForm2();
+  
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+
+<EditForm Model="@ownership">
+    <div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+
+        <div class="container position-relative"
+             style="overflow:auto;
+                justify-content:left;
+                border-width:medium;
+                width:-webkit-fit-content;
+                height:auto;">
+
+            <div class="modal-body" style=" width:auto; height:auto;">
+
+                <div class="modal-content align-content-center" style="width:700px; height:-webkit-fit-content;">
+
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                    </div>
+
+                    <div class="card" style=" width:700px; height:max-content;">
+
+                        <div class="card-header">
+                            <strong class="me-auto">New Mineral Ownership for @($"{LeaseModel.LeaseId}")</strong>
+                        </div>
+                        <div class="card-body m-auto" style="width:auto;">
+
+                            <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+
+                            <div class="col">
+
+                                <div class="card accent-card " style="width:max-content;">
+
+                                    <div class="card-body">
+
+                                        <div class=form-row>
+                                            <div class="col-4">
+                                                @* <label>TRACT ID</label> *@
+                                                <select asp-for="State_ID" asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Tract ID</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+
+                                            <div class="col-3">
+                                                @* <label>TRACT TYPE</label> *@
+                                                <select asp-for="State_ID" asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Tract Type</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+
+                                            <div class="col-4">
+                                                @* <label>FORMATION TYPE</label> *@
+                                                <select asp-for="State_ID" asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Formation Type</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class=form-row>
+                                            <div class="col-8" style="width:auto; height:auto;">
+                                                @* <label>Description Of Obligation</label> *@
+                                                <InputTextArea @bind-Value="ownership.LegalDescription" placeholder="Short Description"></InputTextArea>
+                                            </div>
+                                            <div class="col-4">
+                                                <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Add New Owners </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="form-row">
+                                            <div class="col-4">
+                                                @* <label>Owner ID</label> *@
+                                                <select asp-for="State_ID" asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Owner ID</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+                                            <div class="col-4">
+                                                <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Transfer Interests </button>
+                                            </div>
+                                            <div class="col-4">
+                                                @* <label>Status of Lease</label> *@
+                                                <select asp-for="State_ID" asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Lease Status</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="form-row">
+                                            <div class="col-8" style="width:auto; height:auto;">
+                                                @* <label>Description Of Obligation</label> *@
+                                                <InputTextArea @bind-Value="ownership.Formula" placeholder="1/4 or 0.00000000"></InputTextArea>
+                                            </div>
+                                            <div class="col-4">
+                                                @* <label>Status of Lease</label> *@
+                                                <select asp-for="Lease_ID" class="form-control " asp-items="Html.GetEnumSelectList<States>()">
+                                                    @* role="presentation" *@
+                                                    <option value="">Lease ID</option>
+                                                    @* @Html.ValidationMessage("state") *@
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="form-row">
+
+                                            <div class="col-5">
+
+                                                <div class="form-row">
+
+                                                    <div class="col-5">
+                                                        Interest
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.MineralInterest" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+
+                                                    <div class="col-5">
+                                                        Surfac
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.SurfaceInterest" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-row">
+                                                    @*  <div class="col">
+                                                    Suspense <label>Suspense</label>
+                                                </div> *@
+                                                    <div class="col-5">
+                                                        <InputSelect style="width:100px;" @bind-Value="ownership.SuspenseCode" placeholder="Suspense Code"></InputSelect>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-row">
+                                                    @* <div class="col">
+                                                    Tenure <label>Tenure</label>
+                                                </div> *@
+                                                    <div class="col-5">
+                                                        <InputSelect style="width:100px;" @bind-Value="ownership.TenureCode" placeholder="Tenure Code">Tenure Code</InputSelect>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-1"></div>
+
+                                            <div class="col-6">
+
+                                                <div class="card-header">
+                                                    OWNER ACREAGE
+                                                </div>
+                                                <br />
+                                                <div class="form-row">
+
+                                                    @* Total
+                                                <InputNumber style="width:100px;" @bind-Value="ownership.Total" placeholder="0.00000000"></InputNumber> *@
+                                                    <div class="col">
+                                                        Total @* <label>Producing</label> *@
+                                                    </div>
+                                                    <div class="col">
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.Total" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        Producing @* <label>Producing</label> *@
+                                                    </div>
+                                                    <div class="col">
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.Producing" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        Non-Producing @* <label>Non-Producing</label> *@
+                                                    </div>
+                                                    <div class="col">
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.NonProducing" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        Other @* <label>Other</label> *@
+                                                    </div>
+                                                    <div class="col">
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.Other" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        Outside @* <label>Outside</label> *@
+                                                    </div>
+                                                    <div class="col">
+                                                        <InputNumber style="width:100px;" @bind-Value="ownership.Outside" placeholder="0.00000000"></InputNumber>
+                                                        <br />
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="form-row">
+                                    <div class="col ">
+                                        @* <InputText @bind-Value="EntityId" placeholder="Entity"></InputText> *@
+                                    </div>
+                                    <div class="col ">
+                                        @* <InputText @bind-Value="TractID" placeholder="TractId"></InputText> *@
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="LeaseID" placeholder="LeaseId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="EasementId" placeholder="EasementId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="SuaId" placeholder="SuaId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="RowId" placeholder="RowId"></InputText>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</EditForm>
+
+
+@code {
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+
+    //[Parameter] public string? TractId { get; set; } = string.Empty;
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? EntityId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? EasementId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? SuaId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? RowId { get; set; } = string.Empty;
+
+    //[Parameter] public new string? OwnerID { get; set; } = string.Empty;
+    //[Parameter] public List<string>? Formations { get; set; } = new List<string>(); //string.Empty;
+    #endregion CASCADING PARAMS
+
+    #endregion CASCADING PARAMS
+
+    // static string title = "TractLeasesModal";
+    // string ComponentName = "Lease(s)";
+
+    List<TractOwnership> associatedTractOwnersViaTractId { get; set; }
+        = new List<TractOwnership>();
+
+
+    /* public */
+    TractOwnership ownership { get; set; } = new TractOwnership();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //await PopulateDropdowns();
+
+        if (TractID != string.Empty)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByTractId/{TractID}");/*tractownership.*/
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractOwnersViaTractId = await JsonSerializer
+                             .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+            }
+        }
+
+        if (LeaseID != string.Empty)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByLeaseId/{LeaseID}");/*tractownership.*/
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractOwnersViaTractId = await JsonSerializer
+                             .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+            }
+        }
+
+    }
+
+    // #region DROPDOWNS
+
+    // public async Task<List<string>> PopulateDropdowns()
+    // {
+    //     var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+    //     var getAllcountyTasks = RetreiveAllCountiesAsync();
+    //     var getAllstateTasks = RetrieveAllStatesAsync();
+    //     var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+    //     var getAllregionTasks = RetrieveAllRegionsAsync();
+
+    //     await Task.WhenAll(
+    //                        getAlltractStatusesTasks
+    //                      , getAllcountyTasks
+    //                      , getAllstateTasks
+    //                      , getAllDistrictTasks
+    //                      , getAllregionTasks
+    //                     );
+
+    //     var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+    //                  $"County: {getAllcountyTasks.Result}," +
+    //                  $"States: {getAllstateTasks.Result}," +
+    //                  $"Districts: {getAllDistrictTasks.Result}," +
+    //                  $"Regions: {getAllregionTasks.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+    //    ListOfTractStatuses = await _statusOfTracts
+    //    .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<string> ListOfRegions { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<string> ListOfDistricts = new List<string>();
+    // public async Task<List<string>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    // #endregion DROPDOWNS
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

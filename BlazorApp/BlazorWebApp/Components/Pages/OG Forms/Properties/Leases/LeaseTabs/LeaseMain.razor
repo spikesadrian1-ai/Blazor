@@ -1,0 +1,26 @@
+﻿@page "/Main"
+@page "/Main/{IdFromListView}"
+
+@inherits LeaseMainBase
+
+@{
+
+}
+
+<div class="form-row align-self-end align-items-end align-content-end"
+     style="align-self:end; align-items:flex-end;">
+</div>
+
+<LeaseMainFormRazorApp 
+    InitialState="InitialState"
+    LeaseTablePK="@LeaseTablePK"
+    ID="ID"
+    IdFromListView="@IdFromListView"
+        >
+</LeaseMainFormRazorApp>
+
+@code {
+
+
+
+}

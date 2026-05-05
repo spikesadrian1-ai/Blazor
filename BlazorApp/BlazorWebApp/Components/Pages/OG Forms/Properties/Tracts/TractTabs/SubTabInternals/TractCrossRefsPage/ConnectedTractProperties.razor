@@ -1,0 +1,57 @@
+﻿@page "/ConnectedTractProperties"
+
+@* <TractCrossRefBackBttn></TractCrossRefBackBttn>
+
+<TractCrossRefSubNav></TractCrossRefSubNav> *@
+
+<h3>ConnectedTractProperties</h3>
+
+
+@{
+    bool UserSelectedNewTract = true;
+    bool UserSelectedViewTractsList = false;
+
+    async Task UserCreatesNewTract()
+    {
+        UserSelectedViewTractsList = false;
+        UserSelectedNewTract = true;
+    }
+
+    async Task UserViewsExistingTracts()
+    {
+        UserSelectedNewTract = false;
+        UserSelectedViewTractsList = true;
+    }
+
+}
+<br />
+<div class="row">
+    <br />
+    <button type="button" value="false" itemid="" name="CreateNewEssementButton" @onclick="@UserCreatesNewTract">
+        Create Properties
+    </button>
+    <br />
+    <button type="button" value="false" name="ViewExistingTractsEasementsButton" @onclick="@UserViewsExistingTracts">
+        View Properties
+    </button>
+</div>
+
+
+@* TODO: turn into switch statement *@
+@if (UserSelectedNewTract == true)
+{
+    <br />
+    @* <CreateOrUpdateTractComponent></CreateOrUpdateTractComponent> *@
+
+}
+else if (UserSelectedViewTractsList == true)
+{
+    <br />
+    @* <ListOfTractsComponent></ListOfTractsComponent> *@
+}
+
+
+
+@code {
+
+}

@@ -1,0 +1,351 @@
+﻿@using ApplicationLayer.Entities.Grantor_Grantees
+@using ApplicationLayer.Entities.Owners
+
+@inherits ProspectMainBase
+
+@{
+    ///
+    //ProspectMainForm grantorsGrantees = new ProspectMainForm();
+}
+
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfTractsComponent")"> View Prospects</NavLink>
+</div>
+@* <br /> *@
+<EditForm Model="@prospects">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Prospect for {@prospects.ProspectId}</strong>
+                        }
+                        else
+                        if (InitialState == true)
+                        {
+                            <strong class="me-auto">New Prospect Information</strong>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Identification</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2" style="">
+                                <label class="opacity-50 form-control-sm mb-0">Prospect</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="@prospects.ProspectId" class="form-control text-sm-right" style="align-self:center; width:250px;" placeholder="(NEW)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Name</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="@prospects.Name" class="form-control text-sm-right" style="align-self:center; width:250px;" placeholder="(Enter Prospect Name)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Status</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+                                    @* @onchange="SelectSubTypesChanged" 
+                                        @onselectionchange="() => Test()"
+                                    *@
+                                    <select id="soldToList" class="custom-select" style="width:250px;"
+                                    @onchange="e => e.ToString()"
+                                    @onselectionchange="() => Test(prospects)">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.CountyName</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.Status" class="form-control text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Producing?</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="@prospects.Producing" class="form-control text-sm-right" style="align-self:center; width:10px;" placeholder=""></InputText>
+                            </div>
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Active?</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="@prospects.Active" class="form-control text-sm-right" style="align-self:center; width:10px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Location</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3" style="">
+                                <label class="opacity-50 form-control-sm mb-0">State</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <input list="States" id="StatesList" class="form-control" style="width:225px;" />
+                                    <datalist id="States">
+                                        <option value="0">Well Type</option>
+                                        @foreach (var item in ListOfStates)
+                                        {
+                                            <option value="@item.">@item.ToString()</option>
+                                        }
+                                    </datalist>
+
+                                    @* <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select> *@
+
+                                    @* <InputSelect @bind-Value="@prospects.ListOfStates" class="form-control text-sm-right" style="align-self:center;" placeholder=""></InputSelect>
+                                    <InputSelect @bind-Value="@prospects.States" class="form-control text-sm-right" style="align-self:center;" placeholder=""></InputSelect>
+                                    <InputSelect @bind-Value="@prospects.stateIds" class="form-control text-sm-right" style="align-self:center;" placeholder=""></InputSelect> *@
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.StateId" class="form-control text-sm-right" style="align-self:center; width:225px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">County</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select" style="width:225px;">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                    @* <InputSelect @bind-Value="@prospects." class="form-control text-sm-right" style="align-self:center;" placeholder=""></InputSelect> *@
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.CountyId" class="form-control text-sm-right" style="align-self:center; width:225px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">District</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                    <select id="soldToList" class="custom-select" style="width:225px;">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                    @* <InputSelect @bind-Value="@prospects." class="form-control text-sm-right" style="align-self:center;" placeholder=""></InputSelect> *@
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.DistrictId" class="form-control text-sm-right" style="align-self:center; width:225px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Region</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                    <datalist id="wellTypes">
+                                        <option value="0">Well Type</option>
+                                        @foreach (var item in wellTypes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </datalist> *@
+
+                                    <select id="soldToList" class="custom-select" style="width:225px;">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.RegionId" class="form-control text-sm-right" style="align-self:center; width:225px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Business Associates</div>
+                    <div class="border p-1 nt-4">
+                        <div class="form-row">
+                            <div class="col-3 form-control-sm" style="padding-bottom:;">
+                                <label class="opacity-50 form-control-sm mb-0" >Operator</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <input list="wellTypes" id="wellTypesList" class="form-control custom-select" style="align-self:; width:250px;" />
+                                    <datalist id="wellTypes" >
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item">@item.CountyName</option>
+                                        }
+                                    </datalist>
+                                }
+                                else
+                                if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="@prospects.OperatorId" class="form-control text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3 form-control-sm" style="padding-bottom:;">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Lessee</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="soldToList" class="form-control custom-select" style="align-self:center; width:250px;">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.LesseeId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3 form-control-sm" style="padding-bottom:;">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Landman</label>
+                            </div>
+                            <div class="col form-control-sm" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="soldToList" class="custom-select form-control" style="align-self:center; width:250px;">
+                                        <option value="0">Select a Grantee</option>
+                                        @foreach (var item in ListAllCounties)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="@prospects.LandmanId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputSelect>
+                                }           
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    int selectedStateId = 0;
+    int selectedStatusId = 0;
+
+    protected /* override */ async Task OnInitializedAsync()
+    {
+        await PopulateDropdowns();
+    }
+
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+}

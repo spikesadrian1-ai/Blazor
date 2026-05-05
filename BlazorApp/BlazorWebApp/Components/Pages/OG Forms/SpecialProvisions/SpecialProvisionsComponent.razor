@@ -1,0 +1,302 @@
+﻿@page "/SpecialProvisionsComponent"
+@* @page "/SpecialProvisionsComponent/{id}" *@
+
+@using ApplicationLayer.Entities.SpecialProvision
+@using DomainLayer.Entities.Assets.Tracts
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits LeaseMainBase
+
+@{
+    /* public */
+    SpecialProvisions specialProvisionsEntity = new SpecialProvisions();
+
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+    <div class="container position-relative"
+         style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:450px;">
+
+        <div class="modal-body" style="align-self:center">
+            <div class="modal-content align-content-center">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+                <div class="card" style="align-content:center; width:-webkit-fit-content; height:max-content">
+                    <div class="card-header">
+                        <strong class="me-auto">New SpecialProvisionsComponent Form for Tract @($"{IdFromListView}")</strong>
+                    </div>
+                    <div class="card-body m-auto" style="width:auto">
+                        <form method="post" class="mt-3" enctype="multipart/form-data">
+                            <div class="form-row">
+                                <br />
+                                <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+                                <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>New</button>
+                                <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+                                <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+                                <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Excel</button>
+                                <div class="col-xl-12 col-lg-6">
+                                    <br />
+                                    <div class="card accent-card mb-3">
+                                        <div class="card-body">
+                                            <div class="form-row">
+                                                <div class="col-12 col-lg-6">                                                
+                                                    <label>Pooling Flag</label>
+                                                    <InputSelect @bind-Value="specialProvisionsEntity.PoolingFlag" class="form-control" placeholder="Select a Owner"></InputSelect>
+                                                    <br />
+                                                    <label>Option to Extend</label>
+                                                    <InputText @bind-Value="specialProvisionsEntity.OptionToExtend" class="form-control" placeholder="0.00000000"></InputText>
+                                                    <br />  
+                                                </div>
+                                                 <div class="col-12 col-lg-6"> 
+                                                    <label>Notes:</label>
+                                                    <InputTextArea @bind-Value="specialProvisionsEntity.SpecialProvisionNotes" class="form-control" placeholder="1/16 or .0025"></InputTextArea>
+                                                    <br />                                                
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-4 ">
+                                                    <label>Tract(s)</label>
+                                                    <InputSelect @bind-Value="specialProvisionsEntity.TractId" class="form-control" placeholder="Attached Tracts"></InputSelect>
+                                                    <br />                                                    
+                                                </div
+                                                <div class="col-4">
+                                                    <label>Formation(s)</label>
+                                                    <InputSelect @bind-Value="specialProvisionsEntity.FormationId" class="form-control" placeholder="Formations"></InputSelect>
+                                                    <br />                                                    
+                                                </div
+                                            </div>
+                                             <div class="form-row">
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="EntityId" class="form-control" placeholder="Entity"></InputText>
+                                                    @* <InputSelect @bind-Value="EntityID" class="form-control" placeholder="Entity ID"></InputSelect> *@
+                                                </div>
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="@TractID" class="form-control" placeholder="TractId"></InputText>
+                                                </div>
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="IdFromListView" class="form-control" placeholder="LeaseId"></InputText>
+                                                </div>
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="EasementId" class="form-control" placeholder="EasementId"></InputText>
+                                                    @* <InputNumber @bind-Value="EasementID" class="form-control" placeholder="EasementId"></InputNumber> *@
+                                                </div>
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="SuaId" class="form-control" placeholder="SuaId"></InputText>
+                                                    @* <InputSelect @bind-Value="WellID" class="form-control" placeholder="WellId"></InputSelect> *@
+                                                </div>
+                                                <div class="col-2 ">
+                                                    <InputText @bind-Value="RowId" class="form-control" placeholder="RowId"></InputText>
+                                                    @* <InputNumber @bind-Value="RowID" class="form-control" placeholder="RowId"></InputNumber> *@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    #region CASCADE PARAMS
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+    
+    #region CASCADING PARAMS
+    [Parameter] public string? EntityId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? EasementId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? SuaId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? RowId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #endregion CASCADE PARAMS
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //await PopulateDropdowns();
+
+        // var request = new HttpRequestMessage(HttpMethod.Get,
+        // _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByTractId/{TractId}");/*tractOwnership.*/
+        // var client = _clientFactory.CreateClient();
+        // HttpResponseMessage response = await client.SendAsync(request);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     using var responseStream = await response.Content.ReadAsStreamAsync();
+        //     associatedTractOwnersViaTractId = await JsonSerializer
+        //                  .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+        //     errorString = null;
+        // }
+        // else
+        // {
+        //     errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+        // }
+    }
+
+
+    #region DROPDOWNS
+
+        // public async Task<List<string>> PopulateDropdowns()
+        // {
+        //     var getAllPoolingTypeTask = RetrieveAllTractStatusAsync();
+        //     var getAllTractsTask = RetreiveAllCountiesAsync();
+        //     var getAllFormationsTask = RetrieveAllStatesAsync();
+        //     // var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+        //     // var getAllregionTasks = RetrieveAllRegionsAsync();
+
+        //     await Task.WhenAll(
+        //                        getAllPoolingTypeTask
+        //                      , getAllTractsTask
+        //                      , getAllFormationsTask
+        //                     // , getAllDistrictTasks
+        //                     // , getAllregionTasks
+        //                     );
+
+        //     var report = $"PoolingTypes: {getAllPoolingTypeTask.Result}," +
+        //                  $"Tracts: {getAllTractsTask.Result}," +
+        //                  $"Formations: {getAllFormationsTask.Result},";
+        //                  // $"Districts: {getAllDistrictTasks.Result}," +
+        //                  // $"Regions: {getAllregionTasks.Result},";
+
+        //     return new List<string> { report };
+        // }
+
+        public List<string> ListOfPoolingTypes { get; set; } = new List<string>();
+        // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+        //    ListOfPoolingTypes = await _statusOfTracts
+        //    .RetrieveAllTractStatusAsync();
+
+        public List<TractMainForm> ListOfTracts { get; set; } = new List<TractMainForm>();
+        // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+        //     ListOfTracts = await _dropdownQueryServiceTasks
+        //     .RetrieveAllStatesAsync();
+
+        /// <summary>
+        /// TODO: old logic to get related formations based on the connected tracts
+        /// </summary>
+        // sqlCon.Open();
+        // adapt = new SqlDataAdapter("SELECT * FROM Tract_Ownership WHERE Tract_ID LIKE '" + tract_IDTxtBox.Text + "%'", sqlCon);
+        // dt = new DataTable();
+        // adapt.Fill(dt);
+        // //
+        // //
+        // for (int i = 0; i < dt.Rows.Count; i++)
+        // {
+        //     comboBox2.Items.Add(dt.Rows[i]["Formation_Type"]);
+        // }
+        // sqlCon.Close();
+        //Remove duplicates from COMBOBOX array
+            // List<object> IDs = new List<object>();
+            // foreach (object o1 in comboBox2.Items)
+            // {
+            //     if (!IDs.Contains(o1))
+            //     {
+            //         IDs.Add(o1);
+            //     }
+            // }
+
+            // //ADDS SELETED ITEMS TO LISTBOX
+            // foreach (object ID in comboBox2.Items)
+            // {
+            //     formationCBox.Items.Add(ID).ToString();
+            // }
+
+
+            // formationCBox.Items.Clear();
+            // formationCBox.Items.AddRange(IDs.ToArray());  // string does not show up at the '0' position
+
+        public List<CountyMasterMainForm> ListOfFormations { get; set; } = new List<CountyMasterMainForm>();
+        // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+        //     ListOfFormations = await _countyQueryServiceTasks
+        //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+        // public List<RegionMasterMainForm> ListOfRegions { get; set; } = new List<RegionMasterMainForm>();
+        // public async Task<List<RegionMasterMainForm>> RetrieveAllRegionsAsync() =>
+        //     ListOfRegions = await _dropdownQueryServiceTasks
+        //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+        // public List<DistrictMasterModel> ListOfDistricts = new List<DistrictMasterModel>();
+        // public async Task<List<DistrictMasterModel>> RetrieveAllDistrictsAsync() =>
+        //     ListOfDistricts = await _dropdownQueryServiceTasks
+        //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+
+    #region OPEN/CLOSE LOGIC
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    #endregion OPEN/CLOSE LOGIC
+}

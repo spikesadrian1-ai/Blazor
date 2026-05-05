@@ -1,0 +1,299 @@
+﻿@page "/CountyMain"
+@*@page "/CountyMain/{CountyName}"*@
+
+@inherits CountyMainBase
+
+    @* 
+    /*                   ORIGINAL STATE {SCENARIO #1} - ALL TEXTBOXS ARE 'BLANK'
+    *  ONCE THE USER SEARCHES FOR A COUNTY (OR IS ALREADY POPULATED UPON PAGE RENDERING)
+    *
+    *
+    *
+    *
+    */
+    *@
+
+<br />
+<br/>
+<EditForm Model="@CountySearch">
+    <div class="container">    
+        <InputText id="searchCountyTextbox" @bind-Value="CountySearch.CountyName" class="form-control" placeholder="Search"></InputText>
+        @* {SCENARIO #1: NULL CHECKS INITIAL STATE OF THE APPLICATION} *@
+        @if ((CountySearch.CountyName is null) &&
+        (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId is null))        
+        {
+            //throw NullReferenceException => 
+            //throw Exception("");
+            //throw ArgumentNullException;
+        }
+
+        @* {SCENARIO #2: COUNTY SEARCH INITIALLY USED FIRST WITH COUNTYDROPDOWN AND STATE ID HAVING AN EMPTY STRING} *@
+        @if ((CountySearch.CountyName != null) &&
+        (CountyDropdown.CountyName != string.Empty) &&
+        (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId is null))
+        {
+            try
+            {
+                SearchCountiesAsync(CountySearch.CountyName);
+            }
+            catch (Exception)
+            {
+                /*ByNameErrorString*/
+                
+            }
+        }
+
+        @* {SCENARIO #3: COUNTY SEARCH INITIALLY USED FIRST AND RETRIED WITH COUNTYDROPDOWN HAVING BEEN POPOULATED BUT STATE ID HAVING AN EMPTY STRING}*@
+        @if ((CountySearch.CountyName != null) &&
+        (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId != string.Empty))
+        {
+            try
+            {
+                SearchCountiesAsync(CountySearch.CountyName);
+            }
+            catch (Exception)
+            {
+                /*ByNameErrorString*/
+                
+            }
+        }
+
+        @* {SCENARIO #4: COUNTYDROPDOWN USED AS SECONDARY WITH COUNTY SEARCH BAR / STATE ID NOT EMPTY OR NULL @*(CountySearch.CountyName != null) &&*@
+        @if ((CountyDropdown.CountyName != null) && (CountyDropdown.CountyName != string.Empty) &&
+        (CountySearch.CountyName != string.Empty) &&
+        (CountyDropdown.StateId != null))
+        {
+            CountySearch.CountyName = null;
+            try
+            {
+                SearchCountiesAsync(CountySearch.CountyName);
+            }
+            catch { }
+        }
+    
+    </div>
+</EditForm>
+<br />
+@* <div class="mb-3">
+    <label for="county" class="col-form-label">County: @CountyDropdown.CountyName</label>
+    <select class="form-select" aria-label="Default Select Example" @bind="CountyDropdown.CountyName">
+        <option value="0" selected>Choose County</option>
+        
+    </select>
+</div> *@
+<br />
+<EditForm Model="@CountyDropdown">
+    <div class="container">
+        <select id="ListAllCounties"
+                @bind="selectedCountyId"
+                @bind:event="OnCountySelected">
+            <option value="0">Select County</option>
+            @foreach (var item in ListAllCounties)
+            {
+                <option value="@item.Id">@item.CountyName</option>
+            }
+        </select>
+        <InputSelect id="countyDropdownTextbox" @bind-Value="@CountyDropdown.CountyName" class="form-control"></InputSelect>
+    </div>
+    @* {SCENARIO #1: NULL CHECKS INITIAL STATE OF THE APPLICATION} POPULATES COUNTY DROPDOWN *@
+    @if (
+        (CountySearch.CountyName is null) &&
+    (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+    (CountyDropdown.StateId is null))
+    {
+        //
+        if (CountyDropdown.CountyName != string.Empty)
+        {
+            CountySearch.CountyName = null;
+            //
+            if (ListAllCounties.Count == 0)
+            {
+                try
+                {
+                    /*await*/
+                    RetrieveAllCountiesAsync();
+                    //PopulateCountyDropdown();
+
+                }
+                catch (Exception)
+                {
+                    
+                    throw;
+                }
+            }
+            //
+            if (ListAllCounties.Count > 0)
+            {
+                //
+                foreach (var cnty in ListAllCounties)
+                {
+                    //
+                    try
+                    {
+                        <option value="@cnty.CountyName">@cnty.CountyName</option>
+                    }
+                    catch
+                    { }
+                    //TODO: SEE ABOUT DISPLAYING
+                }
+            }
+        }
+    }
+</EditForm>
+
+<br />
+
+<div class="form-group row"> <label for="CountyNameTextboxLabel" class="col-sm-2 col-form-label"> County Name </label>
+    <div class="col-sm-10">
+  
+
+        @* {SCENARIO #1: NULL CHECKS INITIAL STATE OF THE APPLICATION} HIDES AUTO POPULATED DATA *@
+        @if (
+            (CountySearch.CountyName is null) &&
+        (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId is null)) { 
+            
+            //continue;
+        }
+        
+        @* {SCENARIO #2: COUNTY SEARCH INITIALLY USED FIRST WITH COUNTYDROPDOWN HAVING AN EMPTY STRING} *@
+        @if (
+            (CountySearch.CountyName != null) &&
+        (CountyDropdown.CountyName != string.Empty) && 
+        (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId is null))
+        {
+            <InputText id="CountyNameTextbox" class="form-control" placeholder="County Name" @bind-Value="CountySearch.CountyName" />
+
+            try
+            {
+                CountyNameFilledIn(CountySearch.CountyName@* , Result *@);
+            }
+            catch (NullReferenceException ex)
+            {
+                //throw ex;
+                Console.WriteLine(ex.Message);
+                //return Exception()
+                //throw new ArgumentNullException(nameof(states));
+            }
+        }
+
+        @* {SCENARIO #3: COUNTY SEARCH INITIALLY USED FIRST AND RETRIED WITH COUNTYDROPDOWN NOT HAVING AN EMPTY STRING}*@
+        @if ((CountySearch.CountyName != null) &&
+        (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+        (CountyDropdown.StateId != string.Empty))
+        {
+            try
+            {
+                <InputText id="CountyNameTextbox" class="form-control" placeholder="County Name" @bind-Value="CountySearch.CountyName" />
+                CountyNameFilledIn(CountySearch.CountyName@* , Result *@);
+            }
+            catch { }
+        }
+
+        @* {SCENARIO #4: COUNTYDROPDOWN USED AS SECONDARY WITH COUNTY SEARCH BAR / STATE ID NOT EMPTY} *@
+        @if ((CountyDropdown.CountyName != null) && (CountyDropdown.CountyName != string.Empty) &&
+        (CountySearch.CountyName != string.Empty) &&
+        (CountyDropdown.StateId != null))
+        {
+            // CLEAR SEARCH TEXTBOX
+            // CountySearch.CountyName = null; // or string.Empty??
+            try
+            {
+                <InputText id="CountyNameTextbox" class="form-control" placeholder="County Name" @bind-Value="CountyDropdown.CountyName" />
+                @*@onchange="SearchBarAndCountyTextboxSync" *@
+                CountyNameFilledIn(CountyDropdown.CountyName@* , Result *@);
+            }
+            catch { }
+
+        }
+    
+    </div>
+</div>
+
+<div class="form-group row"> <label for="StateIdTextboxLabel" class="col-sm-2 col-form-label"> State ID </label>
+    <div class="col-sm-10">
+       
+        @* {SCENARIO #1: NULL CHECKS INITIAL STATE OF THE APPLICATION} HIDES AUTO POPULATED DATA *@
+        @if ((CountySearch.CountyName is null) &&
+         (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+         (CountyDropdown.StateId is null)) { /*HIDES STATE TEXTBOX*/ }
+
+        @* {SCENARIO #2: COUNTY SEARCH AS INITIAL USE}*@
+        @if ((CountySearch.CountyName != null) &&
+         (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+         (CountyDropdown.StateId is null))
+        {
+            // POPULATES STATE TEXTBOX
+            <InputText id="StateId" class="form-control" placeholder="State ID" @bind-Value="CountySearch.StateId" />
+            // BRINGS OVER CORRESPONDING STATE ID
+            CountySearch.StateId = State;
+        }
+
+        @* {SCENARIO #3: COUNTY SEARCH INITIALLY USED FIRST AND RETRIED WITH COUNTYDROPDOWN NOT HAVING AN EMPTY STRING}*@
+        @if ((CountySearch.CountyName != null) &&
+         (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+         (CountyDropdown.StateId != string.Empty))
+        {
+            try
+            {
+                // BRINGS OVER CORRESPONDING STATE ID
+                CountySearch.StateId = State;
+                // POPULATES STATE TEXTBOX
+                <InputText id="StateId" class="form-control" placeholder="State ID" @bind-Value="CountySearch.StateId" />
+            }
+            catch { }
+        }
+
+        @* {SCENARIO #4: COUNTYDROPDOWN USED AS SECONDARY WITH COUNTY SEARCH BAR / STATE ID NOT EMPTY (CountySearch.CountyName != null) &&} *@
+        @if ((CountyDropdown.CountyName != null) && (CountyDropdown.CountyName != string.Empty) &&
+         (CountySearch.CountyName != string.Empty) &&
+         (CountyDropdown.StateId != null))
+        {
+            try
+            {
+                // BRINGS OVER CORRESPONDING STATE ID
+                CountyDropdown.StateId = State;
+                // POPULATES STATE TEXTBOX
+                <InputText id="StateId" class="form-control" placeholder="State ID" @bind-Value="CountyDropdown.StateId" />
+            }
+            catch { }
+        }
+    
+    </div>
+</div>
+
+<br />
+<button @onclick="AddNewCountyAsync">Save</button>
+
+
+@code{
+
+    int selectedCountyId = 0;
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async void PopulateCountyDropdown()
+    {
+        await RetrieveAllCountiesAsync();    
+    }
+
+    // if ((CountySearch.CountyName is null) &&
+    // (CountyDropdown.CountyName != string.Empty) && (CountyDropdown.CountyName is null) &&
+    // (CountyDropdown.StateId is null))
+}
+
+
+
+
+
+

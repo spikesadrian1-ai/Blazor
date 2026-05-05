@@ -1,0 +1,100 @@
+﻿@page "/ChainOfTitles"
+
+
+@inherits ChainOfTitleBase
+
+
+<div class="tab-content" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <CotMain 
+                EntityID="@EntityID"
+                InitialState="@InitialState"
+                IdFromListView="@IdFromListView">
+            </CotMain>
+        </TabPage>
+        <TabPage Text="MORE">
+            <CotMore EntityID="@EntityID"></CotMore>
+        </TabPage>
+        <TabPage Text="Filings">
+            <RelatedFilings EntityID="@EntityID"></RelatedFilings>
+        </TabPage>
+        <TabPage Text="Transfers">
+            <RelatedTransfers EntityID="@EntityID"></RelatedTransfers>
+        </TabPage>
+        <TabPage Text="Properties">
+            <RelatedCOTProperty EntityID="@EntityID"></RelatedCOTProperty>
+        </TabPage>
+        <TabPage Text="Notes">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+        @* <TabPage Text="CROSS-REFS">
+            <ContractCrossRefs EntityID="@EntityID"
+                       NewContractID="@NewContractID"></ContractCrossRefs>
+        </TabPage> *@
+    </TabControl>
+</div>
+
+
+
+@code {
+
+    protected /* override */ async Task OnInitializedAsync()
+    {
+        // if (!string.IsNullOrWhiteSpace(EntityID))
+        // {
+        //     InitialState = false;
+        // }
+        // if (string.IsNullOrWhiteSpace(EntityID))
+        // {
+        //     InitialState = true;
+        // }
+
+        //  NEW TRACT ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT
+        else
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            // TractModel.Id = int.Parse(EntityID);
+            //
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE
+            //  else
+            if (InitialState == false)
+            {
+                if ((ID != null))
+                //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+                {
+
+                }
+                //EntityID = FilingID.ToString();
+                ID = EntityID;
+
+            }
+            chainOfTitle.Id = int.Parse(ID);
+            chainOfTitle.CotId = IdFromListView;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {
+            EntityID.ToString();
+            ID.ToString();
+            chainOfTitle.Id.ToString();
+            chainOfTitle.CotId?.ToString();
+        }
+    }
+
+}
+
+
+@code {
+
+}

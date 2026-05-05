@@ -1,0 +1,266 @@
+﻿@* @page "/Well" *@
+@* @page "/OwnerInfo/{OwnerID}" *@
+
+@inherits WellMainBase
+
+@{
+
+}
+
+<EditForm Model="@wellModel">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control" style="padding-bottom:1rem;">Interests Information</div>
+                    @* <div class="card-body"> *@
+                    <div class="form-row">
+                        <div class="col-2 flex-column" style="padding-bottom:3px;">
+                            Description
+                            <InputText @bind-Value="wellModel.InterestDescription" class="form-control-sm text-sm-right" style="align-self:center; width:200px; min-width:100px;" placeholder="(Ex. Description of Interests)"></InputText>
+                        </div>
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Entity W.I.
+                            <InputNumber @bind-Value="wellModel.EntityWi1" class="form-control-sm text-sm-right" style="align-self:center; width:125px; min-width:100px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                        </div>
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Entity N.R.I.
+                            <InputNumber @bind-Value="wellModel.EntityNri1" class="form-control-sm text-sm-right" style="align-self:center; width:125px; min-width:100px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                        </div>
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Entity ROY
+                            <InputNumber @bind-Value="wellModel.EntityRoyalty1" class="form-control-sm text-sm-right" style="align-self:center; width:125px; min-width:100px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                        </div>
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Entity ORRI
+                            <InputNumber @bind-Value="wellModel.EntityOrri1" class="form-control-sm text-sm-right" style="align-self:center; width:125px; min-width:100px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                        </div>
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Entity Other
+                            <InputNumber @bind-Value="wellModel.EntityOther1" class="form-control-sm text-sm-right" style="align-self:center; width:125px; min-width:100px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                        </div>
+                    </div>
+                    @* </div> *@
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Business Associates</div>
+                    <br />
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label class="opacity-50 form-control-sm mb-0">Responsible Party</label>
+                            @* <label class="form-control-sm">Owner</label> *@
+                        </div>
+                        <div class="col-5" style="padding-bottom:3px;">
+                            @if (string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+                                
+                                <select id="responsiblePartyList" class="custom-select">
+                                    <option value="0">Select a Responsible Party</option>
+                                    @foreach (var responsiblePartyName in associateLists)
+                                    {
+                                        <option value="@responsiblePartyName.">@responsiblePartyName.</option>
+                                    }
+                                </select>
+
+                            }
+                          
+                            @if (!string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                <InputSelect @bind-Value="wellModel.ResponsibleParty" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label class="opacity-50 form-control-sm mb-0">Current Operator</label>
+                            @* <label class="form-control-sm">FullName</label> *@
+                        </div>
+                        <div class="col-5" style="padding-bottom:3px;">
+                            @if (string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                <select id="currentOperatorList" class="custom-select">
+                                    <option value="0">Select Current Operator</option>
+                                    @foreach (var currentOperatorName in associateLists)
+                                    {
+                                        <option value="@currentOperatorName.">@currentOperatorName.</option>
+                                    }
+                                </select>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                <InputSelect @bind-Value="wellModel.CurrentOperator" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="Current Operator">CurrentOperator</InputSelect>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label class="opacity-50 form-control-sm mb-0">Previous Operator</label>
+                            @* <label class="form-control-sm">FullName</label> *@
+                        </div>
+                        <div class="col-5">
+                            @if (string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                <select id="previousOperatorList" class="custom-select">
+                                    <option value="0">Select Previous Operator</option>
+                                    @foreach (var item in associateLists)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </select>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                <InputSelect @bind-Value="wellModel.PreviousOperator" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label class="opacity-50 form-control-sm mb-0">Acquired From</label>
+                            @* <label class="form-control-sm">FullName</label> *@
+                        </div>
+                        <div class="col-5" style="padding-bottom:3px;">
+                            @if (string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                <select id="acquiredFromList" class="custom-select">
+                                    <option value="0">Acquired From</option>
+                                    @foreach (var item in associateLists)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </select>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                <InputSelect @bind-Value="wellModel.AcquiredFrom" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-sm-3">
+                            <label class="opacity-50 form-control-sm mb-0">Sold To</label>
+                            @* <label class="form-control-sm">FullName</label> *@
+                        </div>
+                        <div class="col-5">
+                            @if (string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+
+                                <select id="soldToList" class="custom-select">
+                                    <option value="0">Sold To</option>
+                                    @foreach (var item in associateLists)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </select>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(EntityID))
+                            {
+                                <InputSelect @bind-Value="wellModel.SoldTo" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    //[Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(EntityID))
+        {
+            await AssociateDropdowns();
+        }
+        else
+        {
+            //await PopulateForm();
+        }
+    }
+
+    public async Task<List<string>> AssociateDropdowns()
+    {
+        var getResponsiblePartyTask = PopulateAssociateDropdowns(); //welltype
+        
+
+        await Task.WhenAll(
+                           getResponsiblePartyTask
+                        );
+
+        var report = $"Responsible_Party: {getResponsiblePartyTask.Result},"
+                     ;
+
+        return new List<string> { report };
+    }
+
+    public new ICollection<string> associateLists { get; set; } = new List<string>();
+    public async Task<ICollection<string>> PopulateAssociateDropdowns() =>
+       associateLists = await _dropdownQueryServiceTasks
+       .RetrieveListOFAssociates();
+
+
+}
+
+
+

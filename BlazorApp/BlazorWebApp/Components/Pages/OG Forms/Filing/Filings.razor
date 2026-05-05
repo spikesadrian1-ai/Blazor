@@ -1,0 +1,187 @@
+﻿@* @page "/Recordings" *@
+
+@using ApplicationLayer.Entities.FilingInformation
+
+@inherits FilingBase
+
+@{
+   
+}
+
+
+<TabControl>
+    <TabPage Text="Documents">
+        <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+    </TabPage>
+</TabControl>
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="() => SaveOrUpdateNewFiling(filings)"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfFilings")"> View Filings</NavLink>
+</div>
+
+<EditForm Model="@filings">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Filing Information for @filings.GrantorId to @filings.GranteeId in @filings.CountyId County, @filings.StateId</strong>
+                        }
+                        else
+                        if (InitialState == true)
+                        {
+                            <strong class="me-auto">New Filing Information</strong>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Filing Date Information</div>
+                    <div class="card-body">
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Filing</label>
+                                </div>
+                                <div class="col-9" style="padding-bottom:3px;">
+                                    <InputDate @bind-Value="filings.FilingDate" class="form-control text-sm-right" style="width:;"></InputDate>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Recording</label>
+                                </div>
+                                <div class="col-9">
+                                    <InputDate @bind-Value="filings.RecordingDate" class="form-control text-sm-right" style="width:;"></InputDate>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Location Information</div>
+                    <div class="card-body">
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">State</label>
+                                </div>
+                                <div class="col-9" style="padding-bottom:3px;">
+                                    <InputDate @bind-Value="filings.StateId" class="form-control text-sm-right" style="width:;"></InputDate>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">County</label>
+                                </div>
+                                <div class="col-9">
+                                    <InputDate @bind-Value="filings.CountyId" class="form-control text-sm-right" style="width:;"></InputDate>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="">
+                    @* align-items:center; align-content:center; *@
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Recording Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="border p-1 nt-4">
+                            <div class="form-row">
+                                <div class="col-4" style="padding-bottom:3px; padding-right:3px;">
+                                    Book
+                                    <InputText @bind-Value="filings.Book" class="form-control text-sm-right" style="align-self:center; width:75px;" placeholder=""></InputText>
+                                </div>
+                                <div class="col-4" style="padding-bottom:3px; padding-right:3px;">
+                                    Page
+                                    <InputText @bind-Value="filings.Page" class="form-control text-sm-right" style="align-self:center; width:75px;" placeholder=""></InputText>
+                                </div>
+                                <div class="col-4" style="padding-bottom:3px;">
+                                    Volume
+                                    <InputText @bind-Value="filings.Volume" class="form-control text-sm-right" style="align-self:center; width:75px;" placeholder=""></InputText>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-body">
+                        @* <div class="col"> *@
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Entry</label>
+                                @* <label class="form-control-sm">Email:</label> *@
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="filings.Entry" class="form-control text-sm-right" style="align-self:center; width:;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Other</label>
+                                @* <label class="form-control-sm">Email:</label> *@
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="filings.Other" class="form-control text-sm-right" style="align-self:center; width:none;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Notes</label>
+                                @* <label class="form-control-sm">Email:</label> *@
+                            </div>
+                            <div class="col-9" style="padding-bottom:3px;">
+                                <InputTextArea @bind-Value="filings.QuickNote" class="form-control text-sm-right" style="align-self:center; width:none;" placeholder=""></InputTextArea>
+                            </div>
+                        </div>
+                        @* </div> *@
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    public ApplicationLayer.Entities.FilingInformation.Recordings? getList
+        = new ApplicationLayer.Entities.FilingInformation.Recordings();
+
+ 
+    protected override async Task OnInitializedAsync()
+    {
+        if (InitialState == false)
+        {
+            getList.Id = int.Parse(EntityID);
+            getList.GranteeId = IdFromListView;
+            filings.GranteeId = IdFromListView;
+            //TO DO: FIX getTracts.Id being null, SEEMS LIKE A MIX-UP BETWEEN TractModel and getTracts
+            await Task.WhenAll(PopulateFormBasedOnEntityID(getList)/* , PopulateDropdowns() */);
+            //await PopulateDropdowns();
+
+        }
+        else
+        if (InitialState == true)
+        {
+            //await PopulateDropdowns();
+        }
+
+    }
+    
+}

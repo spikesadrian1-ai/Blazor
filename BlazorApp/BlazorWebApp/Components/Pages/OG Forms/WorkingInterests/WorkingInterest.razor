@@ -1,0 +1,347 @@
+﻿@page "/WorkingInterestMain/{TractID}/{ID}/{DeckId}/{DeckName}"
+@page "/WorkingInterestMain/{LeaseID}/{TractID}/{ID}/{DeckId}/{DeckName}"
+
+@inherits WorkingInterestBase
+
+@{
+    Convert.ToInt16(ID);
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@wiDeckMasterEntity">
+    <form method="post" class="mt-3" enctype="multipart/form-data">
+        <div class="form-row">
+            <br />
+            <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(wiDeckMasterEntity))"> Save </button>
+            <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+            <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+            <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Excel </button>
+            <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Details </button>
+            <a class="btn btn-primary
+                      text-wrap
+                      align-items-end
+                      m-1"
+            style="color: aqua;
+                      display:flex;
+                      align-items:end;
+                      align-self:center;
+                      position:relative;
+                      justify-self:center;
+                      text-justify:auto;
+                      font-size: 2rem;
+                      height:50px;
+                      min-width:fit-content;
+                      max-width:150px;"
+            @onclick="ImportantDatesRedirectPage">
+                View Leases
+            </a>
+
+            @* <ImportantDatesComponent LeaseID="LeaseID" @ref="importantDatespopupRef" /> *@
+
+            <div class="col-xl-12 col-lg-6">
+                <br />
+                <div class="card accent-card mb-3">
+                    <div class="card-header">Identification</div>
+                    <div class="card-body">
+                        <div class=form-row>
+                            <div class="col-1">
+                                <label>Deck ID</label>
+                            </div>
+                            <div class="col-2">
+                                @* <label>Deck ID</label> *@
+                                <InputText @bind-Value="DeckId"  class="form-control"></InputText>
+                            </div>
+                            <div class="col-1">
+                                <label>@* Reductio *@</label>
+                            </div>
+                            <div class="col-1">
+                                <label>Tract ID</label>
+                            </div>
+                            <div class="col-3">
+                                <InputText @bind-Value="TractID"  class="form-control"></InputText>
+                            </div>
+                            <div class="col-1">
+                                <label>Active</label>
+                            </div>
+                            <div class="col-1">
+                                <InputText @bind-Value="wiDeckMasterEntity.Active" class="form-control"></InputText>
+                                <br />
+                            </div>
+                        </div>
+                        <div class=form-row>
+                            <div class="col-1">
+                                <label>Deck Name</label>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <InputText @bind-Value="DeckName" class="form-control" placeholder="Deck Name"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="card-header">Deck Details</div>
+                    <div class="card-body">
+                        <div class=form-row>
+                            <div class="col-1">
+                                <label>Payout Code</label>
+                            </div>
+                            <div class="col-4" m-2>
+                                @* <InputSelect @bind-Value="wiDeckMasterEntity.PayoutCode" class="form-control"></InputSelect> *@
+                                <input list="PayoutCodesList" id="PayoutCodeList" value="@wiDeckMasterEntity.PayoutCode" class="form-control" />
+                                <datalist id="PayoutCodesList">
+                                    <option value="Choose Payout Code"></option>
+                                    <option value="Alter Casing Point"></option>
+                                    @*                       <option value="2">BPO / APO</option>
+                                    <option value="3">After Payout</option>
+                                    <option value="4">After Payout 2</option>
+                                    <option value="5">After Payout 3</option>
+                                    <option value="6">After Project Payout</option>
+                                    <option value="7">Before Casing Point</option>
+                                    <option value="8">Before Payout</option> *@
+                                    <option value="Before Prospect Payout"></option>
+                                    @*           <option value="10">Interest 1</option>
+                                    <option value="11">Interest 2</option>
+                                    <option value="12">Interest 3</option>
+                                    <option value="13">Record Title</option>
+                                    <option value="14">Well Revenue</option>
+                                    <option value="15">Oil</option>
+                                    <option value="16">O&G</option>
+                                    <option value="17">Gas</option>
+                                    <option value="18">Condensate</option>
+                                    <option value="19">Casinghead Gas</option> *@
+                                </datalist>
+                                @*     <select id="PayoutCodeSelection" class="form-control ">
+                                    <option value="0">* Choose Payout Code *</option>
+                                    <option value="1">Alter Casing Point</option>
+                                    <option value="2">BPO / APO</option>
+                                    <option value="3">After Payout</option>
+                                    <option value="4">After Payout 2</option>
+                                    <option value="5">After Payout 3</option>
+                                    <option value="6">After Project Payout</option>
+                                    <option value="7">Before Casing Point</option>
+                                    <option value="8">Before Payout</option>
+                                    <option value="9">Before Prospect Payout</option>
+                                    <option value="10">Interest 1</option>
+                                    <option value="11">Interest 2</option>
+                                    <option value="12">Interest 3</option>
+                                    <option value="13">Record Title</option>
+                                    <option value="14">Well Revenue</option>
+                                    <option value="15">Oil</option>
+                                    <option value="16">O&G</option>
+                                    <option value="17">Gas</option>
+                                    <option value="18">Condensate</option>
+                                    <option value="19">Casinghead Gas</option>
+                                </select> *@
+                                <div class="invalid-feedback">
+                                    <span asp-validation-for="CountyID"></span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>@* Reductio *@</label>
+                            </div>
+                            <div class="col-1">
+                                <label>Suspense Code</label>
+                            </div>
+                            <div class="col-4" m-2>
+                                @* <InputSelect @bind-Value="wiDeckMasterEntity.SuspenseCode" class="form-control"></InputSelect> *@
+                                <select id="SuspenseCodesSelectionDropdown"  class="form-control ">
+                                    <option value="0">@wiDeckMasterEntity.SuspenseCode</option>
+                                    <option value="1">Full Interest</option>
+                                    <option value="2">Proportionately Reduced</option>
+                                    <option value="1">Address Unknown/Invalid</option>
+                                    <option value="1">Deceased</option>
+                                    <option value="1">Legal Requirement</option>
+                                    <option value="1">Pay</option>
+                                    <option value="1">Probate</option>
+                                    <option value="1">Title Requirement</option>
+                                    <option value="1">Transferred</option>
+                                    <option value="1">Disputed Interest</option>
+                                    <option value="1">Future Interest</option>
+                                    <option value="1">No Signed D.O.</option>
+                                    <option value="1">Pending Sale</option>
+                                    <option value="1">Pay by Election to Participate</option>
+                                    <option value="1">Title Issue(s)</option>
+                                    <option value="1">Tax ID or SS Number</option>
+                                    <option value="1">Unleased Mineral Interest</option>
+                                    <option value="1">Unsigned Division/Transfer Order</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <span asp-validation-for="CountyID"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class=form-row>
+                            <div class="col-1">
+                                <label>Deck Type  </label>
+                            </div>
+                            <div class="col-4" m-2>
+                                @* value="@wiDeckMasterEntity.DeckType" *@
+                                @* <InputSelect @bind-Value="wiDeckMasterEntity.DeckType" class="form-control"></InputSelect> *@
+                                <select id="DeckTypesSelectionDropdown"  class="form-control ">
+                                    <option value="0">@wiDeckMasterEntity.DeckType</option>
+                                    <option value="0">Working Interest</option>
+                                    <option value="0">Expense Interest</option>
+                                    <option value="0">Revenue Interest</option>
+                                    <option value="0">Record Title</option>
+                                    <option value="0">Operator Rights</option>
+                                    <option value="0">Other Interest</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <span asp-validation-for="CountyID"></span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>@* Reductio *@</label>
+                            </div>
+                            <div class="col-1">
+                                <label>Effective Date</label>
+                            </div>
+                            <div class="col-4">
+                                <InputDate @bind-Value="wiDeckMasterEntity.EffectiveDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+
+                            </div>
+                        </div>
+                        <br />
+                        <div class=form-row>
+                            <div class="col-1">
+                                <label>Product Type</label>
+                            </div>
+                            <div class="col-4">
+                                @* <InputSelect @bind-Value="wiDeckMasterEntity.Product" class="form-control"></InputSelect> *@
+                                <select id="ProductSelectionDropdown" class="form-control ">
+                                    <option value="0">@wiDeckMasterEntity.Product</option>
+                                    <option value="1">Contractual</option>
+                                    <option value="2">All Products</option>
+                                    <option value="3">O&G Only</option>
+                                    <option value="4">Oil</option>
+                                    <option value="5">Gas</option>
+                                    <option value="6">Condensate</option>
+                                    <option value="7">Casinghead Gas</option>
+                                    <option value="8">Plant Products</option>
+                                    <option value="9">Coal & Lignite</option>
+                                    <option value="10">Gold</option>
+                                    <option value="11">Metals</option>
+                                    <option value="12">Sulphur</option>
+                                    <option value="13">Uranium</option>
+                                    <option value="14">Other Minerals</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    <span asp-validation-for="CountyID"></span>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <label>@* Reductio *@</label>
+                            </div>
+                            <div class="col-1">
+                                <label>Expire Date    </label>
+                            </div>
+                            <div class="col-4">
+                                <InputDate @bind-Value="wiDeckMasterEntity.ExpireDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </form>
+</EditForm>
+
+@code {
+
+    #region CASCADE PARAMS
+
+
+
+    #endregion CASCADE PARAMS
+
+    // static string title = "TractLeasesModal";
+    // string ComponentName = "Lease(s)";
+
+    string errorString;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //    // await base.OnInitializedAsync();
+    //     // wiDeckMasterEntity.Id = Convert.ToInt16(ID);
+    //     // // wiDeckMasterEntity.TractId = TractID.ToString();
+    //     // // wiDeckMasterEntity.LeaseId = LeaseID;
+    //     // // wiDeckMasterEntity.DeckName = DeckName;
+    //     // // wiDeckMasterEntity.DeckId = DeckId;
+    //     // await PopulateFormBasedOnEntityID(wiDeckMasterEntity);
+        
+
+    // }
+
+    #region DROPDOWNS
+
+    // public async Task<List<string>> PopulateDropdowns()
+    // {
+    //     var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+    //     var getAllcountyTasks = RetreiveAllCountiesAsync();
+    //     var getAllstateTasks = RetrieveAllStatesAsync();
+    //     var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+    //     var getAllregionTasks = RetrieveAllRegionsAsync();
+
+    //     await Task.WhenAll(
+    //                        getAlltractStatusesTasks
+    //                      , getAllcountyTasks
+    //                      , getAllstateTasks
+    //                      , getAllDistrictTasks
+    //                      , getAllregionTasks
+    //                     );
+
+    //     var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+    //                  $"County: {getAllcountyTasks.Result}," +
+    //                  $"States: {getAllstateTasks.Result}," +
+    //                  $"Districts: {getAllDistrictTasks.Result}," +
+    //                  $"Regions: {getAllregionTasks.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+    //    ListOfTractStatuses = await _statusOfTracts
+    //    .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<RegionMasterMainForm> ListOfRegions { get; set; } = new List<RegionMasterMainForm>();
+    // public async Task<List<RegionMasterMainForm>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<DistrictMasterModel> ListOfDistricts = new List<DistrictMasterModel>();
+    // public async Task<List<DistrictMasterModel>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+    private ImportantDatesComponent importantDatespopupRef;
+
+    private void ImportantDatesRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        importantDatespopupRef.Show("Popup body text");
+    }
+}
+
+
+

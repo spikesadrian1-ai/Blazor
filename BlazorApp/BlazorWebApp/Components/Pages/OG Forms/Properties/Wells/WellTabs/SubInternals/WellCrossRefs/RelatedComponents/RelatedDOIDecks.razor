@@ -1,0 +1,58 @@
+﻿@using ApplicationLayer.Entities
+
+<h3>DoiDecks</h3>
+@* EditFormEntityModel="TractModel" *@
+<GenericCrossRefForm 
+    
+    T="LeaseMainForm2"
+    TableData="LeaseMainForm2"
+    API_RouteAddress="@Route"
+>
+
+</GenericCrossRefForm>
+
+@code {
+
+    public LeaseMainForm2? TractModel { get; set; } = new LeaseMainForm2();
+    string Route = "LeaseMainForm2/RetrieveAllLeases";
+    List<LeaseMainForm2?> LeaseMainForm2 { get; set; } = new List<LeaseMainForm2>();
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; } = new EventCallback<bool>();
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    // [Parameter]
+    // public IHandleAfterRender handleAfterRender { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        //handleAfterRender.OnAfterRenderAsync();
+        //StateHasChanged();
+
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    void OnAfterRenderAsync()
+    {
+        StateHasChanged();
+    }
+}

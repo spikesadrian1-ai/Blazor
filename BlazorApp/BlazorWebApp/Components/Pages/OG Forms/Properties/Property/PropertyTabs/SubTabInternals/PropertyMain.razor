@@ -1,0 +1,28 @@
+﻿@page "/PropertyMain"
+@page "/PropertyMain/{OwnerID}"
+
+<CreateOrUpdatePropertyComponent
+EntityID=""
+InitialState="InitialState">
+
+</CreateOrUpdatePropertyComponent>
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(EntityID))
+        {
+            InitialState = true;
+        }
+        else
+        if (!string.IsNullOrEmpty(EntityID))
+        {
+            InitialState = false;    
+        }
+    }
+}

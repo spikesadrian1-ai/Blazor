@@ -1,0 +1,224 @@
+﻿@* @page "/Well" *@
+@* @page "/OwnerInfo/{OwnerID}" *@
+
+@using ApplicationLayer.Entities.Drafts
+@using ApplicationLayer.Entities.Owners
+
+@inherits WellMainBase
+
+@{
+
+}
+
+
+<EditForm Model="@wellModel">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Important Dates</div>
+                    <br />
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Permit Eff</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.PermitEffective" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Permit Exp</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.PermitExpire" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Acquired</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.DateAcquired" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Sold</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputDate @bind-Value="wellModel.DateSold" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Spud</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.SpudDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3 ">
+                                        <label class="opacity-50 form-control-sm mb-0">Completion</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.Completion" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">OnLine</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.DateOnLine" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">1st Sales</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputDate @bind-Value="wellModel.FirstSalesDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Shut-In</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.LastShutIn" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3 ">
+                                        <label class="opacity-50 form-control-sm mb-0">Plugged</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.PluggedDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Other 1</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.OtherDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Other 2</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputDate @bind-Value="wellModel.OtherDate2" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                            @* <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Form ID</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="wellModel.id" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3 ">
+                                        <label class="opacity-50 form-control-sm mb-0">Draft No</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="wellModel.draf" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Draft Date</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.DraftDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Amount</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputNumber @bind-Value="wellModel.am" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Form ID</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="wellModel.DraftFormId" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3 ">
+                                        <label class="opacity-50 form-control-sm mb-0">Draft No</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="wellModel.DraftNo" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Draft Date</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="wellModel.DraftDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Amount</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputNumber @bind-Value="wellModel.DraftAmount" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                    </div>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Purchasers Information</div>
+                    <div class="border p-1 nt-4">
+                        <InputTextArea @bind-Value="wellModel.PurchaserNotes" class="form-control text-sm-right" style="align-self:center; height:100px; overscroll-behavior-x:auto; " placeholder="(Ex. 0.00)"></InputTextArea>
+                    </div>
+                </div>
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Recording Information</div>
+                    <div class="border p-1 nt-4">
+                        <InputTextArea @bind-Value="wellModel.RecordingInformation" class="form-control text-sm-right" style="align-self:center; height:100px; overscroll-behavior-x:auto; " placeholder="(Ex. 0.00)"></InputTextArea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}

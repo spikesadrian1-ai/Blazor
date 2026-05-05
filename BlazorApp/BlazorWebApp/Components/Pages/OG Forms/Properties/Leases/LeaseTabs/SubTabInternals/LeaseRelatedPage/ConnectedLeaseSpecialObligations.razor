@@ -1,0 +1,83 @@
+@page "/ConnectedLeaseSpecialObligations"
+
+@using ApplicationLayer.Entities.SpecialObligation
+
+@inherits LeaseMainBase
+
+@{
+    SpecialObligations _specialObligations = new SpecialObligations();
+}
+
+<EditForm Model="@_specialObligations">
+    <div class="form-row align-content-center m-3">
+        SPECIAL PROVISIONS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="_specialObligations.DescriptionOfObligation"
+                   style="width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <SpecialProvisionsComponent IdFromListView="@IdFromListView" @ref="popupRef" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in ListOfSpecialObligationsViaLeaseId)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Well ID:  </h8>
+                                    <a href="@($"/ListOfTractsComponent/{@item.DescriptionOfObligation}")">@item.DescriptionOfObligation</a>
+                                    @* <span class="badge badge-primary badge-pill">@item.SpecialProvisionNotes</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code
+{
+
+    // #region CASCADING PARAMS
+    // [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    // [Parameter] public string? TractID { get; set; } = string.Empty;
+    // #endregion CASCADING PARAMS
+
+    string errorString;
+
+    //@InjectAttribute
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IdFromListView != string.Empty)
+        {
+            ListOfSpecialObligationsViaLeaseId = await _leasePopulateDataGrids
+            .RetrieveAllRelatedSpecialObligationsByLeaseIdAsync(IdFromListView);
+        }
+    }
+
+
+    private SpecialProvisionsComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}

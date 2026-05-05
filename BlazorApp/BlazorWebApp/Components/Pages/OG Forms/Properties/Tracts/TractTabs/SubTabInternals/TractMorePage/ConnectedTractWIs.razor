@@ -1,0 +1,206 @@
+﻿@page "/ConnectedTractWIs"
+
+@using ApplicationLayer.Entities.WorkingInterests
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inject LeaseRelatedPageServices _leaseRelatedPageServices;
+
+@inherits TractMainPageBase
+
+@{
+    WideckMaster? wideckMasterEntity = new WideckMaster();
+    //ID = wideckMasterEntity.Id;
+    //Active = wideckMasterEntity.Active;
+
+    //wideckMasterEntity.
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+
+    <div class="form-row align-items-center m-3">
+        WORK INTEREST
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+        @bind-Value="OwnerSearch.OwnerId"
+        style="width:auto; max-width:160px;"
+        class="m-1"
+        placeholder="Search">
+        </InputText>
+        @if (fromLeaseFormState == true)
+        {
+            <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+            <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" TractID="@TractId" @ref="popupRef" />
+        }
+        else
+        {
+            <a class="btn btn-primary m-1">EXPAND</a>
+            @* <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" /> *@
+        }
+        @* </div> *@
+
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark auto"
+            style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+
+                <ol class="">
+                    @foreach (var item in RelatedWIDeckMaster)
+                    {                
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    @* <a class="form-control-sm" href="@($"/WorkingInterestMain/{item.TractId}/{Convert.ToString(@item.Id)}/{@item.DeckId}/{@item.DeckName}")">@item.DeckName</a> *@
+                                    @if (string.IsNullOrWhiteSpace(@item.LeaseId))
+                                    {
+                                        /// - CHECKS IF WORKING INTEREST HAS A LEASE ATTACHED TO A TRACT -
+                                        /// TAKES INTO ACCOUNT WHEN A WORKING INTEREST IS NOT ATTACHED TO A LEASE
+                                        /// ALLOWING PAGE NAVIGATION TO STILL FUNCTION PROPERLY
+                                        <a class="form-control-sm" href="@($"/WorkingInterestMain/{item.TractId}/{Convert.ToString(@item.Id)}/{@item.DeckId}/{@item.DeckName}")">
+                                            Deck: @item.DeckName 
+                                            Type: @item.DeckType
+                                        </a>
+
+                                    }
+                                    else /// -  -
+                                    {
+                                        <a class="form-control-sm" href="@($"/WorkingInterestMain/{item.LeaseId}/{item.TractId}/{Convert.ToString(@item.Id)}/{@item.DeckId}/{@item.DeckName}")">
+                                            Deck: @item.DeckName
+                                            Type: @item.DeckType
+                                        </a>
+
+                                    }
+                                    @{
+
+                                        DeckId = @item.DeckId;
+                                        //ID = @item.Id.ToString();
+                                        ID = Convert.ToString(@item.Id);
+                                        DeckType = @item.DeckType;
+                                        Product = @item.Product;
+                                        EffectiveDate = Convert.ToDateTime(@item.EffectiveDate);
+                                        ExpireDate = Convert.ToDateTime(@item.ExpireDate);
+                                        PayoutCode = @item.PayoutCode;
+                                        SuspenseCode = @item.SuspenseCode;
+
+                                    }
+
+
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</EditForm>
+
+@code
+{
+
+    WorkingInterestBase _workingInterestBase;
+
+    #region CASCADING PARAMS
+
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    [Parameter] public string? DeckName { get; set; } = string.Empty;
+    [Parameter] public string? ID { get; set; } = string.Empty;
+    [Parameter] public string? DeckId { get; set; } = string.Empty;
+    [Parameter] public string? DeckType { get; set; } = string.Empty;
+    [Parameter] public string? Product { get; set; } = string.Empty;
+    [Parameter] public DateTime? EffectiveDate { get; set; } = null;
+    [Parameter] public DateTime? ExpireDate { get; set; } = null;
+    [Parameter] public string? PayoutCode { get; set; } = string.Empty;
+    [Parameter] public string? SuspenseCode { get; set; } = string.Empty;
+    [Parameter] public bool? fromTractFormState { get; set; } //= string.Empty;
+    [Parameter] public bool? fromLeaseFormState { get; set; } //= string.Empty;
+    //[Parameter] public bool? fromLeaseForm { get; set; } //= string.Empty;
+
+    #endregion CASCADING PARAMS
+
+    LeaseMainBase _leaseMainBase = new LeaseMainBase();
+
+    static string title = "TractWorkingInterestModal";
+    string ComponentName = "Working Interest(s)";
+    //string LeasePage = $"TractWorkingInterestPopup/{TractId}";
+
+    public TractOwnership OwnerSearch { get; set; } =
+    new TractOwnership(); //= null;
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<WideckMaster> RelatedWIDeckMaster { get; set; } = new List<WideckMaster>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractId != string.Empty)
+        {
+            fromTractFormState = true;
+
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"WIDeckMaster/SearchAllWideckMasterByTractId/{TractId}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                RelatedWIDeckMaster = await JsonSerializer.DeserializeAsync<List<WideckMaster>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+        else
+        if (LeaseID != string.Empty)
+        {
+            fromLeaseFormState = true;
+
+            try
+            {
+                RelatedWIDeckMaster = await _leaseRelatedPageServices
+                .RetrieveAllRelatedWorkingInterestsByLeaseIdAsync(LeaseID);
+            }
+            catch
+            {
+
+            }
+        }
+    }
+
+    private AddUpdateTractWorkingInterestComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}
+

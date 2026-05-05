@@ -1,0 +1,199 @@
+﻿@page "/ConnectedTractBurdens"
+
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+
+@* @inject LeaseRelatedPageServices _leaseRelatedPageServices *@
+
+@inherits TractMainPageBase
+
+@{
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@TractModel">
+    <div class="form-row align-items-center m-3">
+        BURDENS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+        @bind-Value="TractModel.OwnerId"
+        style="width:auto; max-width:160px;"
+        class="m-1"
+        placeholder="Search">
+        </InputText>
+        @if (fromLeaseFormState == true)
+        {
+            <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+            <ORRIComponent  LeaseID="@LeaseID"
+            @ref="popupRef" />
+            @*    
+                           fromLeaseFormState="fromLeaseFormState"
+                fromLeaseFormState = "fromLeaseFormState" LeaseID = "@LeaseID"*@
+        }
+        else
+        {
+            <a class="btn btn-primary m-1">EXPAND</a>
+            <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" />
+        }
+
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+            style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in associatedTractBurdensViaTractId)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Burden Type:  </h8>
+                                    <span class="badge badge-primary badge-pill">@item.BurdenType</span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+    [Parameter] public bool? fromTractFormState { get; set; } //= string.Empty;
+    [Parameter] public bool? fromLeaseFormState { get; set; } //= string.Empty;
+    //[Parameter] public bool? fromLeaseForm { get; set; } //= string.Empty;
+
+    LeaseRelatedPageServices _leaseRelatedPageServices;
+
+    /* public */
+    List<Burdens> associatedTractBurdensViaTractId { get; set; }
+        = new List<Burdens>();
+
+    List<Burdens> ListAllBurdensViaLeaseId { get; set; }
+        = new List<Burdens>();
+
+    string errorString;
+
+    // if  (!string.IsNullOrEmpty(TractId))
+    // {}
+    // else (!string.IsNullOrEmpty(LeaseID))
+    // {}
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        if (!string.IsNullOrEmpty(TractId)) //&& (string.IsNullOrEmpty(LeaseID)))
+        {
+            fromTractFormState = true;
+
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"Burdens/SearchAllBurdensByTractId/{TractId}");/*tractOwnership.*/
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractBurdensViaTractId = await JsonSerializer
+                             .DeserializeAsync<List<Burdens>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Burdens Data: {response.ReasonPhrase}";
+            }
+        }
+        else if (!string.IsNullOrEmpty(LeaseID))    //((!string.IsNullOrEmpty(LeaseID)) && (string.IsNullOrEmpty(TractId)))
+        {
+            fromLeaseFormState = true;
+
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"Burdens/SearchAllBurdensByLeaseId/{LeaseID}");/*tractOwnership.*/
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractBurdensViaTractId = await JsonSerializer
+                             .DeserializeAsync<List<Burdens>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Burdens Data: {response.ReasonPhrase}";
+            }
+        }
+
+
+        // if (!string.IsNullOrEmpty(TractId))
+        // { 
+        //     fromTractFormState = true;
+        //     var request = new HttpRequestMessage(HttpMethod.Get,
+        //     _config["API_URL"] + $"Burdens/SearchAllBurdensByTractId/{TractId}");/*tractOwnership.*/
+        // }
+        // else 
+        // if (!string.IsNullOrEmpty(LeaseID))
+        // {
+        //     fromLeaseFormState = true;
+
+        //     var request = new HttpRequestMessage(HttpMethod.Get,
+        //     _config["API_URL"] + $"Burdens/SearchAllBurdensByLeaseId/{LeaseID}");/*tractOwnership.*/
+        // }
+
+        // var client = _clientFactory.CreateClient();
+        // HttpResponseMessage response = await client.SendAsync(request);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     using var responseStream = await response.Content.ReadAsStreamAsync();
+        //     associatedTractBurdensViaTractId = await JsonSerializer
+        //                  .DeserializeAsync<List<Burdens>>(responseStream);
+
+        //     errorString = null;
+        // }
+        // else
+        // {
+        //     errorString = $"There was an error getting Burdens Data: {response.ReasonPhrase}";
+        // }
+
+    }
+
+
+
+
+    private ORRIComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}

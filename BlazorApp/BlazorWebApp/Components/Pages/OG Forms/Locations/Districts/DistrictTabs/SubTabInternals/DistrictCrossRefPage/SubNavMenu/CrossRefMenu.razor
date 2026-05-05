@@ -1,0 +1,121 @@
+﻿@inherits DistrictMainBase
+
+
+<br />
+@* <EditForm Model="@owners"> *@
+
+<div class="container border border-top border-bottom m-1 auto">
+    @* border-dark *@
+    <div class="card accent-card">
+        <div class="form-row">
+            <div class="col-3" style="align-items:center; align-content:center;">
+                <div class="card-body">
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary form-control" style="width:300px;" @*onclick="OnPostCreateTract" *@> Related Contracts </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Related Leases </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Payment History </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Twn-Rng-Sec Info </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Title History </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Revenue History </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Related Parties </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> DOI Decks </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> Prod. Purchasers </button>
+                    </div>
+                    <div class="form-row" style="">
+                        <button type="submit" class="btn btn-primary" style="width:300px;" @*onclick="OnPostCreateTract" *@> A.P.I's' </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="form-row">
+                    <div class="card-body border border-dark" style="width:900px; height:500px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@* </EditForm> *@
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}
+
+
+@* 
+<div class="container" align="center">
+    <br>
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav" align="center">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_Prospects">
+                        Prospects
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_Regions">
+                        Regions
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_States">
+                        States
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_Tracts">
+                        Tracts
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_Leases">
+                        Leases
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="District_Wells">
+                        Wells
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+
+}
+ *@

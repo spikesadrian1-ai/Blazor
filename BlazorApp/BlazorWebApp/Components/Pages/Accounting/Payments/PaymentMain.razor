@@ -1,0 +1,355 @@
+﻿@page "/PaymentsMain"
+@* @page "/PaymentsMain/{OwnerID}" *@
+
+@using ApplicationLayer.Entities.NewPayments
+
+@inherits PaymentMainBase
+
+@{
+    ///
+    NewPayment newPayment = new NewPayment();
+}
+
+<TabControl>
+    <TabPage Text="Documents">
+        <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+    </TabPage>
+</TabControl>
+
+<div class="form-row" style="">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(t: paymentEntity))"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfPayments")"> View Payments</NavLink>
+</div>
+<EditForm Model="@newPayment">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (EntityID != null)
+                        {
+                            <strong class="me-auto">Payment {@newPayment.PayeeId} for {@newPayment.PropertyId}</strong>
+                        }
+                        else
+                        if (EntityID == null)
+                        {
+                            <strong class="me-auto">New Payment</strong>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Location Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Property Type</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="ProductSelectionDropdown" class="form-control ">
+                                        <option value="0">Choose Property Type</option>
+                                        <option value="1">Property</option>
+                                        <option value="2">Formation</option>
+                                        <option value="3">Prospect</option>                                        
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.PropertyType" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. JM001)"></InputSelect>
+
+                                }
+                                </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Property ID</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                               {
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select a Property</option>
+                                        @* @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        } *@
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.PropertyId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. James Smith)"></InputSelect>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Tract ID</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select a Tract</option>
+                                       @*  @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        } *@
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.TractId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder=""></InputSelect>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Formation</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select a Formation</option>
+                                        @* @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        } *@
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.SubTractId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. jamessmith@gmail.com)"></InputSelect>
+                                }
+                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Suspense Code</label>
+                            </div>
+                            <div class="col">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="ProductSelectionDropdown" class="form-control ">
+                                        <option value="0">Choose Suspense Code</option>
+                                        <option value="1">Address Unknown/Invalid</option>
+                                        <option value="2">Deceased</option>
+                                        <option value="3">Legal Requirement</option>
+                                        <option value="4">Pay</option>
+                                        <option value="5">Probate</option>
+                                        <option value="6">Title Requirement</option>
+                                        <option value="7">Transferred</option>
+                                        <option value="8">Disputed Interest</option>
+                                        <option value="9">Future Interest</option>
+                                        <option value="10">No Signed D.O.</option>
+                                        <option value="11">Pending Sale</option>
+                                        <option value="12">Pay by Election to Participate</option>
+                                        <option value="13">Title Issue(s)</option>
+                                        <option value="14">Tax ID or SS Number</option>
+                                        <option value="15">Unleased Mineral Interest</option>
+                                        <option value="16">Unsigned Division/Transfer Order</option>
+                                    </select> 
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.SuspenseCode" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. jamessmith@gmail.com)"></InputSelect>
+                                }                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Responsible Parties</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0">Responsible Party</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select a Responsible Party</option>
+                                      @*   @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        } *@
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.ResponsiblePartyId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Payee ID</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select a Payee</option>
+                                        @* @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        } *@
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.PayeeId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. 123-45-6789)"></InputSelect>
+
+                                }
+                             </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">zzz</label>
+                            </div>
+                            <div class="col" >
+                                @* <InputSelect @bind-Value="newPayment.TaxIdType" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputSelect> *@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Payment Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2 ">
+                                <label class="opacity-50 form-control-sm mb-0">Payment Type</label>
+                                @* <label class="form-control-sm">Owner:</label> *@
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="ProductSelectionDropdown" class="form-control ">
+                                        <option value="0">Choose Tenure Code</option>
+                                        <option value="1">Address Unknown/Invalid</option>
+                                        <option value="2">Deceased</option>
+                                        <option value="3">Legal Requirement</option>
+                                        <option value="4">Pay</option>
+                                        <option value="5">Probate</option>
+                                        <option value="6">Title Requirement</option>
+                                        <option value="7">Transferred</option>
+                                        <option value="8">Disputed Interest</option>
+                                        <option value="9">Future Interest</option>
+                                        <option value="10">No Signed D.O.</option>
+                                        <option value="11">Pending Sale</option>
+                                        <option value="12">Pay by Election to Participate</option>
+                                        <option value="13">Title Issue(s)</option>
+                                        <option value="14">Tax ID or SS Number</option>
+                                        <option value="15">Unleased Mineral Interest</option>
+                                        <option value="16">Unsigned Division/Transfer Order</option>
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="newPayment.PaymentType" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. JM001)"></InputSelect>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col" style="padding-bottom:3px;">
+                                @* <InputCheckbox type="submit" class="btn " style="width:150px;"> Pay Lessor @* Directly </InputCheckbox> *@
+                                <input type="radio" name="group" value="1" />
+                                @* @onclick="@(() => selectedGroup = 1)" /> 1 *@
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @* <InputCheckbox type="submit" class="btn " style="width:150px;"> Include Notes on Deck </InputCheckbox> *@
+                                <input type="radio" name="group" value="2" />
+                                @* @onclick="@(() => selectedGroup = 2)" /> 2 *@
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Due Date</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputDate @bind-Value="newPayment.DueDate" class="form-control-sm text-sm-right" style="align-self:center; width:200px; padding-bottom:3px;" placeholder="(Ex. 1+(000)000-0000)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Period</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="newPayment.Period" class="form-control-sm text-sm-right" style="align-self:center; width:200px; padding-bottom:3px;" placeholder="(Ex. 1+(000)000-0000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Net Amount Due</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col">
+                                        <InputText @bind-Value="newPayment.NetAmountDue" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}
+

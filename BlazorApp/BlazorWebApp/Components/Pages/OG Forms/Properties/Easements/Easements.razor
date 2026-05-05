@@ -1,0 +1,31 @@
+﻿<h3>Easements</h3>
+
+
+@* @using BlazorWebApp.Pages.OG_Forms.Properties.Leases.LeaseTabs *@
+<br />
+<div class="container" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <LeaseMain />
+        </TabPage>
+        <TabPage Text="CONT.">
+            <LeaseMainCont />
+        </TabPage>
+        <TabPage Text="RELATED PROPERTIES">
+            <LeaseRelated />
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <LeaseCrossRefs />
+        </TabPage>
+        <TabPage Text="CHARTS / GRAPHS">
+            <LeaseGraphs />
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID=""></RelatedNotes>
+        </TabPage>
+    </TabControl>
+</div>
+
+@code {
+
+}

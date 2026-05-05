@@ -1,0 +1,330 @@
+﻿@page "/County_Wells"
+
+@using ApplicationLayer.Entities.Locations.Counties.Data
+
+@inject IJSRuntime jsRuntime
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+<div class="container">
+    <br>
+    <br>
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="Counties">
+                        BACK
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<div class="container" align="center">
+    <br>
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav" align="center">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Prospects">
+                        Prospects
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Regions">
+                        Regions
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_States">
+                        States
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Tracts">
+                        Tracts
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Leases">
+                        Leases
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Wells">
+                        Wells
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+else if (wellsWithinCounty is null)
+{
+    <div class="h4">Loading...</div>
+}
+else
+{
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-sclae=1">
+        <title>...</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+        <!--<link href="~/css/style.css" rel="stylesheet" />-->
+        @*<script type="text/javascript">
+            $(document).ready(function ()
+            {
+
+                $('[data-toggle="tooltip"]').tooltip();
+
+            });
+        </script>*@
+        <style>
+            #myDIV {
+                width: 500px;
+                height: 500px;
+                background-color: lightblue;
+            }
+        </style>
+    </head>
+    <!--@if (Param == null) || (Param.underparam == null)
+   {-->
+    @*//// SPINNER ANIMATION*@
+    <!--<div class="spinner"></div>
+    }
+    else
+    {-->
+        <body>
+            <div class="form-row">
+                <div class="container">
+                    <div class="table-title">
+                        <div class="row" align="right">
+                            <div class="col-sm-6">
+                                <div align="right">
+                                    <br />
+                                    <a href="#createRegionModal" class="btn btn-success" data-toggle="modal">
+                                        <i class="material-icons">&#xE147;</i> <span>Add Region</span>
+                                    </a>
+                                    <a href="#editRegionModal" class="btn btn-success" data-toggle="modal">
+                                        <i class="material-icons">&#xE147;</i> <span>Edit Region</span>
+                                    </a>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width:90%; margin:0 auto;">
+                        <table id="districtOwners" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    @*<th>ID</th>*@
+                                    @*<th>County</th>*@
+                                    @*<th>State</th>*@
+                                    <th>Well ID</th>
+                                    <th>Name</th>
+                                    @*<th>Type</th>*@
+                                    <th>Status</th>
+                                    <th>Active</th>
+                                    @*<th>Total Depth</th>*@
+                                    <th>Acreage</th>
+                                    <th>Main ID</th>
+                                    <th>Legal Description</th>
+                                    <th>Formation</th>
+                                    @*<th>Current Operator</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var w in wellsWithinCounty)
+                                {
+                                    <tr>
+                                        @*<td>@w.ID</td>*@
+                                        @*<td>@w.CountyId</td>*@
+                                        @*<td>@w.StateId</td>*@
+                                        <td>@w.WellIdNo</td>
+                                        <td>@w.WellName</td>
+                                        @*<td>@w.WellType</td>*@
+                                        <td>@w.WellStatus</td>
+                                        <td>@w.Active</td>
+                                        @*<td>@w.TotalDepthFeet</td>*@
+                                        <td>@w.WellAcreage</td>
+                                        <td>@w.TractMainId</td>
+                                        <td>@w.WellLegalDescription</td>
+                                        <td>@w.FormationCode</td>
+                                        @*<td>@w.CurrentOperator</td>*@
+                                        <td>
+                                            <button type="button" class="btn btn-light m-1">
+                                                <svg xmlns="http://www.w1.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi">
+                                                    <path d="MI5.502 1.94a.5.5 0 0 1 0.70614.459 "></path>
+                                                    <path fill-rule="evenodd" d="M1 13.541.5 1.5 0 0 0 2.5"></path>
+                                                </svg>
+                                            </button>
+                                            <button type="button" class="btn btn-light m-1">
+                                                <svg xmlns="http://www.w1.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi">
+                                                    <path d="MI5.502 1.94a.5.5 0 0 1 0.70614.459 "></path>
+                                                    <path fill-rule="evenodd" d="M1 13.541.5 1.5 0 0 0 2.5"></path>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Add Modal HTML -->
+            <div id="createRegionModal" class="modal fade">
+                <div class="model-dialog">
+                    <div class="modal-content">
+                        <form method="post">
+                            asp-page="Index" asp-action="CreateTractMIOwners"
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add Tract</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Tract ID</label>
+                                    <input type="text" class="form-control" required="required" name="name" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Owner</label>
+                                    <input type="email" class="form-control" required="required" name="email" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Primary Term</label>
+                                    <textarea class="form-control" required="required" name="primary_term" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    FIGURE OUT WHAT IS WRONG WITH THE TEXTBOX. HAS WRITTEN CODE SHOWING UP.
+                                    <textarea class="form-control" required="required" name="address" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                                <input type="submit" class="btn btn-success" value="Add" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Modal HTML -->
+            <div id="editRegionModal" class="modal fade">
+                <div class="model-dialog">
+                    <div class="modal-content">
+                        <form method="post">
+                            asp-page="Index" asp-action="CreateTractMIOwners"
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit Tract</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Tract ID</label>
+                                    <input type="text" class="form-control" required="required" name="name" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Owner</label>
+                                    <input type="email" class="form-control" required="required" name="email" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Primary Term</label>
+                                    <input type="number" required="required" name="primary_term" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    FIGURE OUT WHAT IS WRONG WITH THE TEXTBOX. HAS WRITTEN CODE SHOWING UP.
+                                    <textarea class="form-control" required="required" name="address" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel" />
+                                <input type="submit" class="btn btn-success" value="Add" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @*<script type="text/javascript">
+            function myFunction() {
+              var x = document.getElementById('myDIV');
+              if (x.style.visibility === 'hidden') {
+                x.style.visibility = 'visible';
+              } else {
+                x.style.visibility = 'hidden';
+              }
+            }
+            </script>*@
+
+        </body>
+    @*}*@
+    </html>
+}
+
+@code
+{
+
+    string errorString;
+
+
+    private IEnumerable<WellsWithinCounty> wellsWithinCounty = Array.Empty<WellsWithinCounty>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateWells();
+    }
+
+    private async Task PopulateWells()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + "wellmainform2");
+
+        var client = _clientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            wellsWithinCounty = await JsonSerializer.DeserializeAsync<IEnumerable<WellsWithinCounty>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Counties: { response.ReasonPhrase }";
+        }
+
+
+    }
+    }

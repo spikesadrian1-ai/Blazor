@@ -1,0 +1,95 @@
+﻿@page "/Tracts"
+@page "/Tracts/{IdFromListView}"
+@page "/Tracts/{EntityID}/{IdFromListView}"
+
+@* @using BlazorWebApp.UI.Tabs
+@using BlazorWebApp.Pages.OG_Forms.Properties.Tracts.TractTabs
+@using BlazorWebApp.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMainPage *@
+
+@inherits TractMainPageBase
+
+@{
+    // this.TractModel.TractId = "";
+    // TractID = this.TractModel.TractId;
+}
+
+<div class="tab-content" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <TractMain 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID"
+            >
+            </TractMain>
+        </TabPage>
+        <TabPage Text="RELATED PROPERTIES">
+            <TractMore 
+                TractID="@IdFromListView"
+            ></TractMore>
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <TractCrossRefs />
+        </TabPage>
+        <TabPage Text="FORMATIONS">
+            <TractFormations />
+        </TabPage>
+        <TabPage Text="CHARTS / GRAPHS">
+            <TractGraphs />
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+    </TabControl>
+</div>
+
+
+@code
+{
+    //[Parameter] public bool InitialState { get; set; } //= true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //  NEW TRACT ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        // else
+        // if ((EntityID > 0) && (string.IsNullOrEmpty(IdFromListView)))
+        // {
+        //     InitialState = false;
+        // }
+        else
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT 
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            // TractModel.Id = int.Parse(EntityID);
+            // 
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE 
+            //  else
+            if (InitialState == false )
+            {
+                if ((TractId != null))
+                //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+                {
+
+                }
+                //EntityID = TractId.ToString();       
+                TractId = IdFromListView;
+
+            }
+            TractModel.TractId = IdFromListView;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {            
+                EntityID.ToString();
+                TractId.ToString();
+                TractModel.Id.ToString();            
+                TractModel.TractId.ToString();
+        }
+    }
+}

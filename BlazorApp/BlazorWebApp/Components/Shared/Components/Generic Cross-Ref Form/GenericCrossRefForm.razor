@@ -1,0 +1,116 @@
+﻿@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@using System.Collections.Generic;
+
+@* @inherits GenericCrossRefFormBase<T> *@
+@* @typeparam TElement *@
+
+@typeparam T
+
+<EditForm Model="@EntityModelName">
+    @* <div class="container border border-top border-bottom m-1 auto"> *@
+    <div class="col" style="align-items:center; align-content:center;">
+        <div class="card accent-card mb-3">
+            <div class="card-header form-control">@Title</div>
+            <div class="card-body">
+                <GenDatabaseList Elements="TableData">
+                    <HrefModalName>
+
+                    </HrefModalName>
+
+                    <TableHeader>
+                        <th>Name</th>
+                    </TableHeader>
+
+                    <RowTemplate Context="data">
+                        <td>@data.</td>
+                    </RowTemplate>
+                    
+                    <HrefEditModal>
+                    <a href="@($"#edit{EditModalHrefName}")" class="edit" data-toogle="modal">
+                            <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                        </a>
+                    </HrefEditModal>
+
+                    <HrefDeleteModal>
+                    <a href="@($"#delete{DeleteModalHrefName}")" class="delete" data-toogle="modal">
+                            <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                        </a>
+                    </HrefDeleteModal>
+                </GenDatabaseList>
+
+            </div>
+        </div>
+    </div>
+    @* </div> *@
+</EditForm>
+
+
+@code {
+
+
+    // public new async Task OnInitializedAsync()
+    // {
+    //      await PopulateData(API_RouteAddress, TableData);
+    // }
+    
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    
+    [Parameter] public string Title { get; set; } = string.Empty;
+    [Parameter] public string EntityModelName { get; set; } = string.Empty; 
+
+    #region FORM BASE
+    [Parameter] public string relatedContracts { get; set; } = string.Empty;
+    [Parameter] public string EditFormEntityModel { get; set; } = string.Empty;
+    #endregion FORM BASE
+
+    #region LISTVIEWS
+
+    #endregion LISTVIEWS
+
+    #region TABLE
+    [Parameter] public string EditModalHrefName { get; set; }
+    [Parameter] public string DeleteModalHrefName { get; set; }
+
+    // [Parameter] public RenderFragment<TElement> RowTemplate { get; set; }
+
+    // [Parameter] public List<TElement> Elements { get; set; }
+
+    // [Parameter] public RenderFragment TableHeader { get; set; }
+    #endregion TABLE
+
+    #region RETRIEVE LIST OF LEASES
+
+    [Parameter] public string API_RouteAddress { get; set; } = string.Empty;
+    [Parameter] public List<T> TableData { get; set; } = new List<T>();    //= "LeaseMainForm2/RetrieveAllLeases";
+    
+    public async Task<List<T>> PopulateData(
+          string API_RouteAddress
+        //, List<T> TableData
+        //int page = 1, int quantityPerPage = 10
+        )
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + $"{API_RouteAddress}");
+        var client = _clientFactory.CreateClient();
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            TableData = await JsonSerializer.DeserializeAsync<List<T>>(responseStream);
+
+            //errorString = null;
+        }
+        else
+        {
+            //errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+        }
+
+        return TableData;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+
+}

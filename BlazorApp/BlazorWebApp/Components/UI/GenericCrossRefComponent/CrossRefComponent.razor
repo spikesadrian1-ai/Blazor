@@ -1,0 +1,189 @@
+﻿@* @using static CrossRefDatagridComponent *@
+@* @typeparam T *@
+
+<div class="">
+    <CascadingValue Value="this">        
+        <div class="container border border-top border-bottom m-1 auto" style="">
+            <div class="card accent-card">
+                <div class="card-body">
+                    <div class="card-header form-control-sm">
+                        <strong class="me-auto">@pageTitle</strong>
+                    </div>
+                    <br />
+                    <div class="form-row-sm" style="align-content:center">
+                        @* <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveNewLeaseAsync(leaseModel)"> Save </button>
+                        <button type="submit" class="btn btn-danger" style="width:150px;">Delete</button> *@
+                        <button type="button" class="btn btn-primary" style="width:150px;" "{@printButtonOnClick}">@printButtonOnClickText</button>
+
+                    </div>
+                    <br />
+                    <div class="form-row container border border-top border-bottom m-1 auto">
+                        <div class="col-3" style="align-items:center; ">
+                            <div class="card-body">
+                                <div class="form-row" style="">
+                                    @foreach (CrossRefButtonComponent@* <TElement, T> *@ crossRefButton in Button)
+                                    {
+                                        <div class="form-row" style="">
+                                            <div class="col-3">
+                                                <button type="submit"
+                                                class="btn form-control-sm @GetButtonClass(crossRefButton)"
+                                                style="width:none; height:auto;"
+                                                        @onclick= "(() => ActivatePage(crossRefButton) )">
+                                                    @crossRefButton.Text
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="card-body border border-dark" style="width:inherit; height:inherit;">
+
+                                    @* <CrossRefPageComponent>
+
+                                    </CrossRefPageComponent> *@
+                                    
+                                    @* @foreach (CrossRefButtonComponent crossRefButton in Button)
+                                    {
+                                        <CrossRefPageComponent>
+
+                                        </CrossRefPageComponent>
+                                    } *@
+                                    
+                                    
+                                    <GenDatabaseList Elements="getList">
+                                        <TableHeader>
+                                            @foreach (string var in tableHeaderFragments)
+                                            {
+                                                <th>@tableHeaderFragments.</th>
+                                            }
+                                            
+                                            <th>PropertyType</th>
+                                            <th>Formation</th>
+                                        </TableHeader>
+                                        <RowTemplate Context="entityModel">
+                                            @* <td><a href="@($"/checks/{Convert.ToString(entityModel.Id)}/{entityModel.TractId}/{entityModel.SubTractId}/{entityModel.PropertyType}")" class="nav-link">@entityModel.PaymentType</a></td> *@
+                                            @* <td>@entityModel.PropertyType</td>
+                                            <td>@entityModel.SubTractId</td> *@
+                                        </RowTemplate>
+                                    </GenDatabaseList>
+                                    
+                                    @* @if (showContractComponent == true)
+                                    {
+                                        <RelatedContracts></RelatedContracts>
+                                        //<RelatedContracts @onreadystatechange="()=>ShowRelatedContracts()" @ref="popupRefContracts" />
+                                    }
+                                    @if (showLeaseComponent == true)
+                                    {
+                                        <RelatedLeases />
+                                        //<RelatedLeases @ref="popupRefLeases" />
+                                    }
+                                    @if (showParties == true)
+                                    {
+                                        <RelatedParties></RelatedParties> />
+                                    } *@
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @ChildContent
+    </CascadingValue>
+</div>
+
+
+@code {
+
+    // @typeparam TElement
+    // @typeparam T
+
+    [CascadingParameter]
+    private NewFolder.SubTabControl Parent { get; set; }
+
+    static CrossRefDatagridComponent/* <T> */ crossRefDataGrid = new CrossRefDatagridComponent/* <T> */();
+    
+    [CascadingParameter]
+    public List<string> getList { get; set; } //= new List<TElement>();
+
+    [Parameter]
+    public List<string> tableHeaderFragments { get; set; }
+
+    #region
+    [Parameter]
+    public string pageTitle { get; set; }
+    [Parameter]
+    public EventCallback<object> printButtonOnClick { get; set; } //= new object();
+    [Parameter]
+    public string printButtonOnClickText { get; set; }
+    [Parameter]
+    public EventCallback<bool> IsPrintButtonOnClicked { get; set; } = new EventCallback<bool>();
+
+    [Parameter]
+    public List<string> ButtonLinks { get; set; }   // = new List<string>();
+    #endregion
+
+    #region CROSSREF NAV BUTTONS
+    // Next line is needed so we are able to add <CrossRefButtonComponent> components inside
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public CrossRefButtonComponent@* <TElement, T> *@ ActivePage { get; set; }
+    List<CrossRefButtonComponent@* <TElement, T> *@> Button = new List<CrossRefButtonComponent@* <TElement, T> *@>();
+
+    internal void AddPage(CrossRefButtonComponent@* <TElement, T> *@ crossRefButton
+                            , CrossRefDatagridComponent@* <T> *@ crossRefGrid)
+    {
+        Button.Add(crossRefButton);
+        if (Button.Count == 1)
+            ActivePage = crossRefButton;
+        ActiveGrid = crossRefGrid;
+        StateHasChanged();
+    }
+
+    string GetButtonClass(CrossRefButtonComponent@* <TElement, T> *@ button)
+    {
+        return button == ActivePage ? "btn-primary" : "btn-secondary";
+    }
+
+    void ActivatePage(CrossRefButtonComponent@* <TElement, T> *@ page)
+    {
+        ActivePage = page;
+    }
+
+    #endregion CROSSREF NAV BUTTONS
+
+    #region CROSSREF DATAGRID
+    // [CascadingParameter]
+    // public string GridLabel { get; set; } = "";
+
+
+    [Parameter]
+    public RenderFragment DataGridChildContent { get; set; }
+
+    public CrossRefDatagridComponent@* <T> *@ ActiveGrid { get; set; }
+    List<CrossRefDatagridComponent@* <T> *@> Grid = new List<CrossRefDatagridComponent@* <T> *@>();
+
+    internal void AddGrid(CrossRefDatagridComponent@* <T> *@ crossRefGrid)
+    {
+        Grid.Add(crossRefGrid);
+        if (Grid.Count == 1)
+            ActiveGrid = crossRefGrid;
+        StateHasChanged();
+    }
+
+    string GetGridClass(CrossRefDatagridComponent@* <T> *@ gridButton)
+    {
+        return gridButton == ActiveGrid ? "btn-primary" : "btn-secondary";
+    }
+
+    void ActivateGrid(CrossRefDatagridComponent@* <T> *@ gridPage)
+    {
+        ActiveGrid = gridPage;
+    }
+    #endregion CROSSREF DATAGRID
+}

@@ -1,0 +1,137 @@
+﻿@page "/ConnectedTractROWs"
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits TractMainPageBase
+
+<TractMoreBackButton></TractMoreBackButton>
+
+<TractMoreSubMenu></TractMoreSubMenu>
+
+@{
+    bool UserSelectedNewTract = true;
+    bool UserSelectedViewTractsList = false;
+
+    async Task UserCreatesNewTract()
+    {
+        UserSelectedViewTractsList = false;
+        UserSelectedNewTract = true;
+    }
+
+    async Task UserViewsExistingTracts()
+    {
+        UserSelectedNewTract = false;
+        UserSelectedViewTractsList = true;
+    }
+
+}
+
+@* TODO: turn into switch statement *@
+@if (UserSelectedNewTract == true)
+{
+    <br />
+    @* <CreateOrUpdateTractComponent></CreateOrUpdateTractComponent> *@
+
+}
+else if (UserSelectedViewTractsList == true)
+{
+    <br />
+    @* <ListOfTractsComponent></ListOfTractsComponent> *@
+}
+
+
+<div class="container">
+    <div align="center">
+        <h3> @($"{ComponentName} for Tract ID: {TractId}")</h3>
+    </div>
+    <div class="row" align="left">
+        <br />
+        <div class="row">
+            <br />
+            <button type="button" style="width:auto" class="form-control form-text rounded" value="false" itemid="" name="CreateNewEssementButton" @onclick="@UserCreatesNewTract">
+                Create New @($"{ComponentName}")
+            </button>
+            <br />
+            <button type="button" style="width:auto" class="form-control form-text rounded" value="false" name="ViewExistingTractsEasementsButton" @onclick="@UserViewsExistingTracts">
+                View @($"{ComponentName}")
+            </button>
+        </div>
+        <br />
+    </div>
+    <GenDatabaseList Elements="TractRows">
+        @*         <HrefModalName>
+            <div class="col-4">
+                <a href="test" class="btn btn-primary" style="width: auto;" data-toggle="modal">
+                    <span> @($"Attach to {ComponentName}") </span>
+                </a>
+            </div>
+        </HrefModalName> *@
+        <TableHeader>
+            @* <th>ID</th> *@
+            <th>Name</th>
+            <th>Description</th>
+            <th>Developed</th>
+            <th>Undeveloped</th>
+        </TableHeader>
+
+        <RowTemplate Context="ROWs">
+            @* <td><a href="@($"/ConnectedTractLeases/{Leases.Id}")" class="nav-link">@Leases.Id</a></td> *@
+            <td><a href="@($"/ConnectedTractLeases/{ROWs.RowId}")" class="nav-link">@ROWs.RowId</a></td>
+            <td>@ROWs.FullDescription</td>
+            <td>@ROWs.DevelopedAcreage</td>
+            <td>@ROWs.UndevelopedAcreage</td>
+        </RowTemplate>
+        <HrefEditModal>
+            <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+            </a>
+        </HrefEditModal>
+        <HrefDeleteModal>
+            <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+            </a>
+        </HrefDeleteModal>
+    </GenDatabaseList>
+</div>
+
+
+@code
+{
+    #region CASCADING PARAMS
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    static string title = "TractLeasesModal";
+    //string tractId = "OK01-NOR-001";
+    string ComponentName = "ROW(s)";
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<ApplicationLayer.Entities.TractsRowconnection> TractRows { get; set; }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + $"TractROW/SearchAllTractROWsByTractId/{TractId}");
+        var client = _clientFactory.CreateClient();
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            TractRows = await JsonSerializer.DeserializeAsync<List<ApplicationLayer.Entities.TractsRowconnection>>(responseStream);
+
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+        }
+    }
+
+}

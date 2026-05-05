@@ -1,0 +1,105 @@
+﻿@page "/ListOfDistricts"
+
+@using ApplicationLayer.Entities.Locations.Districts
+
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+
+<br />
+<div class="row" align="center">
+    <div align="center">
+        <h3>Available Districts</h3>
+    </div>
+</div>
+<br />
+<div>
+    <GenDatabaseList Elements="getList">
+
+        <TableHeader>
+            <th>Grantor</th>
+            <th>Grantee</th>
+            <th>Filing Date</th>
+            @* <th>Chain of Title</th>
+            <th>Book</th>
+            <th>Page</th>
+            <th>Volume</th> *@
+        </TableHeader>
+
+        <RowTemplate Context="districts">
+            <td><a href="@($"/district/{Convert.ToString(districts.Id)}/{districts.DistrictId}")" class="nav-link">@districts.DistrictId</a></td>
+            <td>@districts.DistrictName</td>
+            <td>@districts.Notes</td>
+            @* <td>@districts.SpecialProvisionsNotes</td>
+            <td>@districts.MainCompany</td>
+            <td>@districts.Responsible</td>
+            <td>@districts.Volume</td> *@
+        </RowTemplate>
+        <HrefEditModal>
+            <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+            </a>
+        </HrefEditModal>
+        <HrefDeleteModal>
+            <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+            </a>
+        </HrefDeleteModal>
+    </GenDatabaseList>
+</div>
+
+
+
+@code {
+
+    // Districts
+    // Regions
+    // Survey
+    // TwnRngSec
+
+    static string title = "CreateOrUpdateTractMainForm";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await PopulateTracts();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await Task.Run(() => PopulateList());
+    }
+
+    #region RETRIEVE LIST
+
+    List<DistrictMasterModel> getList { get; set; } = new List<DistrictMasterModel>();
+
+    async Task<List<DistrictMasterModel>> PopulateList(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "DistrictsMaster");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getList = await JsonSerializer.DeserializeAsync<List<DistrictMasterModel>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Tracts: {response.ReasonPhrase}";
+        }
+
+        return getList;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+}

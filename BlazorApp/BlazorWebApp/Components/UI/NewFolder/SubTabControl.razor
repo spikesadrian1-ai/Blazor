@@ -1,0 +1,57 @@
+﻿<CascadingValue Value="this">
+    <br />
+    <div class="col ">
+        <div class="btn-group" role="group">
+                @* - 3 SEPERATE EQUAL COLUMNS *@
+                @* <div class="btn-group"  role="group"> *@
+                @foreach (SubTabPage subtabPage in Pages)
+                {
+                    <div class="col">
+                        <button type="button"
+                                class="btn @GetButtonClass(subtabPage)"
+                                @onclick=@( () => ActivatePage(subtabPage) )>
+                            @subtabPage.Text
+                        </button>
+                    </div>
+
+                    @* <button type="button"
+                    class="btn @GetButtonClass(subtabPage)"
+                    @onclick=@( () => ActivatePage(subtabPage) )>
+                    @subtabPage.Text
+                    </button> *@
+                }
+            </div>
+    </div>
+    @* <div class="row"> *@
+        @ChildContent
+    @* </div> *@
+</CascadingValue>
+
+@code 
+{
+    // Next line is needed so we are able to add <SubTabPage> components inside
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public SubTabPage ActivePage { get; set; }
+    List<SubTabPage> Pages = new List<SubTabPage>();
+
+    internal void AddPage(SubTabPage subtabPage)
+    {
+        Pages.Add(subtabPage);
+        if (Pages.Count == 1)
+            ActivePage = subtabPage;
+        StateHasChanged();
+    }
+
+    string GetButtonClass(SubTabPage page)
+    {
+        return page == ActivePage ? "btn-primary" : "btn-secondary";
+    }
+
+    void ActivatePage(SubTabPage page)
+    {
+        ActivePage = page;
+    }
+
+}

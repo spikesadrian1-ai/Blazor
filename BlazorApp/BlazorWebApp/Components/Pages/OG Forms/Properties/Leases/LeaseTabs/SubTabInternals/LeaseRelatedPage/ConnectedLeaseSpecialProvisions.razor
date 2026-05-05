@@ -1,0 +1,91 @@
+@page "/ConnectedLeaseSpecialProvisions"
+
+@using ApplicationLayer.Entities.SpecialProvision
+
+@inherits LeaseMainBase
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-content-center m-3">
+        SPECIAL PROVISIONS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="OwnerSearch.OwnerId"
+                   style="width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <SpecialProvisionsComponent IdFromListView="@IdFromListView" @ref="popupRef" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in ListOfSpecialProvisionsViaLeaseId)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Well ID:  </h8>
+                                    <a href="@($"/ListOfTractsComponent/{@item.SpecialProvisionNotes}")">@item.SpecialProvisionNotes</a>
+                                    @* <span class="badge badge-primary badge-pill">@item.SpecialProvisionNotes</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code 
+{
+        [Parameter] public string? TractID { get; set; } = string.Empty;
+
+    List<SpecialProvisions> ListOfSpecialProvisionsViaLeaseId { get; set; }
+        = new List<SpecialProvisions>();
+
+    public TractOwnership OwnerSearch { get; set; } =
+       new TractOwnership(); //= null;
+
+    string errorString;
+
+    //@InjectAttribute
+    
+    protected override async Task OnInitializedAsync()
+    {
+        if (LeaseTablePK != string.Empty)
+        {
+            ListOfSpecialProvisionsViaLeaseId = await _leasePopulateDataGrids
+            .RetrieveAllRelatedSpecialProvisionsByLeaseIdAsync(LeaseTablePK);
+        }
+    }
+
+
+    private SpecialProvisionsComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}

@@ -1,0 +1,61 @@
+﻿@page "/Recordings"
+@page "/Recordings/{EntityID}"
+@* @page "/Recordings/{EntityID}/{IdFromListView}/{}/{}" *@
+
+
+@inherits FilingBase
+
+<Filings 
+    InitialState="@InitialState"
+    IdFromListView="@IdFromListView"
+    EntityID="@EntityID">
+</Filings>
+
+@code {
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        //  NEW TRACT ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        // else
+        // if ((EntityID > 0) && (string.IsNullOrEmpty(IdFromListView)))
+        // {
+        //     InitialState = false;
+        // }
+        else
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            // TractModel.Id = int.Parse(EntityID);
+            //
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE
+            //  else
+            if (InitialState == false)
+            {
+                if ((FilingID != null))
+                //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+                {
+
+                }
+                //EntityID = FilingID.ToString();
+                FilingID = IdFromListView;
+
+            }
+            filings.GrantorId = IdFromListView;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {
+            EntityID.ToString();
+            FilingID.ToString();
+            filings.Id.ToString();
+            filings.GrantorId?.ToString();
+        }
+    }
+}

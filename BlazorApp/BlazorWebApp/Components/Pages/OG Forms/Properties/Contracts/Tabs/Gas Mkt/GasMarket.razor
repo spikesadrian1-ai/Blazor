@@ -1,0 +1,94 @@
+﻿@using ApplicationLayer.Entities.Owners
+@using ApplicationLayer.Entities.Contracts
+
+@inherits ContractMainBase
+
+@{
+
+    bool PriceRedeterminationClause = false;
+
+    contractMain.PriceRedeterminationClause = "true";
+    contractMain.PriceRedeterminationDate = DateTime.Today;
+    contractMain.PriceSettlement = 0;
+    contractMain.Fees = 0.00M;
+}
+
+<EditForm Model="@contractMain">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control" style="padding-bottom:1rem;">Price / Settlement</div>
+                        <div class="border p-1 nt-4">
+                            @* <input type="text" asp-for="State_ID" placeholder="State ID" /> *@
+                            <InputNumber @bind-Value="contractMain.PriceSettlement" class="form-control text-sm-right" style="align-self:center; height:250px;" placeholder="(Ex. 0.00)"></InputNumber>
+                        </div>
+                     <div class="card-header form-control" style="padding-bottom:1rem;">Fees</div>   @* contractMain.Fees *@
+                        <div class="border p-1 nt-4">
+                            @* <input type="text" asp-for="State_ID" placeholder="State ID" /> *@
+                            <InputNumber @bind-Value="contractMain.Fees" class="form-control text-sm-right" style="align-self:center; height:250px;" placeholder="(Ex. 0.00)"></InputNumber>
+                        </div>
+                </div>
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="form-row">
+                        <div class="border p-1 nt-4">
+                            <div class="form-row">
+                                <div class="col" style="padding-bottom:3px;">
+                                    @* contractMain. *@
+                                    <input type="checkbox" name="PerpetualOptionsClause"
+                                           @bind-value="PriceRedeterminationClause"
+                                           @bind-value:event="input" /> &nbsp; @(PriceRedeterminationClause ? "Perpetual Redetermination Clause?" : "Perpetual Redetermination Clause?")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="border p-1 nt-4">
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Redetermination Date:</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputDate @bind-Value="contractMain.PriceRedeterminationDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            <div class="card-header form-control">Contract Description</div>
+                            <div class="border p-1 nt-4">
+                                <InputTextArea @bind-Value="contractMain.SpecialProvisionsNotes" class="form-control text-sm-right" style="align-self:center; height:250px;" placeholder=""></InputTextArea>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    // [Parameter] public string? EntityID { get; set; } = string.Empty;
+    // [Parameter] public string? NewContractID { get; set; } = string.Empty;
+    // [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+}
+
+

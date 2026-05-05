@@ -1,0 +1,352 @@
+﻿@page "/CreateOrUpdateLeaseComponent"
+@page "/CreateOrUpdateLeaseComponent/{LeaseID}"
+
+
+@using ApplicationLayer.Entities.DropDownList
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities
+@using ApplicationLayer.Entities.Locations.States
+@using ApplicationLayer.Services.Locations.CountyServices
+@using ApplicationLayer.Services.DropdownLists
+@using ApplicationLayer.Services.Assets.Tracts.TractStatus
+
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits TractMainPageBase
+
+<br />
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+@{
+    LeaseMainForm2? LeaseModel = new LeaseMainForm2();
+    LeaseModel.LeaseId = @LeaseID.ToString();
+    ReturnedLease_ID = @LeaseID.ToString();
+    ReturnedLease_ID.ToString();
+}
+
+<CascadingValue Name="@LeaseID" Value="@LeaseID.ToString()"></CascadingValue>
+
+@code {
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    //public string? ReturnedLease_ID { get; set; } = string.Empty;
+
+    public string ReturnedLease_ID
+    {
+        // get => ReturnedLease_ID;
+        // set {
+        //     LeaseID = value; }
+
+        get => LeaseID;
+        set
+        {
+            LeaseID = value;
+        }
+    }
+}
+
+<BackButtonComponent></BackButtonComponent>
+
+@if (ReturnedLease_ID == null)
+{
+    <div class="form-control" align="center"> <h3>New Lease Creation </h3> </div>
+}
+
+@if (ReturnedLease_ID != null)
+{
+    <div class="" align="center"> <h3>Lease Information for Lease ID: @($"{ReturnedLease_ID}")</h3> </div>
+}
+
+<div class="row" align="left">
+    <br />
+    <NavLink class="btn btn-primary form-control" style="width:auto;" href="@($"/ListOfLeasesComponent")">
+        View Leases
+    </NavLink>
+    <br />
+</div>
+
+<form method="post">
+
+    <br />
+    @*     <div class="mb-2">
+        <button type="submit" class="btn btn-primary" style="width:150px;">Attach to Tract(s)</button>
+        <button type="submit" class="btn btn-primary" style="width:200px;">Attach to Easement(s)</button>
+        <button type="submit" class="btn btn-primary" style="width:150px;">Attach to SUA(s)</button>
+        <button type="submit" class="btn btn-primary" style="width:150px;">Attach to ROW(s)</button>
+        <button type="submit" class="btn btn-primary" style="width:150px;">Attach to Well(s)</button>
+        <br />
+        <br />
+    </div> *@
+
+    @* <InputText placeholder="Lease ID" @bind-Value="@LeaseModel.Lease_ID" />
+    <InputText id="ReturnedLease_ID" class="form-control" placeholder="Lease ID" @bind-Value="@LeaseID" />
+    <InputText id="ReturnedLease_ID2" class="form-control" placeholder="Lease ID" @bind-Value="@LeaseID" />
+    <InputText id="ReturnedLease_ID3" class="form-control" placeholder="Lease ID" @bind-Value="@ReturnedLease_ID" /> *@
+
+    <div class="form-row">
+        <div class="card p-1" style="max-width:fit-content">
+            <div class="border p-1 nt-4">
+                <h4 class="text-primary pl-sm-1">Main</h4>
+                <input type="text" asp-for="@ReturnedLease_ID.ToString()" placeholder="Lease ID" data-bind=@($"{ReturnedLease_ID}") />
+                <input type="text" asp-for="@LeaseModel.LeaseId.ToString()" placeholder="Lease ID" data-bind="@($"{ReturnedLease_ID}")" />
+                <input type="text" asp-for="@($"{ReturnedLease_ID}")" placeholder="Lease ID" data-bind="@($"{ReturnedLease_ID}")" />
+                <input type="text" placeholder="Lease ID" data-bind="@LeaseID" />
+                Lease ID:
+                <br />
+                <input type="text" asp-for="@LeaseModel.LeaseId" placeholder="Lease ID" />
+                Lease Date:
+                <input type="date" asp-for="@LeaseModel.LeaseDate" placeholder="Lease Date" />
+                Effective Date:
+                <input type="date" asp-for="@LeaseModel.EffectiveDate" placeholder="Effec. Date" />
+                Primary Term:
+                <input type="range" asp-for="@LeaseModel.PrimaryTerm" placeholder="Primary Term" />
+                <br />
+                Expire Date:
+                <br />
+                <input type="date" asp-for="@LeaseModel.ExpireDate" placeholder="Expire Date" />
+                Term Option:
+                <input type="number" asp-for="@LeaseModel.TermOption" placeholder="Term Option" />
+                Second Expiration Date:
+                <input type="date" asp-for="@LeaseModel.SecondExpirationDate" placeholder="Second Exp. Date" />
+                Active:
+                <input type="checkbox" asp-for="@LeaseModel.Active" name="active"
+                       value="active" />
+                @*  &nbsp; @(active ? "test" : "Active") *@
+                <br />
+                <br />
+                <input type="text" asp-for="@LeaseModel.LessorId" placeholder="Lessor ID" />
+                <input type="text" asp-for="@LeaseModel.LeaseName" placeholder="Lease Name" />
+                <input type="text" asp-for="@LeaseModel.AlternateLeaseName" placeholder="Alt. Lease Name" />
+                <input type="text" asp-for="@LeaseModel.LesseeId" placeholder="Lessee ID" />
+                <br />
+                <br />
+                <input type="text" asp-for="@LeaseModel.ConsiderationAmount" placeholder="Total Consideration (0.00)" />
+                <input type="text" asp-for="@LeaseModel.RoyaltyInterest" placeholder="ROY Amount (0.00000000)" />
+                <input type="text" asp-for="@LeaseModel.ORRI" placeholder="ORRI Amount (0.00000000)" />
+                <input type="text" asp-for="@LeaseModel.GrossAcres" placeholder="Gross Acres (0.00000000)" />
+                <input type="text" asp-for="@LeaseModel.NetAcres" placeholder="Net Acres (0.00000000)" />
+            </div>
+        </div>
+        <hr />
+        <div class="card p-1" style="max-width:fit-content">
+            <div class="border p-1 nt-4">
+                <h5 class="text-primary pl-1">Options</h5>
+                <div class="card-columns">
+                    Paid Up:
+                    <input type="checkbox" asp-for="@LeaseModel.PaidUp" name="PaidUp" value="Paid Up" />
+                    <br />
+                    Producing:
+                    <input type="checkbox" asp-for="@LeaseModel.Producing" name="Producing" />
+                    <br />
+                    Unitized:
+                    <input type="checkbox" asp-for="@LeaseModel.Unitized" name="Unitized" />
+                </div>
+                <div class="card-columns">
+                    Renewal Lease:
+                    <input type="checkbox" asp-for="@LeaseModel.RenewalLease" name="RenewalLease" />
+                    <br />
+                    Top Lease:
+                    <input type="checkbox" asp-for="@LeaseModel.TopLease" name="TopLease" />
+                    <br />
+                    Validated:
+                    <input type="checkbox" asp-for="@LeaseModel.Validated" name="Validated" />
+                </div>
+                <div class="card-columns">
+                    Pending:
+                    <input type="checkbox" asp-for="@LeaseModel.Pending" name="Pending" />
+                    <br />
+                    Ok To Pay:
+                    <input type="checkbox" asp-for="@LeaseModel.OkToPay" name="OkToPay" />
+                    <br />
+                </div>
+            </div>
+        </div>
+        <div class="card p-1" style="max-width:fit-content">
+            <div class="border p-1 nt-4">
+                <h5 class="text-primary pl-1">Location</h5>
+                @* <input type="text" asp-for="StateID" placeholder="State ID" /> *@
+                <select asp-for="StateID" role="presentation" class="form-control " asp-items="Html.GetEnumSelectList<States>()">
+                    <option value="">Choose a state</option>
+                    @* @Html.ValidationMessage("state") *@
+                </select>
+                <br />
+                <br />
+                @* <input type="text" asp-for="CountyID" placeholder="County ID " /> *@
+                <select asp-for="CountyID" role="presentation" class="form-control">
+                    <option value="">Choose a state</option>
+                    @*  @Html.ValidationMessage("state") *@
+                </select>
+            </div>
+        </div>
+        <hr />
+        <div class="card p-1" style="max-width:fit-content">
+            <div class="border p-1 nt-4">
+                <h5 class="text-primary pl-1">Legal Description</h5>
+                <input type="text" style="width:750px; height:125px" asp-for="@LeaseModel.LegalDescription" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="card p-1">
+        <div class="border p-1 nt-4">
+            <h5 class="text-primary pl-1">Create New Lease</h5>
+            <input type="text" asp-for="ConsiderationAmount" placeholder="Total Consideration (0.00000000)" />
+            <input type="text" asp-for="RoyaltyInterest" placeholder="ROY Amount (0.00000000)" />
+            <input type="text" asp-for="ORRI" placeholder="ORRI Amount (0.00000000)" />
+            <input type="text" asp-for="GrossAcres" placeholder="Gross Acres (0.00000000)" />
+            <input type="text" asp-for="NetAcres" placeholder="Net Acres (0.00000000)" />
+        </div>
+    </div>
+    <br />
+    <button class="btn btn-primary" style="width:150px;" @onclick="AddNewCountyAsync">Save</button>
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="AddNewCountyAsync">Delete</button>
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="AddNewCountyAsync">Print</button>
+    @* <button type="submit" class="btn btn-primary" style="width:150px;" asp-page="/OG Forms/Property/Leases/ViewLease">View Leases</button> *@
+    <br />
+</form>
+<br />
+
+@code {
+
+    int selectedStateId = 0;
+    int selectedStatusId = 0;
+
+    private void Add() { }
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // await PopulateDropdowns();
+        // await LoadLeaseInfo();
+        //await Task.WhenAll(PopulateDropdowns(), LoadLeaseInfo(LeaseID));
+    }
+
+    #region DROPDOWNS
+
+    public async Task<List<string>> PopulateDropdowns()
+    {
+        var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+        // var getAllcountyTasks = RetreiveAllCountiesAsync();
+        // var getAllstateTasks = RetrieveAllStatesAsync();
+        // var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+        // var getAllregionTasks = RetrieveAllRegionsAsync();
+
+        await Task.WhenAll(
+                           getAlltractStatusesTasks
+                        // , getAllcountyTasks
+                        // , getAllstateTasks
+                        // , getAllDistrictTasks
+                        // , getAllregionTasks
+                        );
+
+        var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," //+
+                     // $"County: {getAllcountyTasks.Result}," +
+                     // $"States: {getAllstateTasks.Result}," +
+                     // $"Districts: {getAllDistrictTasks.Result}," +
+                     // $"Regions: {getAllregionTasks.Result},"
+                     ;
+
+        return new List<string> { report };
+    }
+
+    public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+       ListOfTractStatuses = await _statusOfTracts
+       .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<RegionMasterMainForm> ListOfRegions { get; set; } = new List<RegionMasterMainForm>();
+    // public async Task<List<RegionMasterMainForm>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<DistrictMasterModel> ListOfDistricts = new List<DistrictMasterModel>();
+    // public async Task<List<DistrictMasterModel>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+    #region LOADLEASEINFO
+
+    // public async Task<List<string>> LoadLeaseInfo(string LeaseID)
+    // {
+    //     var getAllSpecificLeaseInformationTask = RetrieveAllSpecificLeaseInformation(LeaseID);
+
+    //     await Task.WhenAll(getAllSpecificLeaseInformationTask);
+
+    //     var report = $"Specific Lease Information for LeaseID - {LeaseID}: {getAllSpecificLeaseInformationTask.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public async Task<object>/* <LeaseMainForm2> */ RetrieveAllSpecificLeaseInformation(string LeaseID) =>
+
+    //    // ListOfTractStatuses = await _statusOfTracts
+    //    // .RetrieveAllTractStatusAsync();
+
+    #endregion LOADLEASEINFO
+
+    async void AddNewCountyAsync()
+    {
+        // // OBJECTS RECIEVED FROM FRONT-END AND PASSED TO APPLICATION LAYER
+        // string CountyName = CountyDropdown.CountyName;
+        // string State = CountyDropdown.StateId;
+        // try
+        // {
+        //     // NULL CHECKS FROM USER INPUT
+        //     if ((CountyName is null) || (State is null))
+        //     // ERROR PROMPT
+        //     { AddNewCountyErrorString = "County and/or State cannot be empty!"; }
+        //     // REQIURED INFO RECIEVED FROM USER
+        //     // SEND OBJECT(S) TO APP DOMAIN FOR PROCESSING
+        //     else { await CountyApiCommands.SaveNewCounty(CountyName, State); }
+        //     // TODO: UNSURE WHAT ERROR RESPONSES ARE NEEDED FROM APP DOMAIN
+        //     // 1.
+        //     // 2.
+        //     // OR API
+        //     // 1.
+        //     // 2.
+
+        // }
+        // catch { }
+    }
+ }

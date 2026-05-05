@@ -1,0 +1,348 @@
+﻿@page "/AddUpdateTractWorkingInterestComponent/{LeaseID}/{DeckName}"
+
+@using ApplicationLayer.Entities.WorkingInterests
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities.Locations.States
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Leases
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits WorkingInterestBase
+
+@{
+
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+    wiDeckMasterEntity.LeaseId = LeaseID;
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@wiDeckMasterEntity">
+    <div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+        <div class="container position-relative"
+        style="overflow:auto;
+                justify-content:left;
+                border-width:medium;
+                width:-webkit-fit-content;
+                height:450px;">
+
+            <div class="modal-body" style="align-self:center;">
+                <div class="modal-content align-content-center">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                    </div>
+                    <div class="card" style="align-content:center; width:-webkit-fit-content; height:max-content;">
+                        <div class="card-header">
+                            @{
+                                <strong class="me-auto"> New Working Interest Form for Lease @($"{wiDeckMasterEntity.LeaseId}")</strong>
+                            }
+                        </div>
+                        <div class="card-body m-auto align-content-center" style="align-self:center;">
+                            <form method="post" class="mt-3" enctype="multipart/form-data">
+                                <div class="form-row">
+                                    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(wiDeckMasterEntity))"> Save </button>
+                                    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+                                    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+                                    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Excel </button>
+                                    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Details </button>
+                                    <div class="col-xl-12 col-lg-6">
+                                        <div class="card accent-card mb-3">
+                                            <div class="card-header">Identification</div>
+                                            <div class="card-body">
+                                                <div class=form-row>
+                                                    <div class="col-">
+                                                        <label>Deck ID</label>
+                                                        <br />
+                                                        <br />
+                                                        <label>Deck Name</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        @* <label>Deck ID</label> *@
+                                                        <InputText @bind-Value="wiDeckMasterEntity.DeckId" class="form-control" placeholder="Select a Owner"></InputText>
+
+                                                        <InputText @bind-Value="wiDeckMasterEntity.DeckName" class="form-control" placeholder="Deck Name"></InputText>
+                                                    </div>
+                                                    @* <div class="col-1"></div> 
+                                                                ValueChanged="SelectedTractIdEvent"
+                                                                   @onchange="SelectedTractIdEvent"
+                                                                   @oninput="SelectedTractIdEvent"
+                                                    *@
+                                                    <div class="col-2">
+                                                        <label>Tract(s)</label>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        @if (!string.IsNullOrEmpty(LeaseID))
+                                                        {
+                                                            <input list="@_leasePopulateDataGrids.TractLeases" id="TractLeases" class="form-control"
+                                                                   @onchange="SelectedTractIdEvent" />
+                                                            <datalist id="@_leasePopulateDataGrids.TractLeases">
+                                                                @foreach (var item in _leasePopulateDataGrids.TractLeases)
+                                                                {
+                                                                    <option value="@item.TractId.">@item.TractId.</option>
+                                                                }
+                                                            </datalist>
+                                                        }
+                                                        else
+                                                        // if ()
+                                                        { 
+                                                            <InputSelect @bind-Value="wiDeckMasterEntity.TractId" class="form-control-lg"></InputSelect>
+                                                        }
+
+                                                    </div>
+                                                    <div class="col">
+                                                        @*        <label>Active</label>
+                                                        </div>
+                                                        <div class="col-1"> *@
+                                                        @* <InputText @bind-Value="wiDeckMasterEntity.Active" class="form-control"></InputText> *@
+                                                        <button type="button" class="btn btn-primary form-control" style="width:150px;" @*onclick="OnPostCreateTract" *@>Transfer Interest(s)</button>
+
+                                                    </div>
+                                                </div>
+                                                <div class=form-row>
+                                                    @*  <div class="col-1 form-control-lg">
+                                                    <label>Deck Name</label>
+                                                </div>
+                                                <div class="col-12 col-lg-6">
+                                                    <InputText @bind-Value="wiDeckMasterEntity.DeckName" class="form-control-lg" placeholder="Deck Name"></InputText>
+                                                </div> *@
+                                                </div>
+                                            </div>
+                                            <div class="card-header">Deck Details</div>
+                                            <div class="card-body">
+                                                <div class=form-row>
+                                                    <div class="col">
+                                                        <label>Payout @* Code 
+
+                                                            @bind-value:event="@OnPayoutSelected" 
+                                                            @onselect="SelectedPayoutCodeEvent" 
+                                                             value="@SelectedPayoutCode" 
+                                                        @onchange="(() => @SelectedPayoutCodeEvent())"
+                                                            data-bind="@wiDeckMasterEntity.PayoutCode"*@
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-4" m-2>
+                                                        <input list="PayoutCodesList" id="PayoutCodeList"
+                                                        @onchange="SelectedPayoutCodeEvent"
+                                                        class="form-control" />
+                                                        <datalist id="PayoutCodesList">
+                                                            <option value="Alter Casing Point"></option>
+                                                            <option value="BPO / APO"></option>
+                                                            <option value="After Payout"></option>
+                                                            <option value="After Payout 2"></option>
+                                                            <option value="After Payout 3"></option>
+                                                            <option value="After Project Payout"></option>
+                                                            <option value="Before Casing Point"></option>
+                                                            <option value="Before Payout"></option>
+                                                            <option value="Before Prospect Payout"></option>
+                                                            <option value="Interest 1"></option>
+                                                            <option value="Interest 2"></option>
+                                                            <option value="Interest 3"></option>
+                                                            <option value="Record Title"></option>
+                                                            <option value="Well Revenue"></option>
+                                                            <option value="Oil"></option>
+                                                            <option value="O & G"></option>
+                                                            <option value="Gas">Condensate</option>
+                                                            <option value="Condensate"></option>
+                                                            <option value="Casinghead Gas"></option>
+                                                        </datalist>
+                                                        @* <select @onchange="SelectionChanged">
+                                                            <option value="Alter Casing Point">Alter Casing Point</option>
+                                                            <option value="BPO / APO">BPO / APO</option>
+                                                            <option value="After Payout">After Payout</option>
+                                                        </select> *@
+                                                        @* <InputSelect @bind-Value="wiDeckMasterEntity.PayoutCode" class="form-control"></InputSelect> *@
+                                                        @*  <div class="invalid-feedback">
+                                                            <span asp-validation-for="CountyID"></span>
+                                                        </div> *@
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label>@* Reductio *@</label>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Suspense @* Code *@</label>
+                                                    </div>
+                                                    <div class="col-4" m-2>
+                                                        <input list="SuspenseCodesSelectionDropdown"
+                                                               id="SuspenseCodes" class="form-control"
+                                                               @onchange="SelectedSuspenseCodeEvent" />
+                                                        <datalist id="SuspenseCodesSelectionDropdown">
+                                                            <option value="Full Interest"></option>
+                                                            <option value="Proportionately Reduced"></option>
+                                                            <option value="Address Unknown/Invalid"></option>
+                                                            <option value="Deceased"></option>
+                                                            <option value="Legal Requirement"></option>
+                                                            <option value="Pay"></option>
+                                                            <option value="Probate"></option>
+                                                            <option value="Title Requirement"></option>
+                                                            <option value="Transferred"></option>
+                                                            <option value="Disputed Interest"></option>
+                                                            <option value="Future Interest"></option>
+                                                            <option value="No Signed D.O">.</option>
+                                                            <option value="Pending Sale"></option>
+                                                            <option value="Pay by Election to Participate"></option>
+                                                            <option value="Title Issue(s)"></option>
+                                                            <option value="Tax ID or SS Number"></option>
+                                                            <option value="Unleased Mineral Interest"></option>
+                                                            <option value="Unsigned Division/Transfer Order"></option>
+                                                            @*  @foreach (var item in _leasePopulateDataGrids.TractLeases)
+                                                            {
+                                                                <option value="@item.TractId.">@item.TractId.</option>
+                                                            } *@
+                                                        </datalist>
+                                                        @* <InputSelect @bind-Value="wiDeckMasterEntity.SuspenseCode" class="form-control"></InputSelect> *@
+                                                        <div class="invalid-feedback">
+                                                            <span asp-validation-for="CountyID"></span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class=form-row>
+                                                    <div class="col">
+                                                        <label>Deck Type  </label>
+                                                    </div>
+                                                    <div class="col-4" m-2>
+                                                        <input list="DeckTypeSelectionDropdown" id="DeckTypes"
+                                                               @onchange="SelectedDeckTypeEvent" class="form-control" />
+                                                        <datalist id="DeckTypeSelectionDropdown">
+                                                            <option value="Working Interest">Working Interest</option>
+                                                            <option value="Expense Interest"></option>
+                                                            <option value="Record Title"></option>
+                                                            <option value="Operator Rights"></option>
+                                                            <option value="Other Interest"></option>
+                                                            @*  @foreach (var item in _leasePopulateDataGrids.TractLeases)
+                                                            {
+                                                                <option value="@item.TractId.">@item.TractId.</option>
+                                                            } *@
+                                                        </datalist>
+                                                        @* <InputSelect @bind-Value="wiDeckMasterEntity.DeckType" class="form-control"></InputSelect> *@
+                                                        @* <div class="invalid-feedback">
+                                                            <span asp-validation-for="CountyID"></span>
+                                                        </div> *@
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label>@* Reductio *@</label>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Effective @* Date *@</label>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <InputDate @bind-Value="wiDeckMasterEntity.EffectiveDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+
+                                                    </div>
+                                                </div>
+                                                <div class=form-row>
+                                                    <div class="col">
+                                                        <label>Product @* Type *@</label>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <input list="ProductTypeSelectionDropdown" id="ProductSubstanceTypeSelectionDropdown"
+                                                               @onchange="SelectedProductTypeEvent" class="form-control" />
+                                                        <datalist id="ProductTypeSelectionDropdown">
+                                                            <option value="Contractual"></option>
+                                                            <option value="All Products">All Products</option>
+                                                            <option value="O&G Only">O&G Only</option>
+                                                            <option value="Oil"></option>
+                                                            <option value="Gas"></option>
+                                                            <option value="Condensate"></option>
+                                                            <option value="Casinghead Gas">Casinghead Gas</option>
+                                                            <option value="ant Products">Plant Products</option>
+                                                            <option value="Coal & Lignite">Coal & Lignite</option>
+                                                            <option value="Gold"></option>
+                                                            <option value="Metals"></option>
+                                                            <option value="Sulphur"></option>
+                                                            <option value="Uranium"></option>
+                                                            <option value="Other Minerals">Other Minerals</option>
+                                                            @*  @foreach (var item in _leasePopulateDataGrids.TractLeases)
+                                                            {
+                                                                <option value="@item.TractId.">@item.TractId.</option>
+                                                            } *@
+                                                        </datalist>
+                                                        @* <InputSelect @bind-Value="wiDeckMasterEntity.Product" class="form-control"></InputSelect> *@
+                                                        @* <div class="invalid-feedback">
+                                                            <span asp-validation-for="CountyID"></span>
+                                                        </div> *@
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <label>@* Reductio *@</label>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label>Expire @* Date *@    </label>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <InputDate @bind-Value="wiDeckMasterEntity.ExpireDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    #region CASCADE PARAMS
+   
+    [Parameter] public string? EntityId { get; set; } = string.Empty;
+   
+
+    #endregion CASCADE PARAMS
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(LeaseID))
+        {
+            _leasePopulateDataGrids.TractLeases = await _leasePopulateDataGrids.RetrieveAllTractLeasesAsync(LeaseID);
+        }
+    }
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    
+}

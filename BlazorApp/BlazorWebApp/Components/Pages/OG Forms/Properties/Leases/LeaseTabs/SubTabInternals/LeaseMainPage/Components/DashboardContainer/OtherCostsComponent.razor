@@ -1,0 +1,69 @@
+﻿@inherits LeaseMainBase
+
+<h3>OtherCostsComponent</h3>
+
+
+@{
+    ///
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+}
+
+@code {
+    #region CASCADE PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? EntityId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? EasementId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? SuaId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? RowId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #endregion CASCADE PARAMS
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

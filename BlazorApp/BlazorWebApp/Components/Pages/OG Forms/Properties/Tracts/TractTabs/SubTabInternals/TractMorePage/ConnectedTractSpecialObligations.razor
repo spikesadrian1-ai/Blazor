@@ -1,0 +1,197 @@
+﻿@page "/ConnectedTractSpecialObligations"
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inject LeaseRelatedPageServices _leaseRelatedPageServices;
+
+@inherits LeaseMainBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-items-center m-3">
+        SPECIAL OBLIGATIONS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="OwnerSearch.OwnerId"
+                   style="width:auto; max-width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        @if (fromLeaseFormState == true)
+        {
+            <a class="btn btn-primary form-control-lg m-1" @onclick="AddNewSpecialObligationsComponentRedirectPage">NEW</a>
+
+            <AddNewSpecialObligationsComponent LeaseID="@IdFromListView" TractID="@TractID" @ref="addNewSpecialObligationsPopupRef" />
+        }
+        else
+        {
+            <a class="btn btn-primary m-1">EXPAND</a>
+            <AddUpdateTractWorkingInterestComponent LeaseID="@IdFromListView" />
+        }
+        <div class="row m-1">
+        <div class="container border border-top border-bottom border-dark position-relative"
+             style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+             <ol class="">
+                @foreach (var item in associatedTractSpecialObligationsViaTractId)
+                {
+                    <li>
+                        <div class="list-group" role="listbox">
+                            <div class="form-row m-1" style="align-content:normal" role="listitem">
+
+                                @* <a href="@($"/SpecialObligations/{ObligationType}/{TractID}")">ObligationType</a> *@
+                                @* <span class="badge badge-primary badge-pill">@item.ObligationType</span> *@
+
+                                <a class="btn btn-primary form-control-lg m-1" @onclick="SpecialObligationsComponentRedirectPage">@item.ObligationType</a>
+                                @{
+                                    IdFromListView = item.LeaseId?.ToString();
+                                    TractID = item.TractId.ToString();
+                                    //ObligationTypes = item.ObligationType.ToString();
+
+
+                                    //owner_IDcomboBox3.Items.AddRange(Ownerlist.ToArray());  // string does not show up at the '0' position
+                                }
+                                    <SpecialObligationsComponent ObligationTypes="@ObligationTypes" IdFromListView="@IdFromListView" TractID="@TractID" @ref="specialObligationsPopupRef" />
+
+                            </div>
+                        </div>
+                    </li>
+                    
+                }
+             </ol>
+            
+        </div>
+    </div>
+    </div>
+</EditForm>
+
+@code
+{
+    #region CASCADING PARAMS
+
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    
+    [Parameter] public bool? fromTractFromState { get; set; } //= string.Empty;
+        
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+
+    [Parameter] public string? ObligationTypes { get; set; } = string.Empty;
+
+    [Parameter] public List<string>? ListOfObligationTypes { get; set; } = new List<string>(); //= string.Empty;
+
+    #endregion CASCADING PARAMS
+
+    private List<string> ActivateTestObligations(List<string>? ListOfObligationTypes)
+    {
+        List<string> listOfObligationTypes = new List<string>();
+        listOfObligationTypes.Add("TEST1");
+        listOfObligationTypes.Add("TEST2");
+        listOfObligationTypes.Add("TEST3");
+
+        return ListOfObligationTypes = listOfObligationTypes;
+
+    }
+
+    //ApplicationLayer.Services.Lease.LeaseRelated.LeaseRelatedPageServices _leaseRelatedPageServices;
+
+    // public TabPage2 ActivePage { get; set; }
+    // List<TabPage2> Pages2 = new List<TabPage2>();
+
+    // void ActivatePage(TabPage2 page2)
+    // {
+    //     ActivePage = page2 ?? throw new ArgumentNullException(nameof(page2));
+    // }
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    static string title = "TractSpecialObligationsModal";
+    string ComponentName = "SpecialObligation(s)";
+
+    public TractOwnership OwnerSearch { get; set; } =
+    new TractOwnership(); //= null;
+
+    List<ApplicationLayer.Entities.SpecialObligation.SpecialObligations> associatedTractSpecialObligationsViaTractId { get; set; }
+        = new List<ApplicationLayer.Entities.SpecialObligation.SpecialObligations>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractID != string.Empty)
+        {
+            fromTractFromState = true;
+
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"SpecialObligation/SearchAllSpecialObligationsByTractId/{TractID}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractSpecialObligationsViaTractId = await JsonSerializer.DeserializeAsync<List<ApplicationLayer.Entities.SpecialObligation.SpecialObligations>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+        else 
+        if 
+        (LeaseTablePK != string.Empty)
+        {
+            try
+            {
+                associatedTractSpecialObligationsViaTractId = await _leasePopulateDataGrids
+                        .RetrieveAllRelatedSpecialObligationsByLeaseIdAsync(IdFromListView);
+            }
+            catch (HttpRequestException httpRqEx)
+            {
+                //httpRqEx.InnerException(aggr)
+            }
+        }
+        
+    }
+
+    #region POPUP
+
+    private SpecialObligationsComponent specialObligationsPopupRef;
+
+    private void SpecialObligationsComponentRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        specialObligationsPopupRef.Show("Popup body text");
+    }
+
+
+    private AddNewSpecialObligationsComponent addNewSpecialObligationsPopupRef;
+
+    private void AddNewSpecialObligationsComponentRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        addNewSpecialObligationsPopupRef.Show("Popup body text");
+    }
+    
+    #endregion POPUP
+    
+}

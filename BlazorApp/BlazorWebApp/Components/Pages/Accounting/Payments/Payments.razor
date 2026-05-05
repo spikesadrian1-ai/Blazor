@@ -1,0 +1,24 @@
+﻿@page "/makenewpayment"
+@page "/payment"
+
+<PaymentMain 
+    EntityID="@EntityID"
+    OwnerID="@OwnerID">
+
+</PaymentMain>
+
+
+
+@code {
+
+    #region CASCADING PARAMS
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    #endregion CASCADING PARAMS
+
+}

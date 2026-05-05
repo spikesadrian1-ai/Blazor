@@ -1,0 +1,178 @@
+﻿@* @page "/Well" *@
+@* @page "/OwnerInfo/{OwnerID}" *@
+
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Wells.AttachedTracts
+
+@inject WellPopulateDatagrids wellPopulateDatagrids
+
+@inherits WellMainBase
+
+@{
+    //wellModel.WellIdNo = EntityID;
+}
+
+
+<br />
+<EditForm Model="@wellModel">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            <div class="form-row">
+                                <div class="col-md-2" style="padding-bottom:3px;">
+                                    Search:
+                                </div>
+                                <div class="col-3" style="padding-bottom:3px;">
+                                    <InputText @bind-Value="wellModel.WellIdNo" class="form-control-sm text-sm-right" style="width:100px;" placeholder="Search"></InputText>
+                                </div>
+                                <div class="col-1" style="padding-bottom:3px;">
+                                    @* <InputText @bind-Value="wellModel.WellIdNo" class="form-control-sm text-sm-right" style="width:75px;" placeholder=""></InputText> *@
+                                </div>
+                                <div class="col-2" style="padding-bottom:3px;">
+                                    <label>Acreage</label>
+                                </div>
+                                <div class="col-2" style="padding-bottom:3px;">
+                                   @*  Well Acreage *@
+                                    <InputNumber @bind-Value="wellModel.WellAcreage" class="form-control-sm text-sm-right" style="width:75px;" placeholder="0.00000000"></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="card-body border border-dark" style="height:275px; width:300px; overflow:auto">
+                                    <GenDatabaseList Elements="wellPopulateDatagrids.wellTracts">
+                                        <TableHeader>
+                                            <th>Tract</th>
+                                            <th>Developed</th>
+                                        </TableHeader>
+                                        <RowTemplate Context="connectedTracts">
+                                            <td><a href="@($"/Tracts/{Convert.ToString(connectedTracts.Id)}/{connectedTracts.TractId}")" class="nav-link">@connectedTracts.TractId</a></td>
+                                            <td>@connectedTracts.DevelopedAcreage</td>
+                                        </RowTemplate>
+                                        <HrefEditModal>
+                                            <a href="@($"#edit{wellModel.WellIdNo}")" class="edit" data-toogle="modal">
+                                                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                                            </a>
+                                        </HrefEditModal>
+                                    </GenDatabaseList>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            @* <div class="card-body"> *@
+                            <div class="form-row">
+                                <div class="col-2" style="padding-bottom:3px;">
+                                    Search:
+                                </div>
+                                <div class="col-3" style="padding-bottom:3px;">
+                                    <InputText @bind-Value="wellModel.WellIdNo" class="form-control-sm text-sm-right" style="width:125px; min-width:100px;" placeholder=""></InputText>
+                                </div>
+                                <div class="col-4" style="padding-bottom:3px;">
+                                </div>
+                                <div class="col-lg-3" style="padding-bottom:3px;">
+                                    <label>Available Tracts</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="card-body border border-dark" style="height:275px; width:300px; overflow:auto">
+                                    @* <div class="dashboard-container justify-content-md-start align-content-start" style="height:inherit; width:none; justify-items:left; align-content:start; overflow:scroll">                                        *@
+                                    <GenDatabaseList Elements="wellPopulateDatagrids.wellTracts">
+                                            <TableHeader>
+                                                <th>Tract</th>
+                                                <th>Undeveloped</th>
+                                            </TableHeader>
+                                            <RowTemplate Context="connectedTracts">
+                                                <td><a href="@($"/Tracts/{Convert.ToString(connectedTracts.Id)}/{connectedTracts.TractId}")" class="nav-link">@connectedTracts.TractId</a></td>
+                                                <td>@connectedTracts.UndevelopedAcreage</td>
+                                            </RowTemplate>
+
+                                            <HrefEditModal>
+                                                <a href="@($"#edit{wellModel.WellIdNo}")" class="edit" data-toogle="modal">
+                                                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                                                </a>
+                                            </HrefEditModal>
+
+                                        </GenDatabaseList>
+                                    @* </div>                                     *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col-2" style="padding-bottom:3px;">
+                            Search:
+                        </div>
+                        <div class="col-3" style="padding-bottom:3px;">
+                            <InputText @bind-Value="wellModel.WellIdNo" class="form-control-sm text-sm-right" style="width:125px; min-width:100px;" placeholder=""></InputText>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="card-body border border-dark" style="height:600px; width:300px; overflow:auto">
+                            <GenDatabaseList Elements="wellPopulateDatagrids.wellTracts">
+                                <TableHeader>
+                                    <th>Tract</th>
+                                    <th>Developed</th>
+                                    <th>Undeveloped</th>
+                                </TableHeader>
+
+                                <RowTemplate Context="connectedTracts">
+                                    <td><a href="@($"/Tracts/{Convert.ToString(connectedTracts.Id)}/{connectedTracts.TractId}")" class="nav-link">@connectedTracts.TractId</a></td>
+                                    <td>@connectedTracts.DevelopedAcreage</td>
+                                    <td>@connectedTracts.UndevelopedAcreage</td>
+                                </RowTemplate>
+
+                                <HrefEditModal>
+                                    <a href="@($"#edit{wellModel.WellIdNo}")" class="edit" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                                    </a>
+                                </HrefEditModal>
+
+                                <HrefDeleteModal>
+                                    <a href="@($"#delete{wellModel.WellIdNo}")" class="delete" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                    </a>
+                                </HrefDeleteModal>
+                            </GenDatabaseList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+    List<WellTractsConnection> associatedTracts { get; set; }
+       = new List<WellTractsConnection>();
+
+    List<WellTractsConnection> tracts { get; set; }
+       = new List<WellTractsConnection>();
+
+    // List<TractMainForm> tracts { get; set; }
+    //  = new List<TractMainForm>();
+
+    List<WellTractsConnection> availableTracts { get; set; }
+       = new List<WellTractsConnection>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        wellModel.WellIdNo = IdFromListView;
+        
+        wellPopulateDatagrids.wellTracts = await wellPopulateDatagrids.RetrieveRelatedTracts(IdFromListView);
+        // tracts = await wellPopulateDatagrids.RetrieveRelatedTracts(wellModel);
+        // availableTracts = await wellPopulateDatagrids.RetrieveRelatedTracts(wellModel);
+    }
+}
+
+
+

@@ -1,0 +1,157 @@
+﻿@page "/Leases"
+@page "/Leases/{IdFromListView}"
+@page "/Leases/{ID:int}/{IdFromListView}"
+@page "/Leases/{LeaseTablePK}/{IdFromListView}"
+
+@inherits LeaseMainBase
+
+<div class="container" align="center">
+
+    <TabControl>
+        <TabPage Text="MAIN">
+            <LeaseMain 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            LeaseID="@IdFromListView"
+            LeaseTablePK="@LeaseTablePK" />
+        </TabPage>
+        <TabPage Text="CALCULATIONS">
+            <LeaseMainCont IdFromListView="@IdFromListView" />
+        </TabPage>
+        <TabPage Text="RELATED PROPERTIES">
+            <LeaseRelated                 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            LeaseID="@IdFromListView"
+            />
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <LeaseCrossRefs />@* LeaseTablePK="@LeaseTablePK" *@
+        </TabPage>
+        <TabPage Text="CHARTS / GRAPHS">
+            <LeaseGraphs />@* LeaseTablePK="@LeaseTablePK" *@
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@LeaseID"></RelatedNotes>
+        </TabPage>
+    </TabControl>
+</div>
+
+@code {
+
+    async Task OnParameterSetAsync()
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //  NEW LEASE ENTRY 
+        if ((string.IsNullOrEmpty(LeaseTablePK))  && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            // if (!string.IsNullOrEmpty(LeaseTablePK)) //((!string.IsNullOrEmpty(ID)) && (!string.IsNullOrEmpty(LeaseID)))
+            // {
+            //     InitialState = false;                
+            // }           
+
+            InitialState = true;
+
+            //await _leasePopulateDataGrids.PopulateDropdowns();
+        }
+        else
+        //  RE-ROUTE FROM LISTOFLEASES COMPONENT 
+        if ((!string.IsNullOrEmpty(LeaseTablePK)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE 
+            if (InitialState == false )
+            {
+                // /// SCENARIO #1 - FIRST TIME VIEWING A PARTICULAR LEASE
+                // var testName2 = "";
+
+                // if (leaseModel.LeaseId == null)
+                // {
+                //     leaseModel.Id = int.Parse(LeaseTablePK);
+                //     leaseModel.LeaseId = IdFromListView;
+                //     testName2 = IdFromListView;
+                // }
+                // else
+                // {
+                //     testName2 = leaseModel.LeaseId.ToString();
+
+                // }
+
+                /// SCENARIO #2 - FIRST TIME VIEWING A PARTICULAR LEASE
+                if ((LeaseTablePK != null))
+                //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+                {
+
+                }
+                // SINCE THE TABLE ID BEING USED IS OF STRING TYPE - BUNCH OF REASONS AND ALL MY OWN DURING DESIGN PHASE OR 
+
+            }
+            fromLeaseFormState = true;
+            leaseModel.Id = int.Parse(LeaseTablePK);
+            leaseModel.LeaseId = IdFromListView;
+
+        }
+        else
+        //  RE-ROUTE FROM CONNECTEDTRACTLEASES COMPONENT 
+        if ((!string.IsNullOrEmpty(ID.ToString())) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE
+            //  else
+            LeaseTablePK = ID.ToString();
+            leaseModel.Id = int.Parse(LeaseTablePK);
+            leaseModel.LeaseId = IdFromListView;
+            LeaseID = IdFromListView;
+            // if (InitialState == false)
+            // {
+            //     // if ((LeaseTablePK != null))
+            //     // //if (TractModel.TractId != null) //(TractModel.TractId.CompareTo()))
+            //     // {
+                    
+            //     // }
+            // }
+                   
+
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {            
+                ID.ToString();
+            LeaseTablePK.ToString();
+                leaseModel.Id.ToString();            
+                leaseModel.LeaseId.ToString();
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+
+        // if (string.IsNullOrEmpty(LeaseID))
+        // {
+        //     InitialState = true;
+        //     //await _leasePopulateDataGrids.PopulateDropdowns(LeaseID);
+        //     return;
+        // }
+        // else
+        // if (!string.IsNullOrEmpty(LeaseID))
+        // {
+        //     InitialState = false;
+
+        //     try
+        //     {
+        //         await Task.WhenAll(PopulateFormBasedOnEntityID(leaseModel)/* ,  LoadLeaseInfo(LeaseID)*/);
+        //         //NavigationFromTractRelatedPageStateManagement(LeaseID, initialState);
+
+        //         //await _leasePopulateDataGrids.PopulateDropdowns(LeaseID);
+        //     }
+        //     catch
+        //     {
+
+        //     }
+        // }
+
+    }
+}
+

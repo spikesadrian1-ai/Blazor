@@ -1,0 +1,532 @@
+﻿@page "/OwnerInfo"
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Bus._Assoc
+@using ApplicationLayer.Entities.Owners;
+@using ApplicationLayer.Services.DropdownLists;
+
+
+@inherits OwnerMainBase
+
+@{
+
+}
+
+
+<div class="form-row" style="">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="() => SaveNewOwnerAsync(ownersD)"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @onclick="() => DeleteOwner(ownersD)">Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfOwnersAndAssociates")"> View Owners/Associates</NavLink>
+</div>
+<EditForm Model="@owners">
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Information for Owner: @IdFromListView.ToString()</strong>
+                        }
+                        else
+                        if (InitialState == true)
+                        {
+                            <strong class="me-auto">New Owner / Business Associates Form</strong>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Owner Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2 ">
+                                <label class="opacity-50 form-control-sm mb-0">Owner </label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @* owners.OwnerId*@   @* OnOwnerIdEntered="OwnerIdEntered" *@
+                                @* <InputText @bind-Value="owners.OwnerId"
+                                           class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. JM001)"></InputText> *@
+                                @* @ResponseStatus.ToString() *@
+                                @* <DataAnnotationsValidator></DataAnnotationsValidator>
+                                <ValidationSummary></ValidationSummary> *@
+                                @* @ResponseStatus *@
+                                @if (!string.IsNullOrEmpty(owners.OwnerId))
+                                {
+                                    DoesIdAlreadyExists(owners, responseStatus);
+                                    //VerifyOwnerIdIsUniqueObj(owners.OwnerId);
+                                    //RequestResponseStatus = Response;
+                                    //Response = RequestResponseStatus;
+                                }
+                                @if (InitialState == false)
+                                {
+                                    /// COMMENT: USER HAS CHOSEN A TRACT FROM LIST COMPONENT
+                                    var testName2 = "";
+
+                                    if (owners.OwnerId == null)
+                                    {
+                                        testName2 = IdFromListView;
+                                        //owners.OwnerId = IdFromListView;
+                                    }
+                                    else
+                                    {
+                                        testName2 = owners.OwnerId.ToString();
+                                        owners.OwnerId = IdFromListView;
+                                        getOwner.OwnerId = IdFromListView;
+
+                                    }
+
+                                    /// COMMENT: WHEN USER HAS ALREADY SELECTED A TRACT THEN VIEWED A LEASE AND HAS NOW CHOSEN TO VIEW A DIFFERENT TRACT
+                                    /// PURPOSE: TO ENSURE LEASE MODEL HAS BEEN CLEARED AND REHYDRATED WITH THE "NEW" ONE
+                                    /// PROBLEM SOLVED: LOSS/MISSING DATA
+
+                                    var testName3 = getOwner.OwnerId.ToString();
+
+                                    /// COMMENT: CHECK VARIABLES AND IF DIFF THEN USE NEW VARIABLE INSTEAD
+                                    if (testName2 != testName3)
+                                    {
+                                        getOwner.OwnerId = getOwner.OwnerId.ToString();
+                                        owners.OwnerId = IdFromListView; //getOwner.OwnerId.ToString();
+                                        //PopulateFormBasedOnEntityID(getTracts);
+                                    }
+                                    else    //USER SELECTED LISTOFTRACTS COMPONENT TO SELECT A DIFFERENT TRACT - SHUD CHECK IF TRACTID INSTEAD OF AND OR ADDED TO
+                                    if (OwnerID == owners.OwnerId)
+                                    {
+                                        OwnerID = getOwner.OwnerId.ToString();
+                                        owners.OwnerId = IdFromListView; //getOwner.OwnerId.ToString();
+
+                                    }
+
+                                    <InputText @bind-Value="owners.OwnerId"
+                                               class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. JM001)"></InputText>
+                                    @* @ResponseStatus.ToString() *@
+                                    <DataAnnotationsValidator></DataAnnotationsValidator>
+                                    <ValidationSummary></ValidationSummary>
+                                    @* @ResponseStatus *@
+                                }
+                                else
+                                if (InitialState == true)
+                                {
+                                    <input type="text" data-bind="@owners.OwnerId" class="form-control" value="@owners.OwnerId" style="align-self:center; width:275px;" placeholder="Enter Tract ID" />
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Name</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="owners.FullName" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. James Smith)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="owners.FileAs" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder=""></InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Email</label>
+                            </div>
+                            <div class="col">
+                                <InputText @bind-Value="owners.Email" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. jamessmith@gmail.com)"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Tax Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Tax ID</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="owners.TaxId" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">SSN</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="owners.SpouseSsn" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. 123-45-6789)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Tax Type</label>
+                            </div>
+                            <div class="col">
+                                @* <InputSelect @bind-Value="owners.TaxIdType" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputSelect> *@
+                                <select id="ProductSelectionDropdown" class="form-control text-sm-right" style="align-self:center; width:350px;">
+                                    <option value="0">Choose General Class</option>
+                                    <option value="1">Company </option>
+                                    <option value="2">Estate</option>
+                                    <option value="3">Individual</option>
+                                    <option value="4">Trust</option>
+                                    <option value="5">Corporation</option>
+                                    <option value="6">Non-Resident Alien</option>
+                                    <option value="7">Resident Alien</option>
+                                    <option value="8">Lessee</option>
+                                    <option value="9">Government</option>
+                                    <option value="10">Partnership</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Address Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2 ">
+                                <label class="opacity-50 form-control-sm mb-0">Type</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @* <InputSelect @bind-Value="owners.AddressType" class="form-control-sm text-sm-right" style="align-self:center; width:175px;" placeholder=""></InputSelect> *@
+                                <select id="ProductSelectionDropdown" class="form-control" style="width:350px;">
+                                    <option value="0">Choose Address Types</option>
+                                    <option value="1">General Mailing Address</option>
+                                    <option value="2">Payment Obligation Check</option>
+                                    <option value="3">Payment Obligation Ltr(s)</option>
+                                    <option value="4">Revenue Distribution Check(s)</option>
+                                    <option value="5">J.I.B.'s Mailing Address</option>
+                                </select>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <button type="submit" class="btn" @onclick="() => AddNewAddress()" style="width:150px;" > + New Address </button>@* *@
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Address</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputTextArea @bind-Value="owners.Address" class="form-control text-sm-right" style="align-self:center; width:300px; height:75px" placeholder=""></InputTextArea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Business</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="owners.Business" class="form-control text-sm-right" style="align-self:center; width:160px; padding-bottom:3px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Cell</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="owners.Business2" class="form-control text-sm-right" style="align-self:center; width:160px; padding-bottom:3px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Home</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputText @bind-Value="owners.Home" class="form-control text-sm-right" style="align-self:center; width:160px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Fax</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="owners.Fax" class="form-control text-sm-right" style="align-self:center; width:160px; padding-bottom:3px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Mobile</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="owners.Mobile" class="form-control text-sm-right" style="align-self:center; width:160px;" placeholder="(Ex. 1+(000)000-0000)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Web</label>
+                                    </div>
+                                    <div class="col">
+                                        <InputText @bind-Value="owners.WebPage" class="form-control text-sm-right" style="align-self:center; width:160px;" placeholder="(Ex. www.abc123.com)"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card-header form-control">Owner Payment Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Tenure</label>
+                            </div>
+                            @{
+                                // ValueChanged = "OnSelectionChange";
+                                // TValue = "OnChange()";
+                                // OnSelectionChange = "(() => OnChange";
+                            }
+                            <div class="col" style="padding-bottom:3px;">
+                                @* <InputSelect @bind-Value="tenureCodes" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputSelect> *@
+                               
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                <datalist id="wellTypes">
+                                    <option value="0">Well Type</option>
+                                    @foreach (var item in wellTypes)
+                                    {
+                                        <option value="@item.">@item.</option>
+                                    }
+                                </datalist> *@
+@* 
+                                <select id="ProductSelectionDropdown" class="form-control ">
+                                    <option value="0">Choose Tenure Code</option>
+                                    <option value="1">Community Property</option>
+                                    <option value="2">Curtsey</option>
+                                    <option value="3">Dower</option>
+                                    <option value="4">Joint Tenants</option>
+                                    <option value="5">Life Estate</option>
+                                    <option value="6">Naked Owner</option>
+                                    <option value="7">Remainderman</option>
+                                    <option value="8">Separate Property</option>
+                                    <option value="9">Tenants by the Entireties</option>
+                                    <option value="10">Tenant-in-Common</option>
+                                    <option value="11">Unknown</option>
+                                    <option value="12">Usufruct</option>
+                                </select> *@
+                                    <select id="wellAcquisitionTypes" class="custom-select">
+                                        <option value="0">Select Tenure Code</option>
+                                        @foreach (var item in tenureCodes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            //<option value="@item.TenureCode">@item.TenureCode</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="owners.TenureCode" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">No Pay</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @* <InputSelect @bind-Value="owners.NoPayCode" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. 123-45-6789)"></InputSelect> *@
+                                <select id="ProductSelectionDropdown" class="form-control ">
+                                    <option value="0">Choose No-Pay Code</option>
+                                    <option value="1">Not Applicable</option>
+                                    <option value="2">No-Pay - Mining Royalty Checks</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Class</label>
+                            </div>
+                            <div class="col">
+                                @* <InputSelect @bind-Value="owners.GeneralClass" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputSelect> *@
+                                <select id="ProductSelectionDropdown" class="form-control">
+                                    <option value="0">Choose General Class</option>
+                                    <option value="1">Attorney</option>
+                                    <option value="2">Depository Bank</option>
+                                    <option value="3">Field Broker</option>
+                                    <option value="4">County Clerk's Office</option>
+                                    <option value="5">Grantee</option>
+                                    <option value="6">Grantor</option>
+                                    <option value="7">Lessor</option>
+                                    <option value="8">Lessee</option>
+                                    <option value="9">Mineral Owner</option>
+                                    <option value="10">Mortgage Holder</option>
+                                    <option value="11">Non-Participating Royalty Owner</option>
+                                    <option value="12">Operator</option>
+                                    <option value="13">ORRI Owner</option>
+                                    <option value="14">Prospect Originator</option>
+                                    <option value="15">Purchaser/Gatherer</option>
+                                    <option value="16">Signatory Authority</option>
+                                    <option value="17">Surface Tenant</option>
+                                    <option value="18">Surface Owner</option>
+                                    <option value="19">Unleased Mineral Owner</option>
+                                    <option value="20">Water Rights Owner</option>
+                                    <option value="21">Working Interest Participant</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header form-control">Banking Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Default</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="owners.DefaultBankId" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Bank No</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="owners.BankAccountNo" class="form-control text-sm-right" style="align-self:center; width:350px;" placeholder="(Ex. 123-45-6789)"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    public OwnerAddressesMain? getOwner = new OwnerAddressesMain();
+
+    //private readonly IDropdownQueryServiceTasks _dropdownQueryServiceTasks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (InitialState == true)
+        {
+            await AssociateMainPagePopulateDropdowns();
+        }
+        else
+        // EXAMPLE: TRACT USES THE CODE BELOW
+        if (InitialState == false)
+        {
+            getOwner.Id = int.Parse(EntityID);
+            getOwner.OwnerId = IdFromListView;
+            owners.OwnerId = IdFromListView;
+            //TO DO: FIX getOwner.Id being null, SEEMS LIKE A MIX-UP BETWEEN TractModel and getTracts
+            await Task.WhenAll(PopulateFormBasedOnEntityID(getOwner)/* , PopulateDropdowns() */);
+            //await PopulateDropdowns();
+
+        }
+        
+        // OR
+
+        // // EXAMPLE: LEASE USES THE CODE BELOW
+        // if (InitialState == false)
+        // {
+        //     getOwner.Id = int.Parse(LeaseTablePK); //ID.Value;
+        //     getOwner.LeaseId = IdFromListView;
+        //     await PopulateFormBasedOnEntityID(getOwner); //Task.WhenAll(PopulateFormBasedOnEntityID(getLeaseInfo)/* , PopulateDropdowns() */);
+        //     //await PopulateForm(leaseModel);
+
+        // }
+        //else
+        
+    }
+
+
+    /* new */
+    protected void OnOwnerIdEntered(bool isValidOwnerIdFormat)
+    {
+        if (isValidOwnerIdFormat)
+        {
+
+        }
+        else //()
+        {
+
+        }
+
+    }
+
+    // #region DROPDOWNS
+
+    // public async Task<List<string>> PopulateDropdowns()
+    // {
+    //     var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+    //     var getAllcountyTasks = RetreiveAllCountiesAsync();
+    //     var getAllstateTasks = RetrieveAllStatesAsync();
+    //     var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+    //     var getAllregionTasks = RetrieveAllRegionsAsync();
+
+    //     await Task.WhenAll(
+    //                        getAlltractStatusesTasks
+    //                      , getAllcountyTasks
+    //                      , getAllstateTasks
+    //                      , getAllDistrictTasks
+    //                      , getAllregionTasks
+    //                     );
+
+    //     var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+    //                  $"County: {getAllcountyTasks.Result}," +
+    //                  $"States: {getAllstateTasks.Result}," +
+    //                  $"Districts: {getAllDistrictTasks.Result}," +
+    //                  $"Regions: {getAllregionTasks.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+    //    ListOfTractStatuses = await _statusOfTracts
+    //    .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<string> ListOfRegions { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<string> ListOfDistricts = new List<string>();
+    // public async Task<List<string>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    // #endregion DROPDOWNS
+
+
+    void OnChange() { }
+
+    // private void AddNewAddressForm(MouseEventArgs args)
+    // {
+    //     //throw new NotImplementedException();
+    //     NewAddressPopupActivated();
+    // }
+
+    // private Task AddNewAddressForm(MouseEventArgs args)
+    // {
+    //     throw new NotImplementedException();
+    // }
+}

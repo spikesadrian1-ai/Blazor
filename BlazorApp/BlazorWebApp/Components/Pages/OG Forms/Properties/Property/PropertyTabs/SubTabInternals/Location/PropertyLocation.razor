@@ -1,0 +1,158 @@
+﻿@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Location
+
+
+@inherits PropertyMainBase
+
+@{
+
+}
+
+<EditForm Model="@propertyMain">
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Address Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0" >Address</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        <InputTextArea @bind-Value="propertyMain.Address" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputTextArea>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">State</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        <InputSelect @bind-Value="propertyMain.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">County</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        <InputSelect @bind-Value="propertyMain.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-2 ">
+                                        <label class="opacity-50 form-control-sm mb-0">City</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        <InputSelect @bind-Value="propertyMain.City" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">ZIP</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyMain.Zip" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <InputSelect @bind-Value="propertyMain.Country" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Location</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                             <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">TwnRngSec</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.SurveyTwnRng" class="form-control-sm text-sm-right" style="align-self:center; width:300px; height:100px; overflow-y:auto;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                              <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Abstract</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.Abstract" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Block</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.Block" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Lot</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.Lot" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Section</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.Section" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Field</label>
+                            </div>
+                            <div class="col-6" style="padding-bottom:3px;">
+                                <InputText @bind-Value="propertyMain.FieldName" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Area</label>
+                            </div>
+                            <div class="col-6">
+                                <InputText @bind-Value="propertyMain.AreaName" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder=""></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Description</div>
+                    <div class="border p-1 nt-4">
+                        <InputTextArea @bind-Value="propertyMain.LegalDescription" class="form-control text-sm-right" style="align-self:center; height:328px; overscroll-behavior-x:auto;" placeholder=""></InputTextArea>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}
+

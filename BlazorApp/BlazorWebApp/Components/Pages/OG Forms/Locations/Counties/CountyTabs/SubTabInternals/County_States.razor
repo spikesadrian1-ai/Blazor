@@ -1,0 +1,175 @@
+﻿@page "/County_States"
+@*@page "/countymain/{CountyName}"*@
+@*@page "/countymore/{CountyName}"*@
+
+@*@inherits CountyMainMasterMainBase*@
+
+@using ApplicationLayer.Entities.Locations.Counties.Data
+
+@inject IJSRuntime jsRuntime
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+<div class="container">
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="Counties">
+                        BACK
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@*<BackButton TBackLink="Counties">
+        Back
+    </BackButton>*@
+
+<br />
+
+<div class="container" align="center">
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav" align="center">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Prospects">
+                        Prospects
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Regions">
+                        Regions
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_States">
+                        States
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Tracts">
+                        Tracts
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Leases">
+                        Leases
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Wells">
+                        Wells
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<br />
+<br />
+
+@*<Paginations TotalPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+             SelectedPage="SelectedPage">
+</Paginations>*@
+
+<br />
+
+<div>
+    <GenDatabaseList Elements="CountiesWithinState">
+        <TableHeader>
+            <th>ID</th>
+            <th>State</th>
+            <th>State ID</th>
+            <th>Postal Code</th>
+        </TableHeader>
+        <RowTemplate Context="States">
+            <td>@States.Id</td>
+            <td>@States.State</td>
+            <td>@States.StateId</td>
+            <td>@States.PostalCode</td>
+        </RowTemplate>
+    </GenDatabaseList>
+</div>
+
+<br />
+<br />
+
+@*<Paginations TotalPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+             SelectedPage="SelectedPage">
+</Paginations>*@
+
+@code
+{
+    private int totalPageQuantity;
+    private int currentPage = 1;
+
+    string errorString;
+    string databaseUrl;
+
+    //private IEnumerable<DistrictMasterModel> districts = Array.Empty<DistrictMasterModel>();
+    List<CountiesWithinState> CountiesWithinState { get; set; }
+
+    //public async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateCountiesWithinState();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts);
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await PopulateCountiesWithinState(page);
+    }
+
+    public async Task PopulateCountiesWithinState(int page = 1, int quantityPerPage = 10)
+    {
+        //var databaseUrl = ($"StateMain ? page = {page} & quantityPerPage = {quantityPerPage}");
+
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "StateMain");
+
+        //_config["API_URL"] + databaseUrl);
+
+        var client = _clientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(3000);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            ////CountiesWithinState = await JsonSerializer.DeserializeAsync<IEnumerable<CountiesWithinState>>(responseStream);
+            CountiesWithinState = await JsonSerializer.DeserializeAsync<List<CountiesWithinState>>(responseStream);
+            //CountiesWithinState = await JsonSerializer.DeserializeAsync<List<CountiesWithinState>>(responseStream, ($"DistrictsMaster?page=(page)&quantityPerPage"));
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Districts: { response.ReasonPhrase }";
+        }
+    }
+}

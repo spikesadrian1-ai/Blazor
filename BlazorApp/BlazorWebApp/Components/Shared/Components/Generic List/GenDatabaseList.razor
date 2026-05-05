@@ -1,0 +1,112 @@
+﻿@typeparam TElement
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+@if (Elements is null)
+{
+    if (NullTemplate == null)
+    {
+        //// SPINNER ANIMATION
+        <div class="spinner"></div>
+    }
+    else
+    {
+        @NullTemplate
+    }
+}
+else
+if (Elements.Count == 0)
+{
+    if (EmptyTemplate == null)
+    {
+        //// SPINNER ANIMATION
+        <div class="spinner"></div>
+        @* <div class="h4" align="center">No Record(s) in Database</div> *@
+    }
+    else
+    {
+        @EmptyTemplate
+    }
+}
+else
+{
+    if (WithElementTemplate != null)
+    {
+        @WithElementTemplate
+    }
+    else
+    { 
+        <body>
+            <div class="form-row">
+                <div class="container">
+                    @AttachBttnTitle
+                    <div align="center">
+                        @HrefModalName
+                    </div>
+                    <br />
+                    <div style="width:contain; margin:0 auto;">
+                        <table id="" class="table table-striped table-bordered dt-responsive nowrap"
+                                     style="align-content:;
+                                            width:fit-content;"
+                                     cellspacing="0">
+                            <thead>
+                                <tr>
+                                    @TableHeader
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var element in Elements)
+                                 {
+                                    <tr>
+                                        @RowTemplate(element)
+                                        <td>
+                                            @HrefEditModal
+                                            @HrefDeleteModal
+                                        </td>
+                                    </tr>
+                                 }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </body>
+    }
+}
+
+@code
+{
+
+    [Parameter] public List<TElement> Elements { get; set; }
+
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+
+    [Parameter] public RenderFragment WithElementTemplate { get; set; }
+
+    [Parameter] public RenderFragment<TElement> RowTemplate { get; set; }
+
+    [Parameter] public RenderFragment<TElement> WithIndivElementTemplate { get; set; }
+
+    [Parameter] public RenderFragment TableHeader { get; set; }
+
+    [Parameter] public RenderFragment<TElement> AttachBttnTitle { get; set; }
+
+    [Parameter] public List<TElement> ModalName { get; set; }
+    
+    [Parameter] public RenderFragment HrefModalName { get; set; }
+
+    [Parameter] public RenderFragment HrefEditModal { get; set; }
+
+    [Parameter] public RenderFragment HrefDeleteModal { get; set; }
+
+    [Parameter] public RenderFragment onclick { get; set; }
+}

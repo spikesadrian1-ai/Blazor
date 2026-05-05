@@ -1,0 +1,177 @@
+﻿@page "/ConnectedTractWells"
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Leases
+@* @using DomainLayer.Entities.Assets.Wells *@
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inject LeaseRelatedPageServices _leaseRelatedPageServices
+@inject LeasePopulateDataGrids _leasePopulateDataGrids
+
+@inherits TractMorePageBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-content-center m-3">
+        WELLS
+    </div>
+    <div class="row m-1">
+        <a class="btn btn-primary m-1" @onclick="QuickAddFullAcreagesRedirectPage">FULL</a>
+        <QuickAddFullAcreagesComponent TractID="@TractID" @ref="popupQuickAddFullAcreagesRef" />
+
+        <a class="btn btn-primary m-1" @onclick="QuickAddNoAcreagesRedirectPage">Quick</a>
+        <QuickAddNoAcreagesComponent TractID="@TractID" @ref="popupQuickAddNoAcreagesRef" />
+
+        <a class="btn btn-primary m-1" @onclick="NewWellRedirectPage">PARTIAL</a>
+        <NewWellComponent TractID="@TractID" @ref="popupNewWellRef" />
+
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in TractWells)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Well ID:  </h8>
+                                    @* <td> *@
+                                    <a href="@($"/Well/{item.WellId}")" class="nav-link">@item.WellId</a>
+                                    @* </td> *@
+                                    @* <a href="@($"/ListOfTractsComponent/{@item.WellId}")">@item.WellId</a> *@
+                                    @* <span class="badge badge-primary badge-pill">@item.WellId</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code
+{
+    static string title = "WellTractsModal";
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    // static string LeaseId
+    // {
+    //     get => LeaseId;
+    //     set => value.ToString();
+    // }
+
+    string ComponentName = "Well(s)";
+
+    public TractOwnership OwnerSearch { get; set; } =
+    new TractOwnership(); //= null;
+
+    // [Inject]
+    // private  LeaseRelatedPageServices _leaseRelatedPageServices { get; set; }
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<DomainLayer.Entities.Assets.Wells.WellTractsConnection> TractWells { get; set; }
+        = new List<DomainLayer.Entities.Assets.Wells.WellTractsConnection>();
+
+    List<ApplicationLayer.Entities.WellTractsConnection> ListOfWellsViaLeaseId { get; set; }
+        = new List<ApplicationLayer.Entities.WellTractsConnection>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractID != string.Empty)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"WellTract/SearchAllTractWellsByTractId/{TractID}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                TractWells = await JsonSerializer.DeserializeAsync<List<DomainLayer.Entities.Assets.Wells.WellTractsConnection>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+
+        if (LeaseID != string.Empty)
+        {
+            ListOfWellsViaLeaseId = await _leasePopulateDataGrids
+            .RetrieveAllRelatedWellsByLeaseIdAsync(LeaseID);
+        }
+
+    }
+
+    private QuickAddFullAcreagesComponent popupQuickAddFullAcreagesRef;
+
+    private void QuickAddFullAcreagesRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupQuickAddFullAcreagesRef.QuickAddFullAcreagesComponentShow("Popup body text");
+    }
+
+    private QuickAddNoAcreagesComponent popupQuickAddNoAcreagesRef;
+
+    private void QuickAddNoAcreagesRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupQuickAddNoAcreagesRef.QuickAddNoAcreagesComponentShow("Popup body text");
+    }
+
+    private NewWellComponent popupNewWellRef;
+
+    private void NewWellRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupNewWellRef.NewWellRefShow("Popup body text");
+    }
+}
+

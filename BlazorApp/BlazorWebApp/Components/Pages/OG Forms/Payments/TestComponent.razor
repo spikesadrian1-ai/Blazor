@@ -1,0 +1,170 @@
+﻿@page "/TestComponent"
+
+@using ApplicationLayer.Entities.Burden
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities.Locations.States
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits LeaseMainBase
+
+@{
+    /* public */
+    Burdens tractBurdens = new Burdens();
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+    <div class="container position-relative"
+         style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:450px;">
+
+        <div class="modal-body" style="align-self:center">
+            <div class="modal-content align-content-center">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    // static string title = "TractLeasesModal";
+    // string ComponentName = "Lease(s)";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        // await PopulateDropdowns();
+        // var request = new HttpRequestMessage(HttpMethod.Get,
+        // _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByTractId/{TractId}");/*tractOwnership.*/
+        // var client = _clientFactory.CreateClient();
+        // HttpResponseMessage response = await client.SendAsync(request);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     using var responseStream = await response.Content.ReadAsStreamAsync();
+        //     associatedTractOwnersViaTractId = await JsonSerializer
+        //                  .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+        //     errorString = null;
+        // }
+        // else
+        // {
+        //     errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+        // }
+    }
+
+    #region DROPDOWNS
+
+    // public async Task<List<string>> PopulateDropdowns()
+    // {
+    //     var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+    //     var getAllcountyTasks = RetreiveAllCountiesAsync();
+    //     var getAllstateTasks = RetrieveAllStatesAsync();
+    //     var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+    //     var getAllregionTasks = RetrieveAllRegionsAsync();
+
+    //     await Task.WhenAll(
+    //                        getAlltractStatusesTasks
+    //                      , getAllcountyTasks
+    //                      , getAllstateTasks
+    //                      , getAllDistrictTasks
+    //                      , getAllregionTasks
+    //                     );
+
+    //     var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+    //                  $"County: {getAllcountyTasks.Result}," +
+    //                  $"States: {getAllstateTasks.Result}," +
+    //                  $"Districts: {getAllDistrictTasks.Result}," +
+    //                  $"Regions: {getAllregionTasks.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+    //    ListOfTractStatuses = await _statusOfTracts
+    //    .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<RegionMasterMainForm> ListOfRegions { get; set; } = new List<RegionMasterMainForm>();
+    // public async Task<List<RegionMasterMainForm>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<DistrictMasterModel> ListOfDistricts = new List<DistrictMasterModel>();
+    // public async Task<List<DistrictMasterModel>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+}
+

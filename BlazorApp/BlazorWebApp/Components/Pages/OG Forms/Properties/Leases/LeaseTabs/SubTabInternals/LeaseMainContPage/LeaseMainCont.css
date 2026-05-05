@@ -1,0 +1,29 @@
+﻿
+main {
+    min-height: 100%;
+    padding: 6rem 1em 2rem 14rem;
+    color: #201f2b;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 0.5fr 0.5fr;
+    grid-template-rows: auto;
+    gap: 1rem;
+    grid-template-areas:
+        "importantDates bonusInformation leaseIdentification leaseCodes"
+}
+
+
+.card {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.importantDates {
+    grid-area: importantDates;
+    background-color: #2d972e;
+    color: #fff;
+}
+

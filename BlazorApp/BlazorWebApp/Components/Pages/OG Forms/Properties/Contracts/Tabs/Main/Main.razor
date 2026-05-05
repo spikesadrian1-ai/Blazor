@@ -1,0 +1,226 @@
+﻿
+@inherits ContractMainBase
+
+@{
+
+}
+
+<div class="form-row" style="">
+    <button type="submit" class="btn btn-primary" style="width:150px;" onclick="OnSaveEntity"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" onclick="OnDeleteEntity">Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" onclick="OnPrintEntity">Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfContracts")"> View Contracts</NavLink>
+</div>
+<EditForm Model="@contractMain">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Contract for @IdFromListView</strong>
+                        }
+                        else
+                        if (InitialState == true)
+                        {
+                            <strong class="me-auto">New Contract Information</strong>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Information</div>
+                    <div class="border p-1 nt-4">
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Contract</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="contractMain.ContractId" class="form-control-sm text-sm-right" style="align-self:start; width:300px;" placeholder="(Ex. TYPE)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Acct Dept</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="contractMain.AcctDeptId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Status)"></InputText>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Type</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    string test = null;
+
+                                    <input list="wellTypes" id="wellTypesList" class="form-control" style="align-self:center; width:300px;"
+                                           @onchange="SelectedWellContractType" />
+                                    <datalist id="wellTypes" >
+                                        @foreach (var item in contractTypes)
+                                        {
+                                            <option value="@item">@item</option>
+                                            test = item.ToString();
+                                            //selectedContractType = test;
+                                        }
+
+                                        @* selectedContractType =   *@
+
+                                    </datalist>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.Type" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Acquisition)"></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Sub Type</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="soldToList" class="custom-select" style="align-self:center; width:300px;"
+                                        @onchange="SelectSubTypesChanged">
+                                        <option value="0">Select a SubType</option>
+                                        @foreach (var item in subTypes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.SubType" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Status</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <select id="soldToList" class="custom-select" style="align-self:center; width:300px;"
+                                            @onchange="SelectStatusTypesChanged">
+                                        <option value="0">Select a Status</option>
+                                        @foreach (var item in statusTypes)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.StatusCode" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Interests Information</div>
+                    <div class="border p-1 nt-4">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Consideration</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMain.Consideration" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Other Amount 1</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMain.OtherAmount1" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Other Amount 2</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMain.OtherAmount2" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">          
+                <div class="col-12" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Contract Description</div>
+                    <div class="border p-1 nt-4">
+                        <InputTextArea @bind-Value="contractMain.ContractDescription" class="form-control text-sm-right" style="align-self:center; " placeholder="(Ex. 0.00)"></InputTextArea>                                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    private string selectedContractType = string.Empty;
+    string SelectedSubType = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        //wellModel.WellIdNo = EntityID;
+
+        await PopulateDropdowns();
+    }
+
+    void SelectedWellContractType(ChangeEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            selectedContractType = (string)e.Value;
+        }
+
+        contractMain.Type = selectedContractType;
+    }
+
+    void SelectSubTypesChanged(ChangeEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            SelectedSubType = (string)e.Value;
+            contractMain.SubType = (string)e.Value;
+
+        }
+
+        contractMain.SubType = SelectedSubType;
+    }
+
+    void SelectStatusTypesChanged(ChangeEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(e.Value.ToString()))
+        {
+            SelectedSubType = (string)e.Value;
+            contractMain.SubType = (string)e.Value;
+
+        }
+
+        contractMain.SubType = SelectedSubType;
+    }
+}

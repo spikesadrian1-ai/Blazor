@@ -1,0 +1,76 @@
+﻿@page "/ProspectMain"
+@page "/ProspectMain/{ProspectName}"
+
+@{
+    bool NewProspectUserSelected = true;
+    bool ViewProspectsUserSelected = false;
+
+    async Task UserCreatesNewProspect()
+    {
+        ViewProspectsUserSelected = false;
+        NewProspectUserSelected = true;
+    }
+
+    async Task UserViewsExistingProspect()
+    {
+        NewProspectUserSelected = false;
+        ViewProspectsUserSelected = true;
+    }
+
+}
+
+<CreateOrUpdateProspectComponent
+    EntityID="EntityID"
+    InitialState="InitialState"
+></CreateOrUpdateProspectComponent>
+
+@* <br/>
+<div class="row">
+    <br />
+    <button type="button" value="false" itemid="" name="CreateNewProspectButton" @onclick="@UserCreatesNewProspect">
+        Create New Prospect
+    </button>
+    <br />
+    <button type="button" value="false" name="ViewExistingProspectsButton" @onclick="@UserViewsExistingProspect">
+        View Prospects
+    </button>
+</div> *@
+
+
+@* TODO: turn into switch statement *@
+@* @if (NewProspectUserSelected == true)
+{
+    <br/>
+    <CreateOrUpdateProspectComponent></CreateOrUpdateProspectComponent>
+
+}
+else if (ViewProspectsUserSelected == true)
+{
+    <br/>
+    <ListOFProspectsComponent></ListOFProspectsComponent>    
+} *@
+
+@code {
+
+    #region CASCADING PARAMS
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    #endregion CASCADING PARAMS
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(EntityID))
+        {
+            InitialState = false;
+        }
+        else
+        if (string.IsNullOrWhiteSpace(EntityID))
+        {
+            InitialState = true;
+        }
+    }
+}

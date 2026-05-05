@@ -1,0 +1,77 @@
+﻿@page "/Owner"
+@page "/Owner/{EntityID}/{IdFromListView}"
+
+@inherits OwnerMainBase
+
+
+<div class="tab-content" align="center">
+    <TabControl>
+        <TabPage Text="Main">
+            <BusinessOwnerComponent 
+                InitialState="@InitialState"
+                IdFromListView="@IdFromListView"
+                EntityID="@EntityID"
+                OwnerID="@OwnerID">
+            </BusinessOwnerComponent>
+        </TabPage>
+        <TabPage Text="Cross-Refs">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+        <TabPage Text="Documents">
+            <ListOfOwnersAndAssociates ></ListOfOwnersAndAssociates>
+        </TabPage>
+    </TabControl>
+</div>
+
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        //  NEW ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        // else
+        // if ((EntityID > 0) && (string.IsNullOrEmpty(IdFromListView)))
+        // {
+        //     InitialState = false;
+        // }
+        else
+        //  RE-ROUTE FROM LIS COMPONENT
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            // owners.Id = int.Parse(EntityID);
+            //
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT TRACT ASSOCIATED WITH A LEASE
+            //  else
+            if (InitialState == false)
+            {
+                if ((OwnerID != null))
+                //if (owners.TractId != null) //(owners.TractId.CompareTo()))
+                {
+
+                }
+                //EntityID = TractId.ToString();
+                OwnerID = IdFromListView;
+
+            }
+            owners.OwnerId = IdFromListView;
+        }
+        //  RE-ROUTE FROM LISTOFTRACTS COMPONENT AFTER VIEWING A TRACT
+        else
+        if (InitialState == false)
+        {
+            EntityID.ToString();
+            OwnerID.ToString();
+            owners.Id.ToString();
+            owners.OwnerId.ToString();
+        }
+    }
+
+}

@@ -1,0 +1,77 @@
+﻿@page "/properties"
+
+
+@* @using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Cross_Refs
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Insurance
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Rundown
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Taxes
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Timber
+@using BlazorWebApp.UI.Tabs
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Interests
+@using BlazorWebApp.Pages.OG_Forms.Properties.Property.PropertyTabs.SubTabInternals.Location
+ *@
+@{
+
+}
+
+<div class="tab-content" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <PropertyMain 
+                EntityID="@EntityID"
+                InitialState="InitialState">
+            </PropertyMain>
+        </TabPage>
+        <TabPage Text="LOCATION">
+            <PropertyLocation 
+                EntityID="@EntityID"
+                         
+            ></PropertyLocation>
+        </TabPage>
+        <TabPage Text="INTERESTS">
+            @* <PropertyInterest
+                          ></PropertyInterest> *@
+        </TabPage>
+        <TabPage Text="TAXES">
+            <PropertyTax EntityID="@EntityID"
+                          >
+                      </PropertyTax>
+        </TabPage>
+        <TabPage Text="TIMBER">
+            <PropertyTimber EntityID="@EntityID">
+                      </PropertyTimber>
+        </TabPage>
+        <TabPage Text="INSURANCE">
+            <PropertyInsurance EntityID="@EntityID">
+                           </PropertyInsurance>
+        </TabPage>
+        <TabPage Text="OTHER">
+           @*  <PropertyOther EntityID="@EntityID"
+                          OwnerID="@OwnerID"></PropertyOther> *@
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <PropertyCrossRef EntityID="@EntityID">
+                      </PropertyCrossRef>
+        </TabPage>
+        <TabPage Text="RUNDOWN">
+            <PropertyRundown EntityID="@EntityID">
+                      </PropertyRundown>
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+    </TabControl>
+</div>
+
+@code {
+
+    #region CASCADING PARAMS
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    #endregion CASCADING PARAMS
+
+}

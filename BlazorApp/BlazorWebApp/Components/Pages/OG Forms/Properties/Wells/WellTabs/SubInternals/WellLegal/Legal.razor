@@ -1,0 +1,161 @@
+﻿@* @page "/DraftMain/{OwnerID}" *@
+
+@using ApplicationLayer.Entities.Drafts
+@inherits WellMainBase
+
+@{
+
+}
+
+
+<EditForm Model="@wellModel">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col">
+                    <div class="col" style="align-items:center; align-content:center;">
+                        @* <div class="card-body"> *@
+                        <div class="card-header form-control">Location Information</div>
+                        @* </div> *@
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">State</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputSelect @bind-Value="wellModel.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. JM001)"></InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">County</label>
+                                </div>
+                                <div class="col">
+                                    <InputSelect @bind-Value="wellModel.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">State 2</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputSelect @bind-Value="wellModel.StateId2" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. JM001)"></InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">County 2</label>
+                                </div>
+                                <div class="col">
+                                    <InputSelect @bind-Value="wellModel.CountyId2" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputSelect>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">TwnRngSection</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.SurveyTwnRng" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Abstract</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.Abstract" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Lot</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.Lot" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Block</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.Blocks" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Township</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.Township" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Parcel</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.Parcel" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Area Name</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.AreaName" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Pool Name</label>
+                                </div>
+                                <div class="col">
+                                    <InputText @bind-Value="wellModel.PoolName" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputText>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            <div class="card-header form-control">Well Description</div>
+                            <div class="border p-1 nt-4">
+                                <InputTextArea @bind-Value="wellModel.LegalDescription" class="form-control text-sm-right" style="align-self:center; height:100px; overscroll-behavior-x:auto; " placeholder=""></InputTextArea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            <div class="card-header form-control">Location Notes</div>
+                            <div class="border p-1 nt-4">
+                                <InputTextArea @bind-Value="wellModel.LocationNotes" class="form-control text-sm-right" style="align-self:center; height:100px;overscroll-behavior-x:auto;" placeholder=""></InputTextArea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col" style="align-items:center; align-content:center;">
+                            <div class="card-header form-control">Formation Code</div>
+                            <div class="border p-1 nt-4">
+                                <InputTextArea @bind-Value="wellModel.FormationCode" class="form-control text-sm-right" style="align-self:center; height:100px; overscroll-behavior-x:auto; " placeholder=""></InputTextArea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}

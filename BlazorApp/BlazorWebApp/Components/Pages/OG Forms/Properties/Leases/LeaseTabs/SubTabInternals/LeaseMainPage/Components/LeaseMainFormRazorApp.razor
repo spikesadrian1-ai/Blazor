@@ -1,0 +1,722 @@
+﻿@page "/LeaseMainForm"
+@page "/Leases/LeaseMainForm/{LeaseID}"
+
+@using ApplicationLayer.Entities
+@using ApplicationLayer.Entities.DropDownList
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities.Locations.States
+@using ApplicationLayer.Services.DropdownLists
+@using ApplicationLayer.Services.Locations.CountyServices
+@using ApplicationLayer.Services.Assets.Tracts.TractStatus
+
+@inject IStatusOfTracts _statusOfTracts //{ get; set; }
+@inject IDropdownQueryServiceTasks _dropdownQueryServiceTasks //{ get; set; }
+@inject ICountyQueryServiceTasks _countyQueryServiceTasks //{ get; set; }
+
+@inherits LeaseMainBase
+
+@{
+    string RecordingInformationImage = "C:/Users/adspi/Downloads/recordingInformation.jpg"; //"C:\Users\adspi\Downloads\recordingInformationIcon2.jpg"
+}
+
+
+<div class="form-row" style="">
+    @*  @onclick="() => DeleteOwner()" *@
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="() => SaveNewLeaseAsync(leaseModel)"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;">Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" 
+    OnLeaseIdSelected="LeaseSelectedFromList" 
+    class="btn btn-primary" style="width:150px;" itemref="listOfLeasespopupRef" 
+    @onclick="(() => ListOfLeasesPopupRedirectPage())"> View Leases2
+    </NavLink>
+    <a class="btn btn-primary" style="width:150px;" itemref="listOfLeasespopupRef" @onclick="(() => ListOfLeasesPopupRedirectPage())">Print</a>
+    <ListOfLeasesComponent OnLeaseIdSelected="LeaseSelectedFromList" @ref="listOfLeasespopupRef" />
+    <ListOfLeasesComponent OnLeaseIdSelected="LeaseSelectedFromList" @ref="listOfLeasespopupRef">
+    </ListOfLeasesComponent>
+</div>
+<br />
+<EditForm Model="@leaseModel">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Information for Lease: @IdFromListView.ToString()</strong>
+                        }
+                        else
+                        if ((InitialState == true) && (!string.IsNullOrEmpty(IdFromListView)))
+                        {
+                            InitialState = false;
+                            <strong class="me-auto">Information for Lease: @IdFromListView.ToString()</strong>
+                        }
+                        else
+                        if (InitialState == true)
+                        {
+
+                            <strong class="me-auto">New Lease Information Form</strong>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="card-body">
+                <div class=form-row>
+                    <div class="col-4">
+                        <label>Lease ID</label>
+                        @{
+                            if (InitialState == true)
+                            {
+                                <InputText @bind-Value="leaseModel.LeaseId"
+                                class="form-control" placeholder="Enter New Lease ID"></InputText>
+                                <DataAnnotationsValidator></DataAnnotationsValidator>
+                                <ValidationSummary></ValidationSummary>
+                            }
+                            else
+                            if (InitialState == false)
+                            {
+                                /// COMMENT: USER HAS CHOSEN A LEASE FROM LIST COMPONENT
+                                var testName2 = "";
+                                var testName3 = "";
+
+                                if (leaseModel.LeaseId == null)
+                                {
+                                    testName2 = IdFromListView;
+                                    leaseModel.LeaseId = IdFromListView;
+                                    //getLeaseInfo.Id = int.Parse(LeaseTablePK);
+                                }
+                                else
+                                {
+                                    testName2 = leaseModel.LeaseId.ToString();
+                                    leaseModel.LeaseId = IdFromListView;
+                                    getLeaseInfo.LeaseId = IdFromListView;
+                                }
+
+                                /// COMMENT: WHEN USER HAS ALREADY SELECTED A TRACT THEN VIEWED A LEASE AND HAS NOW CHOSEN TO VIEW A DIFFERENT TRACT
+                                /// PURPOSE: TO ENSURE LEASE MODEL HAS BEEN CLEARED AND REHYDRATED WITH THE "NEW" ONE
+                                /// PROBLEM SOLVED: LOSS/MISSING DATA
+
+                                testName3 = getLeaseInfo.LeaseId.ToString();
+
+                                /// COMMENT: CHECK VARIABLES AND IF DIFF THEN USE NEW VARIABLE INSTEAD
+                                if (testName2 != testName3)
+                                {
+                                    //RESET TABLE ID
+                                    // getLeaseInfo.Id = 0;
+                                    // //ID = int.Parse(LeaseTablePK);
+                                    // getLeaseInfo.Id = ID;
+                                    getLeaseInfo.LeaseId = getLeaseInfo.LeaseId.ToString();
+                                    leaseModel.LeaseId = IdFromListView; //getTracts.TractId.ToString();
+                                    //PopulateFormBasedOnEntityID(getLeaseInfo);
+                                    //Task.Run<LeaseMainForm2>(PopulateFormBasedOnEntityID(getLeaseInfo).
+                                    //Task.WhenAll(PopulateFormBasedOnEntityID(getLeaseInfo)/* , PopulateDropdowns() */);
+                                }
+                                else
+                                // if (testName2 == testName3)
+                                // {
+                                        
+                                // }
+
+                                //   SATE MANAGEMENT: CHECKS IF LEASE ID IS THE SAME
+                                if (IdFromListView == leaseModel.LeaseId)
+                                {
+                                    getLeaseInfo.LeaseId = getLeaseInfo.LeaseId.ToString();
+                                    leaseModel.LeaseId = IdFromListView; //getTracts.TractId.ToString();
+                                    Task.WhenAll(PopulateFormBasedOnEntityID(getLeaseInfo)/* , PopulateDropdowns() */);
+
+                                }
+                                // else
+                                // if (IdFromListView != leaseModel.LeaseId)
+                                // {
+                                    
+                                // }
+
+                                <InputText @bind-Value="leaseModel.LeaseId"
+                                class="form-control" placeholder="Enter New Lease ID"
+                                ></InputText>
+                                <DataAnnotationsValidator></DataAnnotationsValidator>
+                                <ValidationSummary></ValidationSummary>
+
+
+                            }
+                        }
+                    </div>
+
+                    <div class="col-2">
+                        <label>Date</label>
+                        <InputDate @bind-Value="leaseModel.LeaseDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+                    </div>
+
+                    <div class="col-2">
+                        <label>Effective</label>
+                        <InputDate @bind-Value="leaseModel.EffectiveDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+                    </div>
+
+                    <div class="col-2">
+                        <label>Expires</label>
+                        <InputDate @bind-Value="leaseModel.ExpirationDate" class="form-control" placeholder="mm/dd/YYYY"></InputDate>
+                    </div>
+
+                    <div class="col-1">
+                        <label>Option</label>
+                        <InputNumber @bind-Value="leaseModel.TermOption" class="form-control" placeholder="0"></InputNumber>
+                    </div>
+
+                    <div class="col-1">
+                        <label>Term</label>
+                        <InputNumber @bind-Value="leaseModel.PrimaryTerm" class="form-control" placeholder="0"></InputNumber>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="col">
+                    <div class="card-body">
+                        <div class="card-header">Location(s)</div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-row">
+
+                            <div class="col-6">
+                                <div class="border p-1 nt-4">
+                                    <select asp-for="StateID" class="form-control " asp-items="Html.GetEnumSelectList<States>()">
+                                        <option value="">Choose a State</option>
+                                    </select>
+                                    <select asp-for="CountyID" class="form-control">
+                                        <option value="">Choose a County</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="border p-1 nt-4">
+                                    @if (InitialState == true)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select County</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select>
+
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select State</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="@leaseModel.CountyId">@leaseModel.CountyId</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select>
+
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="@leaseModel.StateId">@leaseModel.StateId</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col">
+                    <div class="card-body">
+                        <div class="card-header">Lessor / Lessee</div>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="form-row">
+
+                            <div class="col-6">
+                                <div class="border p-1 nt-4">
+                                    @* <label>Lessor ID</label> *@
+                                    @{
+                                        //TODO: ADD SELECT DROPDOWN
+                                    }
+                                    @* <div class="container"> *@
+                                    <select id="ListOfOwners"
+                                    class="form-control"
+                                    @bind="@leaseModel.LessorId"
+                                    @bind:event="OnCountySelected">
+                                        <option value="0">Select a Lessor</option>
+                                        @* @foreach (var item in ListAllCounties)
+                                        {
+                                        <option value="@item.Id">@item.CountyName</option>
+                                        } *@
+                                    </select>
+                                    @* <br /> *@
+                                    <input type="text" value="@leaseModel.LeaseName" class="form-control" placeholder="Lease Name" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="border p-1 nt-4">
+                                    <input type="text" value="@leaseModel.AlternateLeaseName" class="form-control" placeholder="Alt. Lease Name" />
+                                    @* <br /> *@
+                                    <select id="ListOfOwners"
+                                    class="form-control"
+                                    @bind="@leaseModel.LesseeId"
+                                    @bind:event="OnCountySelected">
+                                        <option value="0">Select a Lessee</option>
+                                        @* @foreach (var item in ListAllCounties)
+                                        {
+                                        <option value="@item.Id">@item.CountyName</option>
+                                        } *@
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="card-body legalDescriptionLabel" id="" title="Legal Description">
+                <div class="card-header">Legal Description</div>
+                <div class="form-row">
+
+                    <div class="col">
+                        <div class="border p-1 nt-4">
+                            <InputTextArea @bind-Value="@leaseModel.LegalDescription" class="form-control" placeholder=""></InputTextArea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</EditForm>
+<br />
+<div class="container border border-top border-bottom border-dark m-1">
+    <div class="form-row">
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+                        <a class="btn btn-primary text-wrap m-1"
+                        style="color: aqua;
+                                  display:flex;
+                                  align-self:center;
+                                  position:relative;
+                                  justify-self:center;
+                                  text-justify:auto;
+                                  font-size: 2rem;
+                                  height:150px;
+                                  min-width:fit-content;
+                                  max-width:150px;"
+                        @onclick="ImportantDatesRedirectPage">Lease Dates</a>
+                        <ImportantDatesComponent 
+                        Acquired_Date="@leaseModel.AcquiredDate"
+                        Input_Date="@leaseModel.InputDate"
+                        Lease_Date="@leaseModel.LeaseDate"
+                        Effective_Date="@leaseModel.EffectiveDate"
+                        @ref="importantDatespopupRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+                        <a class="btn btn-primary text-wrap m-1"
+                        style="color: aqua;
+                                  display:flex;
+                                  align-self:center;
+                                  position:relative;
+                                  justify-self:center;
+                                  text-justify:auto;
+                                  font-size: 2rem;
+                                  height:150px;
+                                  min-width:fit-content;
+                                  max-width:150px;"
+                        @onclick="LeaseCodesRedirectPage">Lease Codes</a>
+
+                        <LeaseCodesComponent IdFromListView="@leaseModel.LeaseId" @ref="leaseCodespopupRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+                        <a class="btn btn-primary text-wrap m-1"
+                        style="color: aqua;
+                                  display:flex;
+                                  align-self:center;
+                                  position:relative;
+                                  justify-self:center;
+                                  text-justify:auto;
+                                  font-size: 2rem;
+                                  height:150px;
+                                  min-width:fit-content;
+                                  max-width:150px;"
+                        @onclick="RecordingInformationRedirectPage">Records</a>
+
+                        <RecordingInformationComponent IdFromListView="@leaseModel.LeaseId" @ref="recordingInformationpopupRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+                        <a class="btn btn-primary text-wrap m-1"
+                        style="color: aqua;
+                                  display:flex;
+                                  align-self:center;
+                                  position:relative;
+                                  justify-self:center;
+                                  text-justify:auto;
+                                  font-size: 2rem;
+                                  height:150px;
+                                  min-width:fit-content;
+                                  max-width:150px;"
+                        @onclick="OtherCostsRedirectPage"> Costs</a>
+
+                        <OtherCostsComponent IdFromListView="@leaseModel.LeaseId" @ref="otherCostspopupRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+                        <a class="btn btn-primary text-wrap m-1"
+                        style="color: aqua;
+                                  display:flex;
+                                  align-self:center;
+                                  position:relative;
+                                  justify-self:center;
+                                  text-justify:auto;
+                                  font-size: 2rem;
+                                  height:150px;
+                                  min-width:fit-content;
+                                  max-width:150px;"
+                        @onclick="LeaseIdentificationRedirectPage">Identification</a>
+
+                        <LeaseIdentificationComponent IdFromListView="@leaseModel.LeaseId" @ref="leaseIdentificationpopupRef" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-3 ">
+            <div class="card importantDates"
+            style="background-color: ;
+                        padding:1rem;
+                        border-radius: 10px;">
+
+                <div class="info">
+                    <div class="info-detail">
+
+                        @{
+
+                            if (initialState == true)
+                            {
+                                <a class="btn btn-primary text-wrap m-1"
+                                style="color: aqua;
+                                                  display:flex;
+                                                  align-self:center;
+                                                  position:relative;
+                                                  justify-self:center;
+                                                  text-justify:auto;
+                                                  font-size: 2rem;
+                                                  height:150px;
+                                                  min-width:fit-content;
+                                                  max-width:150px;">
+                                    Related Party's
+                                </a>
+                            }
+                            else
+                                        if (initialState == false)
+                            {
+                                <a class="btn btn-primary text-wrap m-1"
+                                style="color: aqua;
+                                                      display:flex;
+                                                      align-self:center;
+                                                      position:relative;
+                                                      justify-self:center;
+                                                      text-justify:auto;
+                                                      font-size: 2rem;
+                                                      height:150px;
+                                                      min-width:fit-content;
+                                                      max-width:150px;"
+                                @onclick="RelatedPartysRedirectPage">
+                                    Related Party's
+                                </a>
+
+                                <RelatedPartysComponent IdFromListView="@leaseModel.LeaseId" @ref="relatedPartypopupRef" />
+
+                            }
+
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+
+    public LeaseMainForm2? getLeaseInfo = new LeaseMainForm2();
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    //public LeaseMainForm2 getLeases = new LeaseMainForm2();
+    //public LeaseMainForm2? leaseModel { get; set; } = new LeaseMainForm2();
+
+    string errorString;
+
+    // async Task OnParameterSetAsync()
+    // {
+    //     leaseModel.LeaseId = IdFromListView;
+    // }
+
+    private void LeaseSelectedFromList(string selectedLease)
+    {
+
+        //leaseModel.LeaseId = selectedLease;
+        if (!string.IsNullOrEmpty(IdFromListView))
+        {
+            if (selectedLease != IdFromListView)
+            {
+                leaseModel.Id = int.Parse(LeaseTablePK);
+                leaseModel.LeaseId = IdFromListView;
+            }
+        }
+        // else
+        // if ()
+        // { }
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (InitialState == false)
+        {
+            getLeaseInfo.Id = int.Parse(LeaseTablePK); //ID.Value;
+            getLeaseInfo.LeaseId = IdFromListView;
+            await PopulateFormBasedOnEntityID(getLeaseInfo); //Task.WhenAll(PopulateFormBasedOnEntityID(getLeaseInfo)/* , PopulateDropdowns() */);
+            //await PopulateForm(leaseModel);
+
+        }
+        else
+        if (InitialState == true)
+        {
+            await PopulateDropdowns();
+        }
+
+    }
+
+    #region DROPDOWNS
+
+    public async Task<List<string>> PopulateDropdowns()
+    {
+        var getAllTractStatusesTasks = RetrieveAllTractStatusAsync();
+        var getAllCountyTasks = RetreiveAllCountiesAsync();
+        var getAllStateTasks = RetrieveAllStatesAsync();
+        var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+        var getAllRegionTasks = RetrieveAllRegionsAsync();
+
+        await Task.WhenAll(
+                           getAllTractStatusesTasks
+                         , getAllCountyTasks
+                         , getAllStateTasks
+                         , getAllDistrictTasks
+                         , getAllRegionTasks
+                        );
+
+        var report = $"TractStatuses: {getAllTractStatusesTasks.Result}," +
+                     $"County: {getAllCountyTasks.Result}," +
+                     $"States: {getAllStateTasks.Result}," +
+                     $"Districts: {getAllDistrictTasks.Result}," +
+                     $"Regions: {getAllRegionTasks.Result},";
+
+        return new List<string> { report };
+    }
+
+    public List<string> ListOfTractStatuses { get; set; } = new
+        List<string>();
+    public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+       ListOfTractStatuses = await _statusOfTracts
+       .RetrieveAllTractStatusAsync();
+
+    public List<StateMainForm> ListOfStates { get; set; } = new
+        List<StateMainForm>();
+    public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+        ListOfStates = await _dropdownQueryServiceTasks
+        .RetrieveAllStatesAsync();
+
+    public List<CountyMasterMainForm> ListAllCounties { get; set; } = new
+        List<CountyMasterMainForm>();
+    public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+        ListAllCounties = await _countyQueryServiceTasks
+        .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    public List<string> ListOfRegions { get; set; } = new List<string>();
+    public async Task<List<string>> RetrieveAllRegionsAsync() =>
+        ListOfRegions = await _dropdownQueryServiceTasks
+        .RetrieveAllRegionsAsync(ListOfRegions);
+
+    List<string> ListOfDistricts = new List<string>();
+    async Task<List<string>> RetrieveAllDistrictsAsync() =>
+        ListOfDistricts = await _dropdownQueryServiceTasks
+        .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+    async void AddNewCountyAsync()
+    {
+        // // OBJECTS RECIEVED FROM FRONT-END AND PASSED TO APPLICATION LAYER
+        // string CountyName = CountyDropdown.CountyName;
+        // string State = CountyDropdown.StateId;
+        // try
+        // {
+        //     // NULL CHECKS FROM USER INPUT
+        //     if ((CountyName is null) || (State is null))
+        //     // ERROR PROMPT
+        //     { AddNewCountyErrorString = "County and/or State cannot be empty!"; }
+        //     // REQIURED INFO RECIEVED FROM USER
+        //     // SEND OBJECT(S) TO APP DOMAIN FOR PROCESSING
+        //     else { await CountyApiCommands.SaveNewCounty(CountyName, State); }
+        //     // TODO: UNSURE WHAT ERROR RESPONSES ARE NEEDED FROM APP DOMAIN
+        //     // 1.
+        //     // 2.
+        //     // OR API
+        //     // 1.
+        //     // 2.
+
+        // }
+        // catch { }
+    }
+
+
+    #region PopupComponents
+
+
+    private ListOfLeasesComponent listOfLeasespopupRef;
+
+    private void ListOfLeasesPopupRedirectPage()
+    {
+        listOfLeasespopupRef.Show("Popup body text");
+    }
+
+    private ImportantDatesComponent importantDatespopupRef;
+
+    private void ImportantDatesRedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        importantDatespopupRef.Show("Popup body text");
+    }
+
+
+    private LeaseCodesComponent leaseCodespopupRef;
+
+    private void LeaseCodesRedirectPage()
+    {
+        leaseCodespopupRef.Show("Popup body text");
+    }
+
+
+    private LeaseIdentificationComponent leaseIdentificationpopupRef;
+
+    private void LeaseIdentificationRedirectPage()
+    {
+        leaseIdentificationpopupRef.Show("Popup body text");
+    }
+
+
+    private RecordingInformationComponent recordingInformationpopupRef;
+
+    private void RecordingInformationRedirectPage()
+    {
+        recordingInformationpopupRef.Show("Popup body text");
+    }
+
+
+    private OtherCostsComponent otherCostspopupRef;
+
+    private void OtherCostsRedirectPage()
+    {
+        otherCostspopupRef.Show("Popup body text");
+    }
+
+
+    private RelatedPartysComponent relatedPartypopupRef;
+
+    private void RelatedPartysRedirectPage()
+    {
+        relatedPartypopupRef.Show("Popup body text");
+    }
+
+
+    #endregion PopupComponents
+}

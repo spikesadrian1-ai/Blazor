@@ -1,0 +1,133 @@
+﻿@using ApplicationLayer.Entities.NewPayments
+@using ApplicationLayer.Entities
+@using ApplicationLayer.Entities.Drafts
+
+
+
+<BlazorWebApp.UI.NewFolder.SubTabControl>
+    <CrossRefComponent
+    pageTitle="@pageTitle"
+    printButtonOnClick="Close2"    
+    printButtonOnClickText="PRINT"
+    tableHeaderFragments="@HistoricalTableHeaders">
+    @*  TElement="_drafts"
+        T="etList" *@
+
+        <CrossRefButtonComponent
+        Text="Historical Payments">
+            @*TElement="_drafts"
+                T="etList" *@
+        </CrossRefButtonComponent>
+
+        <CrossRefButtonComponent 
+        Text="Related Drafts">
+            @*
+            TElement="_drafts"
+            T="etList" *@
+        </CrossRefButtonComponent>
+
+        <CrossRefButtonComponent 
+        Text="Related Drafts">
+            @*
+            TElement="_drafts"
+            T="etList" *@
+        </CrossRefButtonComponent>
+
+
+    </CrossRefComponent>
+
+
+    @* </div> *@
+</BlazorWebApp.UI.NewFolder.SubTabControl>
+
+
+@code {
+    // @typeparam T
+    // @typeparam TElement
+
+    string pageTitle = "Revenue History";
+
+    string TEST = "";/**/
+    
+    [Parameter]
+    public List<string>? HistoricalTableHeaders { get; set; } = new List<string>(); //= string.Empty;
+
+    // private List<string> ActivateTestObligations(List<string>? historicalTableHeader)
+    // {
+    //     //List<string> HistoricalTableHeader = new List<string>();
+    //     HistoricalTableHeader.Add("TEST1");
+    //     HistoricalTableHeader.Add("TEST2");
+    //     HistoricalTableHeader.Add("TEST3");
+
+    //     return HistoricalTableHeader = historicalTableHeader;
+
+    // }
+    protected override async Task OnInitializedAsync()
+    {
+        List<string> historicalTableHeaders = new List<string>();
+        historicalTableHeaders.Add("TEST1");
+        historicalTableHeaders.Add("TEST2");
+        historicalTableHeaders.Add("TEST3");
+
+        //listOfObligationTypes.ToList();
+        HistoricalTableHeaders = historicalTableHeaders;
+    }
+
+    [Parameter]
+    public List<LeaseMainForm2> etList { get; set; } = new List<LeaseMainForm2>();
+    //etList.Add(item:)
+    
+    
+
+
+    //[CascadingParameter]
+    public List<LeaseMainForm2?> _drafts /* { get; set; } */ = new List<LeaseMainForm2>();
+    // public List<LeaseMainForm2?> _revenue { get; set; } = new List<LeaseMainForm2>();
+
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; } = new EventCallback<bool>();
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    // [Parameter]
+    // public IHandleAfterRender handleAfterRender { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        //handleAfterRender.OnAfterRenderAsync();
+        //StateHasChanged();
+
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    void OnAfterRenderAsync()
+    {
+        StateHasChanged();
+    }
+    public void Close2()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

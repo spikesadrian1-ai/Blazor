@@ -1,0 +1,32 @@
+﻿@page "/Districts"
+@page "/district/{EntityID}/{IdFromListView}"
+@* 
+@using BlazorWebApp.UI.Tabs
+@using BlazorWebApp.Pages.OG_Forms.Locations.Districts.DistrictTabs *@
+
+@inherits DistrictMainBase
+
+
+<div class="tab-content"  align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <DistrictMain />
+        </TabPage>
+        <TabPage Text="MORE">
+            <DistrictMore />
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <DistrictCrossRefs />
+        </TabPage>
+        <TabPage Text="Related">
+            <DistrictRelated />
+        </TabPage>
+        <TabPage Text="CHARTS / GRAPHS">
+            <DistrictGraphs />
+        </TabPage>
+        <TabPage Text="VIEW">
+            <ListOfDistricts />
+        </TabPage>
+    </TabControl>
+</div>
+

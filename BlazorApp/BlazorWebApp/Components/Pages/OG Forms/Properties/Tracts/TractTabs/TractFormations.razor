@@ -1,0 +1,51 @@
+@page "/TractFormations"
+
+@inherits TractMorePageBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<br />
+<div class="form-row">
+    <div class="container">
+        <div class="card-deck">
+            @foreach (var item in TractDepth)
+            {
+                <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
+                    <div class="card-header">
+                        <h3>
+                            @item.
+                        </h3>
+                    </div>
+                    @*
+                    <img class="card-img-top" src="@item.photoPath"/>
+                    *@
+                    <img class="card-img-top" />
+                    <div class="card-footer text-center">
+                        <a href="" class="btn btn-primary m-1">View</a>
+                        <a href="" class="btn btn-primary m-1">Edit</a>
+                        <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfTractsComponent")"> View Tracts</NavLink>
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code
+{
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateDataGrids();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts);
+    }
+}

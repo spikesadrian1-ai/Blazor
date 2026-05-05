@@ -1,0 +1,95 @@
+﻿@using ApplicationLayer.Entities.Locations.Districts
+
+@*@using ApplicationLayer.Entities.Locations.Counties.Data*@
+
+@inject IJSRuntime jsRuntime
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+@*<Paginations TotalPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+             SelectedPage="SelectedPage">
+</Paginations>*@
+
+@* <div class="container">
+    <BlazorWebApp.UI.NewFolder.SubTabControl>
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="TRACTS">
+            <ProspectMain />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="LEASES">
+            <ProspectMain />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="WELLS">
+            <ProspectMain />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+    </BlazorWebApp.UI.NewFolder.SubTabControl>
+</div> *@
+
+
+@*OR YOU CAN SEPERATE AND RENDER MULTIPLE FRAGMNETS ON A SINGLE COMPONET*@
+
+<div>
+    <GenDatabaseList Elements="getDistricts">
+
+        <TableHeader>
+            <th>ID</th>
+            <th>Name</th>
+        </TableHeader>
+
+        <RowTemplate Context="Districts">
+            <td>@Districts.DistrictId</td>
+            <td>@Districts.DistrictName</td>
+        </RowTemplate>
+
+    </GenDatabaseList>
+</div>
+
+@code 
+{
+    //List<Districts> districts { get; set; }
+    private int totalPageQuantity;
+    private int currentPage = 1;
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateDistricts();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts(/* page: 1, quantityPerPage: 10) */);
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await PopulateDistricts(page);
+    }
+
+    public List<DistrictMasterModel> getDistricts = new List<DistrictMasterModel>();
+
+    async Task PopulateDistricts(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "DistrictsMaster");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getDistricts = await JsonSerializer.DeserializeAsync<List<DistrictMasterModel>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Districts: { response.ReasonPhrase }";
+        }
+    }
+}

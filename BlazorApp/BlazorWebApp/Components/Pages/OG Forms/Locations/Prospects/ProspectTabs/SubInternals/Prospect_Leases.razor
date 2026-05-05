@@ -1,0 +1,70 @@
+﻿@page "/Prospect_Leases"
+@page "/Prospect_Leases/{ProspectId}"
+
+<h3>Prospect_Leases</h3>
+
+@inject TractsWithinProspect tracts
+
+
+@{
+
+    string title = $"Tract Information for {prospectId}";
+
+    // [Parameter]
+    // int test
+    string selectedTractId = tracts.TractId;
+    int selectedStatusId = 0;
+
+    //tracts.TractId = selectedTractId;
+
+
+    async Task OnTractSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+}
+
+<div class="text-left">
+    <br />
+    <h3>@title</h3>
+</div>
+
+<div class="container ">
+    <div class="col-md-6">
+        <select id="connectedTracts" class="custom-select"
+                @bind="selectedTractId"
+                @bind:event="OnTractSelected">
+            <option value="0">Select Tract</option>
+            @foreach (var item in tracts.ConnectedTracts)
+            {
+                <option value="@item.Id">@item.TractId</option>
+            }
+        </select>
+    </div>
+</div>
+
+
+@code {
+
+    string prospectId = "MT001"; //string.Empty;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await PopulateTractsBasedOnProspectId();
+        //return base.OnInitializedAsync();
+    }
+
+    public async Task<List<string>> PopulateTractsBasedOnProspectId()
+    {
+        var getAllTractsTasks = tracts.GetRelatedTracts(prospectId);
+
+        await Task.WhenAll(getAllTractsTasks);
+
+        var report = $"Tracts Within Prospect {prospectId}: {getAllTractsTasks.Result}";
+
+        return new List<string> { report };
+    }
+}

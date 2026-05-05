@@ -1,0 +1,386 @@
+@page "/TractCrossRefs"
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractCrossRefsPage.RelatedComponents
+
+@inherits TractMainPageBase
+
+
+<EditForm Model="@TractModel">
+
+    <div class="container-fluid m-1 auto"
+    style="height:initial">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col-2" style="align-items:center; align-content:center;">
+                    <div class="card-body">
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control" style="width:300px;"
+                            @onclick="ShowRelatedContracts">
+                                Related Contracts
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control" style="width:300px;"
+                            @onclick="ShowRelatedProperties">
+                                Related Properties
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedPayments">
+                                Payment History
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedTwnRngSections">
+                                Twn/Rng/Sections
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedRevenueHistory">
+                                Revenue History
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedTitleHistory">
+                                Title History
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedDoiDecks">
+                                DOI Decks
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedCrossRefsAll">
+                                ALl Cross-Refs
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedGisData">
+                                GIS
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                            @onclick="ShowRelatedGisCrossRef">
+                                GIS Cross-Refs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="form-row">
+                        <div class="card-body border border-dark align-content-center" style="width:inherit; align-content:center;">
+                            @if (showContractComponent == true)
+                            {
+                                <RelatedTractContracts />
+                            }
+                            @if (showRelatedProperties == true)
+                            {
+                                <RelatedProperties />
+                            }
+                            @if (showPayments == true)
+                            {
+                                <RelatedPaymentHistory/>
+                            }
+                            @if (showTwnRngSecs == true)
+                            {
+                                <RelatedTwnRngSections />
+                            }
+                            @if (showRevenueHistory == true)
+                            {
+                                <RelatedRevenueHistory />
+                            }
+                            @if (showTitleHistory == true)
+                            {
+                                <RelatedTitleHistory />
+                            }
+                            @if (showDOIDecks == true)
+                            {
+                                <RelatedDoiDecks />
+                            }
+                            @if (showAllCrossRefs == true)
+                            {
+                                <RelatesdCrossRefsAll />
+                            }
+                            @if (showGis == true)
+                            {
+                                <RelatedGis />
+                            }
+                            @if (showGisCrossRef == true)
+                            {
+                                <RelatedGisCrossRefs />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+
+
+    bool showContractComponent = false; //RelatedContracts
+    bool showRelatedProperties = false; //RelatedProperties
+    bool showPayments = false;          //PaymentHistory
+    bool showTwnRngSecs = false;        //RelatedTwnRngSecs
+    bool showRevenueHistory = false;    //RelatedRevenueHistory
+    bool showTitleHistory = false;      //RelatedTitleHistory
+    bool showDOIDecks = false;          //RelatedDOIDecks
+    bool showAllCrossRefs = false;      //RelatedAllCrossRefs
+    bool showGis = false;               //RelatedTwnRngSecs
+    bool showGisCrossRef = false;
+
+    // public void /* Task<List<ContractMainForm2>> */ ShowRelatedContracts(bool showContractComponent)
+    // {
+    //     /* return */ showContractComponent = true;
+    //     //return wellCrossRefs.RetrieveRelatedContracts(EntityID);
+    // }
+
+    // private void ShowRelatedTwnRngSecs()
+    // {
+    //     if (showTwnRngSecs == false)
+    //     {
+    //         showContractComponent = false;
+    //         showRelatedProperties = false;
+    //         showPayments = false;
+    //         showParties = false;
+    //         showTitleHistory = false;
+    //         showRevenueHistory = false;
+    //         showProductionPurchasers = false;
+    //         showDOIDecks = false;
+    //         showApiHistory = false;
+
+    //         showTwnRngSecs = true;
+    //         //StateHasChanged();
+    //     }
+    //     // Shows the popup at the center of the screen
+    //     //popupRefContracts.Show("Popup body text");
+    // }
+
+    private void ShowRelatedContracts()
+    {
+        //switch () { }
+
+        if (showContractComponent == false)
+        {
+            showRelatedProperties = false; //RelatedProperties
+            showPayments = false;          //PaymentHistory
+            showTwnRngSecs = false;        //RelatedTwnRngSecs
+            showRevenueHistory = false;    //RelatedRevenueHistory
+            showTitleHistory = false;      //RelatedTitleHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showContractComponent = true; //RelatedContracts
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedProperties()
+    {
+        showContractComponent = false; //RelatedContracts
+        showPayments = false;          //PaymentHistory
+        showTwnRngSecs = false;        //RelatedTwnRngSecs
+        showRevenueHistory = false;    //RelatedRevenueHistory
+        showTitleHistory = false;      //RelatedTitleHistory
+        showDOIDecks = false;          //RelatedDOIDecks
+        showAllCrossRefs = false;      //RelatedAllCrossRefs
+        showGis = false;               //RelatedTwnRngSecs
+        showGisCrossRef = false;
+
+        showRelatedProperties = true;
+
+        //StateHasChanged();
+        // Shows the popup at the center of the screen
+        //popupRefLeases.Show("Popup body text");
+    }
+    
+    private void ShowRelatedPayments()
+    {
+        if (showPayments == false)
+        {
+            showContractComponent = false; //RelatedContracts
+            showRelatedProperties = false; //RelatedProperties
+            showTwnRngSecs = false;        //RelatedTwnRngSecs
+            showRevenueHistory = false;    //RelatedRevenueHistory
+            showTitleHistory = false;      //RelatedTitleHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showPayments = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedTwnRngSections()
+    {
+        if (showTwnRngSecs == false)
+        {
+            showContractComponent = false; //RelatedContracts
+            showRelatedProperties = false; //RelatedProperties
+            showPayments = false;          //PaymentHistory
+            showRevenueHistory = false;    //RelatedRevenueHistory
+            showTitleHistory = false;      //RelatedTitleHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showTwnRngSecs = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedRevenueHistory()
+    {
+        if (showRevenueHistory == false)
+        {
+            showContractComponent = false; //RelatedContracts
+            showRelatedProperties = false; //RelatedProperties
+            showPayments = false;          //PaymentHistory
+            showTwnRngSecs = false;        //RelatedTwnRngSecs
+            showTitleHistory = false;      //RelatedTitleHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showRevenueHistory = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+    
+    private void ShowRelatedTitleHistory()
+    {
+        if (showTitleHistory == false)
+        {
+            showContractComponent = false; //RelatedContracts
+            showRelatedProperties = false; //RelatedProperties
+            showPayments = false;          //PaymentHistory
+            showTwnRngSecs = false;        //RelatedTwnRngSecs
+            showRevenueHistory = false;    //RelatedRevenueHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showTitleHistory = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedDoiDecks()
+    {
+
+        showContractComponent = false; //RelatedContracts
+        showRelatedProperties = false; //RelatedProperties
+        showPayments = false;          //PaymentHistory
+        showTwnRngSecs = false;        //RelatedTwnRngSecs
+        showRevenueHistory = false;    //RelatedRevenueHistory
+        showTitleHistory = false;      //RelatedTitleHistory
+        showAllCrossRefs = false;      //RelatedAllCrossRefs
+        showGis = false;               //RelatedTwnRngSecs
+        showGisCrossRef = false;
+
+        showDOIDecks = true;
+
+    }
+
+    private void ShowRelatedCrossRefsAll()
+    {
+        if (showAllCrossRefs == false)
+        {
+            showContractComponent = false; //RelatedContracts
+            showRelatedProperties = false; //RelatedProperties
+            showPayments = false;          //PaymentHistory
+            showTwnRngSecs = false;        //RelatedTwnRngSecs
+            showRevenueHistory = false;    //RelatedRevenueHistory
+            showTitleHistory = false;      //RelatedTitleHistory
+            showDOIDecks = false;          //RelatedDOIDecks
+            showAllCrossRefs = false;      //RelatedAllCrossRefs
+            showGis = false;               //RelatedTwnRngSecs
+            showGisCrossRef = false;
+
+            showAllCrossRefs = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }   
+
+    private void ShowRelatedGisData()
+    {
+        showContractComponent = false; //RelatedContracts
+        showRelatedProperties = false; //RelatedProperties
+        showPayments = false;          //PaymentHistory
+        showTwnRngSecs = false;        //RelatedTwnRngSecs
+        showRevenueHistory = false;    //RelatedRevenueHistory
+        showTitleHistory = false;      //RelatedTitleHistory
+        showDOIDecks = false;          //RelatedDOIDecks
+        showAllCrossRefs = false;      //RelatedAllCrossRefs
+        showGisCrossRef = false;
+
+        showGis = true;
+    }
+
+    private void ShowRelatedGisCrossRef()
+    {
+        showContractComponent = false; //RelatedContracts
+        showRelatedProperties = false; //RelatedProperties
+        showPayments = false;          //PaymentHistory
+        showTwnRngSecs = false;        //RelatedTwnRngSecs
+        showRevenueHistory = false;    //RelatedRevenueHistory
+        showTitleHistory = false;      //RelatedTitleHistory
+        showDOIDecks = false;          //RelatedDOIDecks
+        showAllCrossRefs = false;      //RelatedAllCrossRefs
+        showGis = false;               //RelatedTwnRngSecs
+
+        showGisCrossRef = true;
+    }
+
+}
+
+
+@* <TractCrossRefSubNav TractID="@TractID"></TractCrossRefSubNav> *@
+
+@* @code
+{
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateDataGrids();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts);
+    }
+} *@

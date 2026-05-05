@@ -1,0 +1,185 @@
+﻿@page "/District_States"
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@* <DistrictCrossRefBackButton></DistrictCrossRefBackButton> *@
+<br />
+
+<CrossRefMenu></CrossRefMenu>
+
+<h3>States within the Selected District</h3>
+
+@if (string.IsNullOrWhiteSpace(errorString) == false)
+{
+    <div class="h2">@errorString</div>
+}
+@*else if (GetStatesWithinDistrict is null)
+{
+    <div class="h4">Loading...</div>
+}*@
+else
+{
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            #myDIV {
+                width: 500px;
+                height: 500px;
+                background-color: lightblue;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="form-row">
+            <div class="container">
+                <div style="width:90%; margin:0 auto;">
+                    <table id="districtOwners" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>State ID</th>
+                                <th>State Name</th>
+                                <th>Total Interest</th>
+                                <th>Total Acreage</th>
+                                <th>Unleased</th>
+                                <th>Leased</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @*@{  var tr = 1;}
+        @foreach(var tract in GetStatesWithinDistrict.tracts)
+         {*@
+                            <tr>
+                                <td>
+                                    TEXAS             @*State*@
+                                </td>
+                                <td>
+                                    Permian Basin East    @*Region Name*@
+                                </td>
+                                <td>
+                                    Contains 0.68912365 total interest in .... @*Description*@
+                                </td>
+                                <td>
+                                    18    @*Formations*@
+                                </td>
+                                <td>
+                                    YES    @*Active*@
+                                </td>
+                                <td>
+                                    @*<a href="#editTractMIOwnerModal" class="edit" data-toogle="modal">
+                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                </a>*@
+                                    <a href="#deleteTractMIOwnerModal" class="delete" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    TEXAS             @*State*@
+                                </td>
+                                <td>
+                                    Permian Basin East    @*Region Name*@
+                                </td>
+                                <td>
+                                    Contains 0.68912365 total interest in .... @*Description*@
+                                </td>
+                                <td>
+                                    18    @*Formations*@
+                                </td>
+                                <td>
+                                    YES    @*Active*@
+                                </td>
+                                <td>
+                                    @*<a href="#editTractMIOwnerModal" class="edit" data-toogle="modal">
+                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                </a>*@
+                                    <a href="#deleteTractMIOwnerModal" class="delete" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    TEXAS             @*State*@
+                                </td>
+                                <td>
+                                    Permian Basin East    @*Region Name*@
+                                </td>
+                                <td>
+                                    Contains 0.68912365 total interest in .... @*Description*@
+                                </td>
+                                <td>
+                                    18    @*Formations*@
+                                </td>
+                                <td>
+                                    YES    @*Active*@
+                                </td>
+                                <td>
+                                    @*<a href="#editTractMIOwnerModal" class="edit" data-toogle="modal">
+                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                </a>*@
+                                    <a href="#deleteTractMIOwnerModal" class="delete" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                    </a>
+                                </td>
+                            </tr>
+                            @*tr++;
+        }*@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        @*<script type="text/javascript">
+            function myFunction() {
+              var x = document.getElementById('myDIV');
+              if (x.style.visibility === 'hidden') {
+                x.style.visibility = 'visible';
+              } else {
+                x.style.visibility = 'hidden';
+              }
+            }
+            </script>*@
+
+        @code
+        {
+
+        }
+
+
+    </body>
+</html>
+}
+
+@code
+ {
+    //strictMasterModel GetStatesWithinDistrict;
+    string errorString;
+
+   @*  protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        // TODO: MAKE CUSTOM PROC FOR REGIONS WITHIN A CERTAIN DISTRICT
+        /// API url goes inside ""  \\// "http://localhost:1397/"); OR "https://localhost:44300/"); OR "https://localhost:44300/api/LeasesInsideDistrict/GetAllLeases/");
+        "");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            //GetStatesWithinDistrict = await response.Content.ReadFromJsonAsync<DistrictMasterModel>();  // SHUD BE 'ReadFromJsonAsync'
+        }
+        else
+        {
+            errorString = $"There was an error getting Districts: { response.ReasonPhrase }";
+        }
+    } *@
+
+}

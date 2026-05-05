@@ -1,0 +1,60 @@
+﻿@* navbar-expand-sm *@
+<div class="">
+    <CascadingValue Value="this">
+        <div class="container" align="justify" style="width: 160px">
+            <br>
+            <nav class="navbar navbar-expand-sm bg-light navbar-dark" style="justify-content:left">
+                <div class="btn-group" role="group">
+                    @foreach (TabPage2 tabPage2 in Pages2)
+                    {
+                        <div class="row">
+                            <div class="col">
+                                <button type="button"
+                                        class="btn @GetButtonClass(tabPage2)"
+                                        style="width: 110px"
+                                        @onclick=@( () => ActivatePage(tabPage2) )>
+                                    @tabPage2.Text
+                                </button>
+                                <div class="col">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                </div>
+            </nav>
+        </div>
+        @ChildContent
+    </CascadingValue>
+</div>
+
+
+
+@code
+{
+    // Next line is needed so we are able to add <TabPage> components inside
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public TabPage2 ActivePage { get; set; }
+    List<TabPage2> Pages2 = new List<TabPage2>();
+    // List<string> Id = new List<string>();
+
+    internal void AddPage(TabPage2 tabPage2)
+    {
+        Pages2.Add(tabPage2);
+        if (Pages2.Count == 1)
+            ActivePage = tabPage2;
+        StateHasChanged();
+    }
+
+    string GetButtonClass(TabPage2 page2)
+    {
+        return page2 == ActivePage ? "btn-primary" : "btn-secondary";
+    }
+
+    void ActivatePage(TabPage2 page2)
+    {
+        ActivePage = page2;
+    }
+}

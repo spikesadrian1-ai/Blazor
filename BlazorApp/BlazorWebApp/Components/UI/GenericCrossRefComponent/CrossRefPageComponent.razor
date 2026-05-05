@@ -1,0 +1,33 @@
+﻿@* @if (Parent.ActivePage == this)
+{
+    @ChildContent
+} *@
+
+<h3>CrossRefPageComponent</h3>
+
+@code {
+    // @typeparam TElement
+    // @typeparam T
+
+    [CascadingParameter]
+    private CrossRefButtonComponent/* <TElement, T> */ Parent { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    // protected override void OnInitialized()
+    // {
+    //     if (Parent == null)
+    //         throw new ArgumentNullException(nameof(Parent), "CrossRefComponent must exist within a SubTabControl");
+    //     base.OnInitialized();
+
+    //     Parent.AddPage(this);
+    // }
+
+}

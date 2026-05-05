@@ -1,5 +1,7 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using System.Text.Json
+@using System.Collections
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -9,3 +11,186 @@
 @using Microsoft.JSInterop
 @using BlazorWebApp
 @using BlazorWebApp.Components
+@using BlazorWebApp.Components.Layout
+@using BlazorWebApp.Components.Shared
+
+@using BlazorWebApp.Components.UI
+@using BlazorWebApp.Components.UI.Tabs
+@using BlazorWebApp.Components.UI.SubTabs
+@using BlazorWebApp.Components.UI.NewFolder
+@using BlazorWebApp.Components.UI.GenericCrossRefComponent
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Main
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.More
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Location
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Dates
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Gas_Mkt
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Seismic
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.Other
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Contracts.Tabs.CrossRefs
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Districts.DistrictTabs.SubTabInternals.DistrictCrossRefPage.SubNavMenu
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseCrossRefsPage.SubNavMenu
+@using ApplicationLayer.Entities.Contracts
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Wells.WellCrossRefs 
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellMain
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellDates
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellLegal
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellInterests
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellAttachedTracts
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellUnitizations
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellChartsGraphs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents.PaymentHistorySubControls
+
+
+#region VARIOUS POP-UPS
+
+#region MINERAL OWNERS
+@using BlazorWebApp.Components.Pages.OG_Forms.TractOwners
+#endregion MINERAL OWNERS
+
+#region WORKING INTERESTS
+@using BlazorWebApp.Components.Pages.OG_Forms.WorkingInterests
+#endregion WORKING INTERESTS
+
+#region SPECIAL PROVISIONS - PROBLEMS
+@using BlazorWebApp.Components.Pages.OG_Forms.SpecialProvisions
+#endregion SPECIAL PROVISIONS
+
+#region SPECIAL OBLIGATIONS
+@using BlazorWebApp.Components.Pages.OG_Forms.SpecialObligations
+#endregion SPECIAL OBLIGATIONS
+
+#region PROPERTY
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Property
+#endregion PROPERTY
+
+#region PaymentObligations
+@using BlazorWebApp.Components.Pages.OG_Forms
+@using BlazorWebApp.Components.Pages.OG_Forms.Payments
+@using BlazorWebApp.Components.Pages.OG_Forms.Obligations.Payment
+@* @using BlazorWebApp.Components.Pages.OG_Forms.PaymentObligations *@
+#endregion PaymentObligations
+
+#region BURDENS
+@using BlazorWebApp.Components.Pages.OG_Forms.Burden
+#endregion BURDENS
+
+#region ORRI
+@using BlazorWebApp.Components.Pages.OG_Forms.Royalty_ORRIs
+#endregion ORRI
+
+#region WELLS
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells 
+@* @using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents. *@
+
+#endregion WELLS
+
+#endregion VARIOUS POP-UPS
+
+#region COUNTY
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Counties.CountyTabs
+#endregion COUNTY
+
+#region DISTRICTS
+@* @using BlazorWebApp.Pages.OG_Forms.Locations.Districts
+@using BlazorWebApp.Pages.OG_Forms.Locations.Districts.DistrictTabs
+@using BlazorWebApp.Pages.OG_Forms.Locations.Districts.DistrictTabs.SubTabInternals
+@using BlazorWebApp.Pages.OG_Forms.Locations.Districts.DistrictTabs.SubTabInternals.DistrictCrossRefPage
+@using BlazorWebApp.Pages.OG_Forms.Locations.Districts.DistrictTabs.SubTabInternals.DistrictCrossRefPage.SubNavMenu *@
+#endregion DISTRICTS
+
+#region PROSPECT
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Prospects.ProspectTabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Prospects.ProspectTabs.RazorComponents
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Prospects.ProspectTabs.SubInternals
+#endregion PROSPECT
+
+#region PROPERTIES
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.BackBttnComponent
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseMainPage
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseMainPage.Components
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseMorePage.SubNavMenu
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseRelatedPage
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseRelatedPage.SubNavMenu
+#endregion PROPERTIES
+
+#region TRACTS
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMainPage
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMainPage.Components
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage.BackBttnComponent
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage.SubNavMenu
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractCrossRefsPage.BackBttnComponent
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractCrossRefsPage.SubNavMenu
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractCrossRefsPage.RelatedComponents
+#endregion TRACTS
+
+#region OWNERS / BUSINESS ASSOCIATES
+@using BlazorWebApp.Components.Pages.OG_Forms.Bus._Assoc
+#endregion OWNERS / BUSINESS ASSOCIATES
+
+#region CHAIN OF TITLES
+@using BlazorWebApp.Components.Pages.OG_Forms.ChainOfTitle
+@using BlazorWebApp.Components.Pages.OG_Forms.ChainOfTitle.Tabs
+#endregion CHAIN OF TITLES
+
+
+@using BlazorWebApp.Components.Shared.Components.Generic_List
+@using BlazorWebApp.Components.Shared.Components.Generic_Tables
+@using BlazorWebApp.Components.Shared.Components.Generic_Cross_Ref_Form
+
+
+
+#region APPLICATION LAYER
+
+@using ApplicationLayer.Entities.Locations.Counties
+@using ApplicationLayer.Entities.Locations.Counties.Data
+@using ApplicationLayer.Entities.Locations.Districts
+@using ApplicationLayer.Entities.Locations.Prospects
+@using ApplicationLayer.Entities.Locations.Prospects.Data
+@using ApplicationLayer.Entities
+@using ApplicationLayer.Entities.Burden
+@using ApplicationLayer.Entities.TractOwnerships
+@using ApplicationLayer.Entities.FilingInformation
+
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+@using ApplicationLayer.Services.Assets.Leases
+@using ApplicationLayer.Services.Assets.Tracts.TractOwners
+@using ApplicationLayer.Services.Owners;
+@* @using ApplicationLayer.Services.Owners.ChainOfTitles; *@
+@using ApplicationLayer.Services.Owners.BusinessAssociateOwners;
+@using ApplicationLayer.Services.Owners.Filings;
+
+using ApplicationLayer.UseCases.Owners.CheckIfOwnerExists;
+using ApplicationLayer.UseCases.Owners.CreateEntity;
+using ApplicationLayer.UseCases.Owners.DeleteEntity;
+using ApplicationLayer.UseCases.Owners.NewAddressCreation;
+
+
+@* @using ApplicationLayer.Entities.Locations.Districts.Data *@
+#endregion APPLICATION LAYER
+
+@using ApplicationLayer.Interfaces.IEvents
+@using ApplicationLayer.Interfaces.ApiCommands
+@using ApplicationLayer.Interfaces.ApiQueries
+@using ApplicationLayer.Interfaces.UnitOfWork
+
+@using ApplicationLayer.Events.CountyEvents
+@using ApplicationLayer.Events.Owners
+@using ApplicationLayer.Entities.Contracts
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Wells.WellCrossRefs
+
+@* @using ApplicationLayer.Interfaces.LandProperty
+@using ApplicationLayer.Interfaces.LandProperty.Leases.LeaseMorePage
+@using ApplicationLayer.Interfaces.UnitOfWork *@

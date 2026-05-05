@@ -1,0 +1,28 @@
+﻿@page "/CountyMore/{CountyName}"
+
+@inherits CountyMoreBase
+
+<br />
+
+<div>
+    <GenDatabaseList Elements="ListAllCounties">
+
+        <TableHeader>
+            <th>County Name</th>
+            <th>State</th>
+            @*<th>State Code</th>
+            <th>ID</th>*@
+        </TableHeader>
+
+        <RowTemplate Context="county">
+            <td>@county.CountyName</td>
+            <td>@county.StateId</td>
+            @*<td>@county.CountyId</td>
+            <td>@county.Id</td>*@
+        </RowTemplate>
+
+    </GenDatabaseList>
+</div>
+
+
+

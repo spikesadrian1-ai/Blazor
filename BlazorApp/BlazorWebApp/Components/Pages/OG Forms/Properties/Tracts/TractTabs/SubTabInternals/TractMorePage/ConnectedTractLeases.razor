@@ -1,0 +1,239 @@
+﻿@page "/ConnectedTractLeases"
+@page "/ConnectedTractLeases/{TractId}"
+
+@using ApplicationLayer.Entities
+@using DomainLayer.Entities.Assets.Tracts
+@* @inject BlazorWebApp.Pages.OG_Forms.Properties.Leases.LeaseTabs.SubTabInternals.LeaseMainPage.LeaseMainBase leaseMainBase; *@
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits TractMainPageBase
+
+@* <div class="row">
+    <div class="col-2">
+        <TractMoreSubMenu TractID="@TractID">
+
+        </TractMoreSubMenu>
+    </div>
+</div> *@
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-2">
+            @*           <TractMoreSubMenu TractId="@TractID">
+
+            </TractMoreSubMenu> *@
+        </div>
+        <div class="col-10">
+            <GenDatabaseList Elements="TractLeases">
+                <HrefModalName>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <a class="btn btn-primary m-1" @onclick="RedirectPage">@($"Attach to {ComponentName}")</a>
+
+                            <AddUpdateTractWorkingInterestComponent TractID="@TractId" @ref="popupRef" />
+
+                            @* <NavLink class="edit" href="@($"/FIX THIS")" data-toogle="modal">
+                                <span class="oi oi-list-rich" aria-hidden="true"></span>
+                                @($"Attach to {ComponentName}")
+                            </NavLink> *@
+                        </div>
+                        <div class="col-4">
+                            <div class="justify-content-center">
+                                <h4>Leases for @($"{TractId}")</h4>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <a href="test" class="btn btn-primary" style="width: auto;" data-toggle="modal">
+                                <span> @($"View {ComponentName}") </span>
+                            </a>
+                        </div>
+                    </div>
+                </HrefModalName>
+                <TableHeader>
+                    @* <th>ID</th> *@
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Developed</th>
+                    <th>Undeveloped</th>
+                </TableHeader>
+                <RowTemplate Context="Leases">
+                    <td>
+                        <a @onclick="Close" href="@($"Leases/{@Leases.Id}/{@Leases.LeaseId}")" class="nav-link">
+                            @Leases.LeaseId
+                        </a>
+                        @{
+                            //leaseMainBase.InitialState = false;
+                            //leaseMainBase.leaseModel.Id = int.Parse(Leases.TractMainId);
+                            //leaseMainBase.leaseModel.LeaseId = Leases.LeaseId;
+                        }
+                    </td>
+                    <td>@Leases.FullDescription</td>
+                    <td>@Leases.DevelopedAcreage</td>
+                    <td>@Leases.UndevelopedAcreage</td>
+                </RowTemplate>
+                <HrefEditModal>
+                    <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                        <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                    </a>
+                </HrefEditModal>
+                <HrefDeleteModal>
+                    <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                    </a>
+                </HrefDeleteModal>
+            </GenDatabaseList>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="container border border-top border-bottom border-dark m-1">
+    <div class="form-row">
+        <div class="col-3 ">
+            <ListOfRelatedTractOwners TractID="@TractId"></ListOfRelatedTractOwners>
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractBurdens TractID="@TractId"></ConnectedTractBurdens>            
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractSurfaceOwners TractID="@TractId"></ConnectedTractSurfaceOwners>
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractPaymentObligations TractID="@TractId"></ConnectedTractPaymentObligations>            
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="container border border-top border-bottom border-dark m-1">
+    <div class="form-row">
+        <div class="col-3 ">
+            <ConnectedTractWells TractID="@TractId"></ConnectedTractWells>
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractWIs TractID="@TractId"></ConnectedTractWIs>
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractWIDetails TractID="@TractId"></ConnectedTractWIDetails>
+        </div>
+        <div class="col-3 ">
+            <ConnectedTractSpecialObligations TractID="@TractId"></ConnectedTractSpecialObligations>
+        </div>
+    </div>
+</div>
+
+
+@code
+{
+    #region CASCADING PARAMS
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+
+    static string title = "TractLeasesModal";
+    string ComponentName = "Lease(s)";
+    //string LeasePage = $"TractLeasePopup/{TractId}";
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<ApplicationLayer.Entities.TractsLeaseConnection> TractLeases { get; set; } = new List<ApplicationLayer.Entities.TractsLeaseConnection>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (InitialState == false)
+        { 
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"TractLease/SearchAllTractLeasesByTractId/{TractId}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode) {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                TractLeases = await JsonSerializer
+                             .DeserializeAsync<List<ApplicationLayer.Entities.TractsLeaseConnection>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+        else
+        if (InitialState == true)
+        {
+
+        }
+
+    }
+
+    private void OnDropdownChange(ChangeEventArgs e)
+    {
+        // if ((e.Value is string dropdownValue) && !String.IsNullOrWhiteSpace(dropdownValue))
+        // {
+        //     selectedComponent = components[dropdownValue];
+        // }
+        // else
+        // {
+        //     selectedComponent = null;
+        // }
+    }
+
+    private AddUpdateTractWorkingInterestComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+
+    #region LeaseID Selected Event
+    
+    private void Close()
+    {
+        
+    }
+
+    [Parameter] public IEnumerable<LeaseMainForm2> availLeases { get; set; }
+
+    [Parameter] public EventCallback<string> OnLeaseIdSelected { get; set; }
+
+    private string _leaseIdSelected;
+
+    //[Parameter] public EventCallback<bool> RowSelected { get; set; }
+
+    public string SelectedLeaseIdEvent(string LeaseID)
+    {
+
+        _leaseIdSelected = LeaseID;
+        //IdFromListView = LeaseID;
+
+        OnLeaseIdSelected.InvokeAsync(_leaseIdSelected);
+        //OnLeaseIdSelected.InvokeAsync(IdFromListView);
+
+        // availLeases = (IEnumerable<string>)getLeases;
+        // _leaseIdSelected = /* LeaseID; */ availLeases.FirstOrDefault();
+
+        // if (_leaseIdSelected == true)
+        // {
+        //     if (!string.IsNullOrEmpty(LeaseID))
+        //     {
+        //         IdFromListView = LeaseID;
+        //     }
+
+
+        // }
+
+        return _leaseIdSelected;
+    }
+
+    #endregion LeaseID Selected Event
+}

@@ -1,0 +1,378 @@
+﻿@* @page "/Well" *@
+@* @page "/OwnerInfo/{OwnerID}" *@
+
+
+@inject WellCrossRefs wellCrossRefs
+
+
+@inherits WellMainBase
+
+@{
+    //var ContractClicked
+    // if (showContractComponent == true)
+    // {
+    //     <RelatedContracts @ref="popupRefContracts"></RelatedContracts>
+    // }
+    // if (showLeaseComponent == true)
+    // {
+    //     <RelatedLeases @ref="popupRefLeases"></RelatedLeases>
+    // }
+}
+
+
+<br />
+<EditForm Model="@wellModel">
+
+    <div class="container-fluid m-1 auto"
+    style="height:initial">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col-2" style="align-items:center; align-content:center;">
+                    <div class="card-body">
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control" style="width:300px;"
+                            @onclick="ShowRelatedContracts">
+                                Related Contracts
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control" style="width:300px;"
+                            @onclick="ShowRelatedLeases">
+                                Related Leases
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedPayments">
+                                Payment History
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedTitleHistory"> Title History </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedRevenueHistory"> Revenue History </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                                    @onclick="ShowRelatedTwnRngSections">
+                                Twn/Rng/Sections
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedParties"> Related Parties </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;"
+                                    @onclick="ShowRelatedDoiDecks">
+                                DOI Decks
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedProductionPurchasers"> Purchasers </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary" style="width:300px;" 
+                            @onclick="ShowRelatedApiHistory"> A.P.I's' </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="form-row">
+                        <div class="card-body border border-dark align-content-center" style="width:inherit; align-content:center;">
+                            @if (showContractComponent == true){
+                                <RelatedContracts 
+                                    T="ContractMainForm2">
+
+                                </RelatedContracts>
+                                //<RelatedContracts @onreadystatechange="()=>ShowRelatedContracts()" @ref="popupRefContracts" />
+                            }
+                            @if (showLeaseComponent == true){                                
+                                <RelatedLeases />
+                            }
+                            @if (showPayments == true){
+                                <PaymentHistory ></PaymentHistory>
+                            }
+                            @if (showTwnRngSecs == true){
+                                <RelatedTwnRngSecs></RelatedTwnRngSecs>
+                            }
+                            @if (showTitleHistory == true){                                
+                                <TitleHistory ></TitleHistory>
+                            }
+                            @if (showRevenueHistory == true){                                
+                                <RevenueHistory ></RevenueHistory>
+                            }
+                            @if (showParties == true){                                
+                                <RelatedParties></RelatedParties>
+                            }                            
+                            @if (showDOIDecks == true){                                
+                                <RelatedDOIDecks ></RelatedDOIDecks>
+                            }                            
+                            @if (showApiHistory == true){                                
+                                <RelatedApiHistory ></RelatedApiHistory>
+                            }
+                            @if (showProductionPurchasers == true)
+                            {
+                                <RelatedProductionPurchasers></RelatedProductionPurchasers>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+
+
+    bool showContractComponent = false; //RelatedContracts
+    bool showLeaseComponent = false;    //RelatedLeases
+    bool showPayments = false;          //PaymentHistory
+    bool showParties = false;           //RelatedParties
+    bool showTitleHistory = false;      //RelatedTitleHistory
+    bool showRevenueHistory = false;    //RelatedRevenueHistory
+    bool showTwnRngSecs = false;        //RelatedTwnRngSecs
+    bool showDOIDecks = false;          //RelatedDOIDecks
+    bool showApiHistory = false;        //RelatedApiHistory
+    bool showProductionPurchasers = false; 
+
+    // public void /* Task<List<ContractMainForm2>> */ ShowRelatedContracts(bool showContractComponent)
+    // {
+    //     /* return */ showContractComponent = true;
+    //     //return wellCrossRefs.RetrieveRelatedContracts(EntityID);
+    // }
+
+    private void ShowRelatedTwnRngSecs()
+    {
+        if (showTwnRngSecs == false)
+        {
+            showContractComponent = false;
+            showLeaseComponent = false;
+            showPayments = false;
+            showParties = false;
+            showTitleHistory = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;    
+            showDOIDecks = false;      
+            showApiHistory = false;   
+
+            showTwnRngSecs = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedPayments()
+    {
+        if (showPayments == false)
+        {
+            showContractComponent = false;
+            showLeaseComponent = false;
+            showTwnRngSecs = false;
+            showParties = false;
+            showTitleHistory = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;    
+            showDOIDecks = false;      
+            showApiHistory = false;   
+
+            showPayments = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedTwnRngSections()
+    {
+        if (showParties == false)
+        {
+            showContractComponent = false;
+            showLeaseComponent = false;
+            showPayments = false;
+            showParties = false;
+            showTitleHistory = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;
+            showDOIDecks = false;
+            showApiHistory = false;
+
+            showTwnRngSecs = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedParties()
+    {
+        if (showParties == false)
+        {
+            showContractComponent = false;
+            showLeaseComponent = false;
+            showTwnRngSecs = false;
+            showPayments = false;
+            showTitleHistory = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;    
+            showDOIDecks = false;      
+            showApiHistory = false;   
+
+            showParties = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedTitleHistory()
+    {
+        if (showTitleHistory == false)
+        {
+            showLeaseComponent = false;
+            showParties = false;
+            showTwnRngSecs = false;
+            showPayments = false;
+            showContractComponent = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;
+            showDOIDecks = false;
+            showApiHistory = false;
+
+            showTitleHistory = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    private void ShowRelatedRevenueHistory()
+    {
+        if (showRevenueHistory == false)
+        {
+            showContractComponent = false;
+            showLeaseComponent = false;
+            showTwnRngSecs = false;
+            showPayments = false;
+            showParties = false;
+            showTitleHistory = false;
+            showProductionPurchasers = false;    
+            showDOIDecks = false;      
+            showApiHistory = false;   
+
+            showRevenueHistory = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+
+    //private RelatedContracts popupRefContracts = new RelatedContracts();
+
+    private void ShowRelatedContracts()
+    {
+        if (showContractComponent == false)
+        {
+            showTitleHistory = false;
+            showLeaseComponent = false;
+            showParties = false;
+            showTwnRngSecs = false;
+            showPayments = false;
+            showRevenueHistory = false;
+            showProductionPurchasers = false;    
+            showDOIDecks = false;      
+            showApiHistory = false;   
+
+            showContractComponent = true;
+            //StateHasChanged();
+        }
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    // public void /* Task<List<ContractMainForm2>> */ ShowRelatedLeases(bool showLeaseComponent)
+    // {
+    //     /* return */
+    //     showContractComponent = false;
+    //     showLeaseComponent = true;
+    //     //return wellCrossRefs.RetrieveRelatedContracts(EntityID);
+    // }
+
+    //private RelatedLeases popupRefLeases = new RelatedLeases();
+
+    private void ShowRelatedLeases()
+    {
+        showContractComponent = false;
+        showParties = false;
+        showTwnRngSecs = false;
+        showPayments = false;
+        showTitleHistory = false;
+        showRevenueHistory = false;
+        showProductionPurchasers = false;
+        showDOIDecks = false;
+        showApiHistory = false;
+
+        showLeaseComponent = true;
+
+        //StateHasChanged();
+        // Shows the popup at the center of the screen
+        //popupRefLeases.Show("Popup body text");
+    }
+
+    private void ShowRelatedDoiDecks()
+    {
+
+        showContractComponent = false;
+        showParties = false;
+        showTwnRngSecs = false;
+        showPayments = false;
+        showTitleHistory = false;
+        showRevenueHistory = false;
+        showLeaseComponent = false;
+        showProductionPurchasers = false;
+        showApiHistory = false;
+
+        showDOIDecks = true;
+
+    }
+
+    private void ShowRelatedProductionPurchasers() { 
+        showContractComponent = false;
+        showParties = false;
+        showPayments = false;
+        showTitleHistory = false;
+        showRevenueHistory = false;
+        showLeaseComponent = false;
+        showApiHistory = false;
+        showTwnRngSecs = false;
+        showDOIDecks = false;
+
+        showProductionPurchasers = true;
+    }
+
+    private void ShowRelatedApiHistory()
+    { 
+        showContractComponent = false;
+        showParties = false;
+        showPayments = false;
+        showTitleHistory = false;
+        showRevenueHistory = false;
+        showLeaseComponent = false;
+        showProductionPurchasers = false;
+        showTwnRngSecs = false;
+        showDOIDecks = false;
+
+        showApiHistory = true;
+    }
+
+}

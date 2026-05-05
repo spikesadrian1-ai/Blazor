@@ -1,0 +1,432 @@
+﻿@page "/AddNewSpecialObligations"
+@page "/AddNewSpecialObligations/{TractID}"
+
+@using ApplicationLayer.Entities.SpecialObligation
+@using ApplicationLayer.UseCases.RelatedProperties.SpecialObligation.CreateEntity
+
+
+@inject IJSRuntime jsRuntime
+@* @inject ApplicationLayer.UseCases.RelatedProperties.SpecialObligation.CreateEntity.CreateSpecialObligation createSpecialObligation; *@
+
+@inherits LeaseMainBase
+
+@{
+    #region POPUP
+
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+    #endregion POPUP
+
+    #region ENTITY
+
+    SpecialObligations specialObligationEntity = new SpecialObligations();
+
+    #endregion ENTITY
+
+    #region TRACT FORM STATE
+
+    // /// TRACT RELATED FORM: NEW BUTTON PRESSED
+    // if (ObligationTypes is null)
+    // {
+    //     /// CHECK STATE: NO LEASE(S) ATTACHED TO CURRENT TRACT
+    //     if ((LeaseID is null) && (!string.IsNullOrEmpty(TractID))) { specialObligationEntity.LeaseId = Convert.ToString(AttachedLeaseIDs); }
+
+    //     /// CHECK STATE: ATTACHED LEASE(S) AND TRACT
+    //     if ((LeaseID != string.Empty) && (!string.IsNullOrEmpty(TractID)))
+    //     {
+    //         specialObligationEntity.LeaseId = LeaseID;
+
+    //     }
+
+    //     // DEFAULT VAULES
+    //     specialObligationEntity.TractId = TractID;
+    //     specialObligationEntity.ObligationType = "Test Type";    //Convert.ToString(ListOfObligationTypes);
+    //     specialObligationEntity.ObligationDate = null;
+    //     specialObligationEntity.ObligationAmount = Convert.ToDecimal(0.00);
+    //     specialObligationEntity.ResponsiblePartyId = string.Empty;  // TODO: IF MORE THAN ONE PERSON THEN MAKE A LIST
+    //     specialObligationEntity.DescriptionOfObligation = string.Empty;
+    //     specialObligationEntity.RecurringObligation = string.Empty; //TODO:
+    //     specialObligationEntity.FormationId = string.Empty;
+    //     specialObligationEntity.Recommendation = string.Empty;
+    //     specialObligationEntity.RecurringPeriod = 0;
+    //     specialObligationEntity.ExpirationDate = null;
+
+    // }
+
+    // DEFAULT VAULES
+    specialObligationEntity.TractId = TractID;
+    //specialObligationEntity.ObligationType = "Test Type";    //Convert.ToString(ListOfObligationTypes);
+    specialObligationEntity.ObligationDate = null;
+    specialObligationEntity.ObligationAmount = Convert.ToDecimal(0.00);
+    specialObligationEntity.ResponsiblePartyId = string.Empty;  // TODO: IF MORE THAN ONE PERSON THEN MAKE A LIST
+    specialObligationEntity.DescriptionOfObligation = string.Empty;
+    specialObligationEntity.RecurringObligation = string.Empty; //TODO:
+    specialObligationEntity.FormationId = string.Empty;
+    specialObligationEntity.Recommendation = string.Empty;
+    specialObligationEntity.RecurringPeriod = 0;
+    specialObligationEntity.ExpirationDate = null;
+
+
+    #endregion TRACT FORM STATE
+}
+
+
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+
+
+<div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+
+    <div class="container position-relative"
+         style="overflow:auto;
+                            justify-content:left;
+                            border-width:medium;
+                            width:-webkit-fit-content;
+                            height:auto;">
+
+        <div class="modal-body" style="align-content:center; width:-webkit-fit-content; height:auto;">
+
+            <div class="modal-content align-content-center" style="align-content:center; width:700px; height:-webkit-fit-content;">
+
+                <div class="modal-header">
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+
+                <div class="card" style="align-content:center; width:700px; height:max-content;">
+
+                    <div class="card-header">
+                        @{
+                            if (EntityId != null)
+                            {
+                                // <strong class="me-auto">New Working Interest Form for Lease : @($"  {LeaseID}")</strong>
+                            }
+                            else
+                            // if (LeaseID != null)
+                            // {
+                            //     <strong class="me-auto">New Special Obligation for Lease : @($"  {LeaseID}")</strong>
+                            // }
+                            // else
+                            if (EasementId != null)
+                            {
+                                <strong class="me-auto">New Special Obligation for Easement @($"  {EasementId}")</strong>
+                            }
+                            else
+                                        if (SuaId != null)
+                            {
+                                <strong class="me-auto">New Special Obligation for SUA @($"  {SuaId}")</strong>
+                            }
+                            else
+                                        if (RowId != null)
+                            {
+                                <strong class="me-auto">New Special Obligation for ROW @($"  {RowId}")</strong>
+                            }
+                            else
+                                        if (TractID != null)
+                            {
+                                <strong class="me-auto">New Special Obligation for Tract @($"  {TractID}")</strong>
+                            }
+                            // else
+                            //         if (string.IsNullOrEmpty(EntityId))
+                            // {
+                            //     <strong class="me-auto">New Special Obligation Form</strong>
+                            // }
+                        }
+                    </div>
+
+                    <div class="card-body m-auto" style="width:auto">
+
+                        <form method="post" class="mt-3" enctype="multipart/form-data">
+                            <button type="submit" class="btn btn-primary form-control-lg" style="width:150px;" @* @onclick="SaveByID2()" *@> Save </button>
+                            <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+                            <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+
+                            <EditForm Model="@specialObligationEntity">
+
+                                <div class="col">
+
+
+                                    <div class="card accent-card mb-3">
+
+                                        <div class="card-body">
+
+                                            <div class=form-row>
+                                                <div class="col-3">
+                                                    <label>Obligation Date</label>
+                                                    <InputDate class="form-control-lg" @bind-Value="specialObligationEntity.ObligationDate" placeholder="mm/dd/YYYY"></InputDate>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <label>Obligation Type</label>
+                                                    <select id="ObligationTypes" name="ObligationTypeDropdown" class="form-control-lg" data-bind="@ListOfObligationTypes">
+                                                        @* role="presentation" *@
+                                                        <option value="0">Choose a Obligation</option>
+                                                        @{
+                                                            foreach (var obligationType in ListOfObligationTypes)
+                                                            {
+                                                                <option value="@obligationType.">@obligationType.</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-4">
+                                                    <label>Responsible Party</label>
+                                                    <select id="ResponsibleParties" name="ResponsiblePartyDropdown" class="form-control-lg " data-bind="">
+                                                        @* role="presentation" *@
+                                                        <option value="">Choose a Party</option>
+                                                        @* @Html.ValidationMessage("state") *@
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class=form-row>
+                                                <div class="col" style="width:auto; height:auto;">
+                                                    @* <label>Description Of Obligation</label> *@
+                                                    <InputTextArea class="form-control-lg" @bind-Value="specialObligationEntity.DescriptionOfObligation" placeholder=""></InputTextArea>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="form-row">
+                                                <label>Recurring</label>
+                                                <div class="col-1">
+                                                    <InputText class="form-control-lg" @bind-Value="specialObligationEntity.RecurringObligation"></InputText>
+                                                    <br />
+                                                </div>
+                                                <div class="col-sm-3"></div>
+                                                <label>Recommendation</label>
+                                                <div class="col-sm-3">
+                                                    <InputText class="form-control-lg" @bind-Value="specialObligationEntity.Recommendation" placeholder=""></InputText>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <label>Period</label>
+                                                <div class="col-2">
+                                                    <InputNumber class="form-control-lg" @bind-Value="specialObligationEntity.RecurringPeriod" placeholder="0"></InputNumber>
+                                                    <br />
+                                                </div>
+                                                <div class="col-sm-3"></div>
+                                                <label>Amount</label>
+                                                <div class="col-3">
+                                                    <InputNumber class="form-control-lg" @bind-Value="specialObligationEntity.ObligationAmount" placeholder="0.00"></InputNumber>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <label>Expire</label>
+                                                <div class="col-sm-3">
+                                                    <InputDate class="form-control-lg" @bind-Value="specialObligationEntity.ExpirationDate" placeholder="mm/dd/YYY"></InputDate>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="form-row">
+                                                <label>Tract ID</label>
+                                                <div class="col-sm-3">
+                                                    <InputText class="form-control-lg" @bind-Value="TractID"></InputText>
+                                                </div>
+                                                @*  <br />
+                                                    <div class="col-sm-3">
+                                                        <InputText @bind-Value="specialObligationEntity.TractId" ></InputText>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="form-row"> *@
+                                                <label>Formation</label>
+                                                <div class="col-sm-3">
+                                                    <InputSelect class="form-control-lg" @bind-Value="specialObligationEntity.FormationId"></InputSelect>
+                                                </div>
+                                                @*  <br />
+                                                    <div class="col-sm-3">
+                                                        <InputText @bind-Value="specialObligationEntity.TractId" ></InputText>
+                                                    </div> *@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*       <div class="form-row">
+                                    <div class="col ">
+                                        <InputText @bind-Value="EntityId" placeholder="Entity"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="TractID" placeholder="TractId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="LeaseID" placeholder="LeaseId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="EasementId" placeholder="EasementId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="SuaId" placeholder="SuaId"></InputText>
+                                    </div>
+                                    <div class="col ">
+                                        <InputText @bind-Value="RowId" placeholder="RowId"></InputText>
+                                    </div>
+                                </div> *@
+                            </EditForm>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@code {
+
+    ApplicationLayer.UseCases.RelatedProperties.SpecialObligation.CreateEntity.CreateSpecialObligation createSpecialObligation;
+
+    #region CASCADE PARAMS
+
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+
+    [Parameter] public string? EntityId { get; set; } = string.Empty;
+
+    [Parameter] public string? EasementId { get; set; } = string.Empty;
+
+    [Parameter] public string? SuaId { get; set; } = string.Empty;
+
+    [Parameter] public string? RowId { get; set; } = string.Empty;
+
+    #endregion CASCADE PARAMS
+
+    public List<string>? ListOfObligationTypes { get; set; } = new List<string>(); //= string.Empty;
+
+    public List<string?> AttachedLeaseIDs { get; set; }
+
+    public List<string?> AttachedTractIDs { get; set; }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        List<string> listOfObligationTypes = new List<string>();
+        listOfObligationTypes.Add("TEST1");
+        listOfObligationTypes.Add("TEST2");
+        listOfObligationTypes.Add("TEST3");
+
+        //listOfObligationTypes.ToList();
+        ListOfObligationTypes = listOfObligationTypes;
+
+
+
+        // await PopulateDropdowns();
+        // var request = new HttpRequestMessage(HttpMethod.Get,
+        // _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByTractId/{TractId}");/*tractOwnership.*/
+        // var client = _clientFactory.CreateClient();
+        // HttpResponseMessage response = await client.SendAsync(request);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     using var responseStream = await response.Content.ReadAsStreamAsync();
+        //     associatedTractOwnersViaTractId = await JsonSerializer
+        //                  .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+        //     errorString = null;
+        // }
+        // else
+        // {
+        //     errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+        // }
+    }
+
+    #region DROPDOWNS
+
+    // public async Task<List<string>> PopulateDropdowns()
+    // {
+    //     var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+    //     var getAllcountyTasks = RetreiveAllCountiesAsync();
+    //     var getAllstateTasks = RetrieveAllStatesAsync();
+    //     var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+    //     var getAllregionTasks = RetrieveAllRegionsAsync();
+
+    //     await Task.WhenAll(
+    //                        getAlltractStatusesTasks
+    //                      , getAllcountyTasks
+    //                      , getAllstateTasks
+    //                      , getAllDistrictTasks
+    //                      , getAllregionTasks
+    //                     );
+
+    //     var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+    //                  $"County: {getAllcountyTasks.Result}," +
+    //                  $"States: {getAllstateTasks.Result}," +
+    //                  $"Districts: {getAllDistrictTasks.Result}," +
+    //                  $"Regions: {getAllregionTasks.Result},";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    // public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+    //    ListOfTractStatuses = await _statusOfTracts
+    //    .RetrieveAllTractStatusAsync();
+
+    // public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    // public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+    //     ListOfStates = await _dropdownQueryServiceTasks
+    //     .RetrieveAllStatesAsync();
+
+    // public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    // public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+    //     ListAllCounties = await _countyQueryServiceTasks
+    //     .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    // public List<RegionMasterMainForm> ListOfRegions { get; set; } = new List<RegionMasterMainForm>();
+    // public async Task<List<RegionMasterMainForm>> RetrieveAllRegionsAsync() =>
+    //     ListOfRegions = await _dropdownQueryServiceTasks
+    //     .RetrieveAllRegionsAsync(ListOfRegions);
+
+    // public List<DistrictMasterModel> ListOfDistricts = new List<DistrictMasterModel>();
+    // public async Task<List<DistrictMasterModel>> RetrieveAllDistrictsAsync() =>
+    //     ListOfDistricts = await _dropdownQueryServiceTasks
+    //     .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+    #region POPUP
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    #endregion POPUP
+
+}
+

@@ -1,0 +1,59 @@
+﻿@page "/RegionMain"
+
+@using ApplicationLayer.Entities.Locations.Counties
+@using ApplicationLayer.Entities.Locations.Prospects
+@using ApplicationLayer.Entities.Locations.States
+
+@inherits ProspectMainBase
+
+@inject IJSRuntime JS
+@* @bind:after="" (seems not work but shud in .NET 7)*@
+@* @bind-value="" (Typically used with <InputSelect> rather than <select>)*@
+@* @onchange=""   (would need to add 'ChangeEventArgs e' as param to SelectedStateInput method) *@ 
+
+
+<button type="submit" class="btn btn-primary" style="width:150px;" @* @onclick="(() => SaveButton(TractModel))" *@> Save </button>
+<button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+<button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+@* <button type="submit" class="btn btn-primary" style="width:150px;" href="/ListOfLeasesComponent"> View Tract </button> *@
+<NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfRegions")"> View Tracts</NavLink>
+
+
+<div class="container">
+    <select id="ListOfStates"
+        @bind="selectedStateId" 
+        @bind:event="OnStateSelected">
+        <option value="0">*** State ***</option>
+        @foreach (var item in ListOfStates)
+        {
+            <option value="@item.Id">@item.StateId</option>
+        }
+    </select>
+</div>
+
+
+@code {
+    int selectedStateId = 0;
+
+    //protected override async Task OnIntiailizedAsync()
+    //{}
+
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected() {
+        
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO 
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+
+
+}

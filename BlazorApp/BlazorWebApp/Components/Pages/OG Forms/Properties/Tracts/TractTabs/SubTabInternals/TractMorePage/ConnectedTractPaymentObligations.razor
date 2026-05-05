@@ -1,0 +1,142 @@
+﻿@page "/ConnectedTractPaymentObligations"
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+@inject LeaseRelatedPageServices _leaseRelatedPageServices
+
+@inherits TractMorePageBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-items-center m-3">
+        PAYMENT OBLIGATIONS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="OwnerSearch.OwnerId"
+                   style="width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1">EXPAND</a>
+        <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in TractPaymentObligations)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Payment Type:  </h8>
+                                    <a href="@($"/ListOfTractsComponent/{@item.OwnerId}")">@item.PaymentType</a>
+                                    @* <span class="badge badge-primary badge-pill">@item.PaymentType</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code
+{
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+
+    //ApplicationLayer.Services.Lease.LeaseRelated.LeaseRelatedPageServices _leaseRelatedPageServices;
+
+
+    static string title = "TractPaymentsModal";
+    string ComponentName = "Payment(s)";
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<ApplicationLayer.Entities.Payments.PaymentObligations> TractPaymentObligations { get; set; }
+        = new List<ApplicationLayer.Entities.Payments.PaymentObligations>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractID != string.Empty)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"PaymentObligations/SearchAllPaymentsByTractId/{TractID}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                TractPaymentObligations = await JsonSerializer.DeserializeAsync<List<ApplicationLayer.Entities.Payments.PaymentObligations>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+        else if (LeaseID != null)
+        {
+            TractPaymentObligations = await _leaseRelatedPageServices.RetrieveAllRelatedPaymentObligationsByLeaseIdAsync(LeaseID);
+        }
+        //else ((LeaseId != null) && (TractId != null)) ListOfWellsViaLeaseId = await _leaseRelatedPageServices.RetrieveAllRelatedWellsByLeaseIdAsync(LeaseId);
+
+    }
+
+    // private PaymentObligationsComponent popupRef;
+
+    // private void RedirectPage()
+    // {
+    //     // Shows the popup at the center of the screen
+    //     popupRef.Show("Popup body text");
+    // }
+
+}

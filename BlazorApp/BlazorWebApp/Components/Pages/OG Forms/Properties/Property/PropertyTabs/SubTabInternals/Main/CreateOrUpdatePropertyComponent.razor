@@ -1,0 +1,228 @@
+﻿@using ApplicationLayer.Entities.Owners
+@using ApplicationLayer.Entities.Grantor_Grantees
+@using ApplicationLayer.Entities.Property
+@* @using ApplicationLayer.Entities.Properties.Property *@
+
+@inherits PropertyMainBase
+
+@{
+
+}
+
+
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfProperties")"> View Properties</NavLink>
+</div>
+<br />
+<EditForm Model="@propertyMain">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false)
+                        {
+                            <strong class="me-auto">Property Information for {@propertyMain.PropertyId}</strong>
+                        }
+                        else
+                            if (InitialState == true)
+                        {
+                            <strong class="me-auto">New Property Information Form</strong>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Identification</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Property</label>
+                                    </div>
+                                    <div class="col-8" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyMain.PropertyId" class="form-control-sm text-sm-right" style="align-self:; width:250px;" placeholder="(Ex. JM001)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Description</label>
+                                    </div>
+                                    <div class="col-8" style="padding-bottom:3px;">
+                                        <InputTextArea @bind-Value="propertyMain.Description" class="form-control-sm text-sm-right" style="align-self:; width:250px; height:150px; overflow-y:auto;" placeholder="(Ex. JM001)"></InputTextArea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Type</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        @if (string.IsNullOrWhiteSpace(EntityID))
+                                        {
+                                            <select id="soldToList" class="form-control-sm custom-select" style="width:300px;">
+                                                <option value="0">Select a Property Type</option>
+                                                @foreach (var item in propertyTypeList)
+                                                {
+                                                    <option value="@item.">@item.</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <InputSelect @bind-Value="propertyMain.PropertyType" class="form-control text-sm-right" style="align-self:; width:300px;" placeholder="(Ex. JM001)"></InputSelect>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Grantor</label>
+                                    </div>
+                                    <div class="col-6" style="padding-bottom:3px;">
+                                        @if (string.IsNullOrWhiteSpace(EntityID))
+                                        {
+                                            <select id="soldToList" class="form-control-sm custom-select" style="width:300px;">
+                                                <option value="0">Select a Grantor</option>
+                                                @foreach (var item in grantorList)
+                                                {
+                                                    <option value="@item.">@item.</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <InputSelect @bind-Value="propertyMain.GrantorId" class="form-control text-sm-right" style="align-self:; width:300px;" placeholder="(Ex. JM001)"></InputSelect>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Grantee</label>
+                                    </div>
+                                    <div class="col-6">
+                                        @if (string.IsNullOrWhiteSpace(EntityID))
+                                        {
+                                            @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                                    <datalist id="wellTypes">
+                                                        <option value="0">Well Type</option>
+                                                        @foreach (var item in wellTypes)
+                                                        {
+                                                            <option value="@item.">@item.</option>
+                                                        }
+                                                    </datalist> *@
+
+                                            <select id="soldToList" class="form-control custom-select" style="width:300px;">
+                                                <option value="0">Select a Grantee</option>
+                                                @foreach (var item in granteeList)
+                                                {
+                                                    <option value="@item.">@item.</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <InputSelect @bind-Value="propertyMain.GranteeId" class="custom-control-input text-sm-right" style="align-self:; width:300px;" placeholder="(Ex. JM001)"></InputSelect>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+            <div class="form-row">
+                <div class="col" style="align-items:; align-content:center;">
+                    <div class="card-header form-control">Dates</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Acquired</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">                                
+                                <InputDate @bind-Value="propertyMain.Acquired" class="form-control-sm text-sm-right" style="align-self:; width:250px;" placeholder=""></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Divested</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">                                
+                                <InputDate @bind-Value="propertyMain.Divested" class="form-control-sm text-sm-right" style="align-self:; width:250px;" placeholder=""></InputDate>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="align-items:; align-content:center;">
+                    <div class="card-header form-control">Property Values</div>
+                    <div class="card-body">
+                        @* <div class="col"> *@
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Original</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">                                    
+                                    <InputNumber @bind-Value="propertyMain.Original" class="form-control-sm text-sm-right" style="align-self:; width:250px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Current</label>
+                                </div>
+                                <div class="col" style="padding-bottom:;">                                    
+                                    <InputNumber @bind-Value="propertyMain.Current" class="form-control-sm text-sm-right" style="align-self:; width:250px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                        @* </div> *@
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Sold To</label>
+                        </div>
+                        <div class="col" style="padding-bottom:3px;">
+                            <InputSelect @bind-Value="propertyMain.SoldTo" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-row">
+                        <div class="col-3">
+                            <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Status</label>
+                        </div>
+                        <div class="col " style="padding-bottom:3px;">
+                            <InputSelect @bind-Value="propertyMain.Status" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+    [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //wellModel.WellIdNo = EntityID;
+
+        await PropertyMainPagePopulateDropdowns();
+    }
+}
+

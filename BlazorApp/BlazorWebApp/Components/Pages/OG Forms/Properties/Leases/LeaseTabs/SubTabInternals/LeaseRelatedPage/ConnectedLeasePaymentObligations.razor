@@ -1,0 +1,119 @@
+@page "/ConnectedLeasePaymentObligations"
+
+@using ApplicationLayer.Entities.Payments
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject LeaseRelatedPageServices _leaseRelatedPageServices
+
+@inherits LeaseMainBase
+
+@{
+    if (!string.IsNullOrEmpty(LeaseID))
+    {
+        fromLeaseFormState = true;    
+    }
+    PaymentObligations _paymentObligations = new PaymentObligations();
+    //_paymentObligations.SearchAllPaymentObligations(LeaseID);
+}
+
+<EditForm Model="@_paymentObligations">
+    <div class="form-row align-items-center m-3">
+        PAYMENT OBLIGATIONS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+        @bind-Value="_paymentObligations.Formation"
+        style="width:160px;"
+        class="m-1"
+        placeholder="Search">
+        </InputText>
+        @if (fromLeaseFormState == true)
+        {
+            <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+            <TestComponent LeaseID="@LeaseID" @ref="popupRef" />
+
+        }
+        
+        @* <TestComponent LeaseID="@LeaseID" @ref="popupRef" /> *@
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in LeasePaymentObligations)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Payment Type:  </h8>
+                                    <a href="@($"/ListOfTractsComponent/{@item.OwnerId}")">@item.PaymentType</a>
+                                    @* <span class="badge badge-primary badge-pill">@item.PaymentType</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code
+{
+    #region CASCADING PARAMS
+    //[Parameter] public bool? fromTractFormState { get; set; } //= string.Empty;
+    //[Parameter] public bool? fromLeaseFormState { get; set; } //= string.Empty;
+    #endregion CASCADING PARAMS
+
+    static string title = "TractPaymentsModal";
+    string ComponentName = "Payment(s)";
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    List<PaymentObligations> LeasePaymentObligations { get; set; }
+        = new List<PaymentObligations>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (LeaseID != string.Empty)
+        { 
+            fromLeaseFormState = true;
+
+            LeasePaymentObligations = await _leaseRelatedPageServices
+            .RetrieveAllRelatedPaymentObligationsByLeaseIdAsync(LeaseTablePK);
+        }
+    }
+
+
+    private TestComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}

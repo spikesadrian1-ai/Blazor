@@ -1,0 +1,340 @@
+@page "/ListOfRelatedLeaseOwners"
+
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Leases
+@* @using BlazorWebApp.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage *@
+
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+@inject LeaseDataGridSearchs _leaseDataGridSearch
+@inject LeasePopulateDataGrids leasePopulateDataGrids
+
+@inherits LeaseMainBase
+
+@{
+    TractOwnership _tractOwnership = new TractOwnership();
+
+    //if () { }
+    //if () { }
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@_tractOwnership">
+    <div class="form-row align-items-center m-3">
+        MINERAL OWNERS
+    </div>
+    <div class="form-row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="_tractOwnership.OwnerId"
+                   style="width:auto; max-width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <AddUpdateMineralOwnerComponent LeaseID="@IdFromListView" @ref="popupRef" />
+        <div class="form-row m-1">
+        <div class="container border border-top border-bottom border-dark position-relative"
+        style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+            <ol>
+                @foreach (var _Ownership in associatedTractOwnersViaTractId)
+                {
+                    <li>
+                        <div class="list-group" role="listbox">
+                            <div class="row m-1" style="align-content:normal" role="listitem">
+                                <label class="opacity-50 form-control-sm mb-0">Owner: @_Ownership.OwnerId</label>
+                                <a class="form-control-sm" href="@($"/tractOwnership/{Convert.ToString(@_Ownership.Id)}/{@_Ownership.OwnerId}/{@_Ownership.TractId}/{@_Ownership.FormationType}")">@_Ownership.FormationType</a>
+                                @* <span class="badge badge-primary badge-pill">@_tractOwnership.OwnerId</span> *@
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ol>
+        </div>
+
+    </div>
+    </div>
+</EditForm>
+
+@code {
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region
+
+    private RecordingInformationComponent recordingInformationpopupRef;
+
+    private void RecordingInformationRedirectPage()
+    {
+        recordingInformationpopupRef.Show("Popup body text");
+    }
+
+    #endregion
+
+    string errorString;
+
+    List<TractOwnership> associatedTractOwnersViaTractId { get; set; }
+        = new List<TractOwnership>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // _leasePopulateDataGrids.TractMineralOwners = await _leasePopulateDataGrids
+        //     .RetrieveRelatedTractMineralOwners(LeaseID);
+        if (!string.IsNullOrEmpty(LeaseTablePK)) { }
+        try
+        {
+            #region HTTP CALL
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["WebAPI"] + $"TractOwnership/SearchAllTractOwnershipByLeaseId/{IdFromListView}");
+            var client = _clientFactory.CreateClient();
+            var response = await client.SendAsync(request);
+            #endregion HTTP CALL
+
+            #region HTTP RESPONSE
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractOwnersViaTractId = await JsonSerializer.DeserializeAsync<List<TractOwnership>>(responseStream);
+                //errorString = null;
+            }
+            else { _ = $"There was an error getting Tracts from DB: {response.ReasonPhrase}"; }
+            #endregion HTTP RESPONSE
+        }
+        catch { }
+
+    }
+
+    private AddUpdateMineralOwnerComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+
+    //      if (lease_IDTextBox.Text == "PLEASE ENTER A NEW LEASE ID")
+    //         {
+    //             lease_IDTextBox.BackColor = Color.Pink;
+    //             lease_IDTextBox.ForeColor = Color.Red;
+    //             lease_IDTextBox.Focus();
+    //             MessageBox.Show("PLEASE ENTER LEASE ID");
+    //             return;
+    //         }
+    //         else if (lease_IDTextBox.Text == string.Empty)
+    //         {
+    //             lease_IDTextBox.BackColor = Color.Pink;
+    //             lease_IDTextBox.ForeColor = Color.Red;
+    //             lease_IDTextBox.Focus();
+    //             MessageBox.Show("LEASE ID is BLANK");
+    //             return;
+    //         }
+    //         else
+    //         if (TractLeaseDGView.RowCount == 0)
+    // {
+    //     MessageBox.Show("NO TRACT IS ATTACHED TO THE CURRENT LEASE");
+    //     return;
+    // }
+    // else if (IsValid())
+    // {
+
+    //     string box_msgquestion = "Will you be attaching a Surface or Mineral Owner?";
+
+    //     string box_title = "SURFACE OR MINERAL OWNER?";
+
+    //     /////
+    //     ///
+    //     DialogResult DialogResult = MessageBox.Show(box_msgquestion, box_title, MessageBoxButtons.YesNoCancel);
+    //     if (DialogResult == DialogResult.Yes)
+    //     {
+    //     string box_msgquestion1 = "Will you be attaching a New Owner?";
+
+    //     string box_title1 = "ADD NEW OWNER OR EXISTING?";
+
+    //     DialogResult DialogResult1 = MessageBox.Show(box_msgquestion1, box_title1, MessageBoxButtons.YesNoCancel);
+    //     if (DialogResult1 == DialogResult.Yes)
+    //     {
+    //         Owner frm2 = new Owner
+    //         (
+    //         // textBox1.Text
+    //         );
+
+    //         //Identification
+    //         frm2.SUA_IDTextBox.Text = this.lease_IDTextBox.Text.ToString();
+    //         frm2.surfaceTextBox.Text = "SURFACE OWNER";
+
+    //         this.Show();           //Hide the main form before showing the secondary
+    //         frm2.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //         this.Show();           //When frm2 is closed, continue with the code (show main form)
+
+    //     }
+    //     else
+    //     if (DialogResult1 == DialogResult.No)
+    //     {
+    //         string box_msgquestion3 = "Will you be attaching multiple existing Owners?";
+
+    //         string box_title3 = "SINGLE OR MULTIPLE OWNERS?";
+    //         DialogResult DialogResult3 = MessageBox.Show(box_msgquestion3, box_title3, MessageBoxButtons.YesNoCancel);
+    //         if (DialogResult3 == DialogResult.Yes)
+    //         {
+    //             if (TractLeaseDGView.RowCount > 0)
+    //             {
+    //                 MessageBox.Show("NO TRACT IS ATTACHED TO THE CURRENT LEASE. PLEASE ATTACH A TRACT BEFORE PROCEEDING.");
+    //                 return;
+    //             }
+    //             else
+    //             if (TractLeaseDGView.RowCount < 0)
+    //             {
+    //                 Lease_OwnerAttachment frm = new Lease_OwnerAttachment
+    //                 (
+    //                 // //  lease_IDTextBox.Text
+    //                 // //, prospect_IDComboBox.Text
+    //                 );
+
+    //                 //Identification
+    //                 frm.textBox1.Text = this.lease_IDTextBox.Text.ToString();
+    //                 frm.textBox2.Text = this.TractLeaseDGView.CurrentRow.Cells[1].Value.ToString();
+    //                 frm.surfaceTextBox.Text = "SURFACE OWNER";
+
+    //                 this.Show();           //Hide the main form before showing the secondary
+    //                 frm.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //                 this.Show();           //When frm2 is closed, continue with the code (show main form)
+    //             }
+
+    //             //if (sqlCon.State == ConnectionState.Closed)
+    //             //    //        // And if closed, then open
+    //             //    sqlCon.Open();
+
+    //         }
+    //         else
+    //         if (DialogResult3 == DialogResult.No)
+    //         {
+    //             Create_New_Surface_Owner frm = new Create_New_Surface_Owner
+    //              (
+    //              //  lease_IDTextBox.Text
+    //              //, prospect_IDComboBox.Text
+    //              );
+
+    //             //Identification
+    //             frm.leaseTextBox.Text = this.lease_IDTextBox.Text.ToString();
+    //             frm.comboBox1.Text = this.TractLeaseDGView.CurrentRow.Cells[1].Value.ToString();
+
+    //             this.Show();           //Hide the main form before showing the secondary
+    //             frm.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //             this.Show();           //When frm2 is closed, continue with the code (show main form)
+    //         }
+    //     }
+    //     }
+    //     else
+    //     if (DialogResult == DialogResult.No)
+    //     {
+    //     /////
+    //     /// MINERAL OWNERSHIP SECTION
+
+    //     string box_msgquestion2 = "Will you be attaching a newly created a Owner?";
+
+    //     string box_title2 = "CREATE NEW OWNER OR ATTACH AN EXISTING OWNER?";
+
+    //     /////
+    //     ///
+    //     DialogResult DialogResult2 = MessageBox.Show(box_msgquestion2, box_title2, MessageBoxButtons.YesNoCancel);
+    //     if (DialogResult2 == DialogResult.Yes)
+    //     {
+    //         Owner frm2 = new Owner
+    //            (
+    //            // textBox1.Text
+    //            );
+
+    //         //Identification
+    //         frm2.Lease_IDTextBox.Text = this.lease_IDTextBox.Text.ToString();
+
+    //         this.Show();           //Hide the main form before showing the secondary
+    //         frm2.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //         this.Show();           //When frm2 is closed, continue with the code (show main form)
+
+
+    //     }
+    //     else
+    //     if (DialogResult == DialogResult.No)
+    //     {
+    //         /////
+    //         /// MINERAL OWNERSHIP SECTION
+
+    //         string box_msgquestion3 = "Will you be attaching multiple existing Owners?";
+
+    //         string box_title3 = "SINGLE OR MULTIPLE OWNERS?";
+    //         DialogResult DialogResult3 = MessageBox.Show(box_msgquestion3, box_title3, MessageBoxButtons.YesNoCancel);
+    //         if (DialogResult3 == DialogResult.Yes)
+    //         {
+    //             if (TractLeaseDGView.RowCount > 0)
+    //             {
+    //                 MessageBox.Show("NO TRACT IS ATTACHED TO THE CURRENT LEASE. PLEASE ATTACH A TRACT BEFORE PROCEEDING.");
+    //                 return;
+    //             }
+    //             else
+    //             if (TractLeaseDGView.RowCount < 0)
+    //             {
+    //                 Lease_OwnerAttachment frm = new Lease_OwnerAttachment
+    //                 (
+    //                 //  lease_IDTextBox.Text
+    //                 //, prospect_IDComboBox.Text
+    //                 );
+
+    //                 //Identification
+    //                 frm.textBox1.Text = this.lease_IDTextBox.Text.ToString();
+    //                 frm.textBox2.Text = this.TractLeaseDGView.CurrentRow.Cells[1].Value.ToString();
+    //                 frm.mineralTextBox.Text = "MINERAL OWNER";
+
+    //                 this.Show();           //Hide the main form before showing the secondary
+    //                 frm.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //                 this.Show();           //When frm2 is closed, continue with the code (show main form)
+    //             }
+
+    //         }
+    //         else
+    //         if (DialogResult3 == DialogResult.No)
+    //         {
+    //             Tract_Owners.Form1 frm2 = new Tract_Owners.Form1
+    //              (
+    //                  this.TractLeaseDGView.CurrentRow.Cells[1].Value.ToString()                 // string tract_Master_EmptyTract_ID
+    //                , this.TractLeaseDGView.CurrentRow.Cells[2].Value.ToString()          // string tract_Master_EmptyShort_Description
+    //                , this.TractLeaseDGView.CurrentRow.Cells[4].Value.ToString()              // string tract_Master_EmptyTotalTract_TotalAcreage
+    //                , this.TractLeaseDGView.CurrentRow.Cells[7].Value.ToString()                  // string tract_Master_EmptyTotalTract_ProducingAcreage
+    //                , this.TractLeaseDGView.CurrentRow.Cells[8].Value.ToString()                // string tract_Master_EmptyTotalTract_Non_ProducingAcreage
+    //                , this.TractLeaseDGView.CurrentRow.Cells[10].Value.ToString()                      // string tract_Master_EmptyTotalTract_OtherAcreage
+    //                , this.TractLeaseDGView.CurrentRow.Cells[9].Value.ToString()                    // string tract_Master_EmptyTotalTract_OutsideAcreage
+    //                , this.TractLeaseDGView.CurrentRow.Cells[6].Value.ToString()      // string tract_Master_Empty_BeginDepth
+    //                , this.TractLeaseDGView.CurrentRow.Cells[6].Value.ToString()         // string tract_Master_Empty_EndDepth
+    //                , this.TractLeaseDGView.CurrentRow.Cells[5].Value.ToString()               // string tract_Master_EmptyTotaltract_Status
+    //              );
+
+    //             //Identification
+    //             frm2.lease_IDComboBox.Text = this.lease_IDTextBox.Text.ToString();
+    //             frm2.tract_IDComboBox.Text = this.TractLeaseDGView.CurrentRow.Cells[1].Value.ToString();
+
+    //             this.Show();           //Hide the main form before showing the secondary
+    //             frm2.ShowDialog();     //Show secondary form, code execution stop until frm2 is closed
+    //             this.Show();           //When frm2 is closed, continue with the code (show main form)
+    //         }
+    //     }
+    //     }
+
+    //     Refresh_Searches();
+
+    // }
+
+}

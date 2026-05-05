@@ -1,0 +1,113 @@
+﻿@page "/ListOfWells"
+
+
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+<br />
+<div class="row" align="center">
+    <div align="center">
+        <h3>Available Wells</h3>
+    </div>
+</div>
+<br />
+<br />
+<div>
+    <GenDatabaseList Elements="getWells">
+
+        <TableHeader>
+            <th>Well No</th>
+            <th>Name</th>
+            <th>Well Description</th>
+            <th>Status</th>
+            <th>Acreage</th>
+            @* <th>Status</th>
+               <th>Provisions</th> *@
+        </TableHeader>
+
+        <RowTemplate Context="Tracts">
+            <td><a href="@($"/Well/{Convert.ToString(Tracts.Id)}/{Tracts.WellIdNo}")" class="nav-link">@Tracts.WellIdNo</a></td>
+            <td>@Tracts.WellName</td>
+            <td>@Tracts.WellLegalDescription</td>
+            <td>@Tracts.WellStatus</td>
+            <td>@Tracts.WellAcreage</td>
+            @*  <td>@Tracts.ShortDescription</td>
+            <td>@Tracts.TractStatus</td>
+            <td>@Tracts.SpecialProvisionsNotes</td> *@
+        </RowTemplate>
+        <HrefEditModal>
+            <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+            </a>
+        </HrefEditModal>
+        <HrefDeleteModal>
+            <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+            </a>
+        </HrefDeleteModal>
+    </GenDatabaseList>
+</div>
+
+
+@code
+{
+    public WellMainForm2 Wells { get; set; } = new WellMainForm2();
+    static string title = "CreateOrUpdateTractMainForm";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await PopulateTracts();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await Task.Run(() => PopulateWells());
+    }
+
+    #region PAGINATION
+
+    private int totalPageQuantity;
+    private int currentPage = 1;
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await PopulateWells(page);
+    }
+
+    #endregion PAGINATION
+
+    #region RETRIEVE LIST OF TRACTS
+
+    List<WellMainForm2> getWells { get; set; } = new List<WellMainForm2>();
+
+    async Task<List<WellMainForm2>> PopulateWells(int page = 1, int quantityPerPage = 2)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "WellMainForm2");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getWells = await JsonSerializer.DeserializeAsync<List<WellMainForm2>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Tracts: {response.ReasonPhrase}";
+        }
+
+        return getWells;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+
+}

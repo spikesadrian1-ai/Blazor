@@ -1,0 +1,116 @@
+﻿
+
+@using ApplicationLayer.Entities.Locations.Prospects
+
+@inject IJSRuntime jsRuntime
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+@* @inherits ProspectMainBase *@
+
+@* @inject ApplicationLayer.Services.DropdownLists.DropdownQueryServiceTasks _listOfProspects *@
+
+<br />
+<h3>Available Prospects</h3>
+<br />
+<div>
+    <GenDatabaseList Elements="getProspects">
+        <TableHeader>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Gross Acres</th>
+            <th>Notes (SP)</th>
+        </TableHeader>
+
+        <RowTemplate Context="Prospects">
+            @* <td>@Prospects.ProspectId</td>
+            <td>@Prospects.Name</td>
+            <td>@Prospects.GrossAcres</td>
+            <td>@Prospects.SpecialProvisionsNotes</td> *@
+            @* <td>@prospects.DistrictName</td> *@
+        </RowTemplate>
+    </GenDatabaseList>
+</div>
+
+
+@code {
+
+    private int totalPageQuantity;
+    private int currentPage = 1;
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await PopulateProspects();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts);
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await PopulateProspects(page);
+    }
+
+    public List<ProspectMainForm> getProspects { get; set; } = new List<ProspectMainForm>();
+
+    async Task<List<ProspectMainForm>> PopulateProspects(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "ProspectMain");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getProspects = await JsonSerializer.DeserializeAsync<List<ProspectMainForm>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Districts: {response.ReasonPhrase}";
+        }
+
+        return getProspects;
+    }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await PopulateProspects();
+    // }
+
+    // async Task<List<string>> PopulateProspects() {
+
+    //     var getAllProspectsTasks = RetrieveAllProspectsAsync(/* ListOfProspects */);
+
+    //     await Task.WhenAll(getAllProspectsTasks);
+
+    //     var report = $"Prospects: {getAllProspectsTasks.Result}";
+
+    //     return new List<string> { report };
+    // }
+
+    // public List<ProspectMain> ListOfProspects /* { get; set; } */ = new List<ProspectMain>();
+    // async Task<List<ProspectMain>> RetrieveAllProspectsAsync(/* ListOfProspects */) //=> await _dropdownQueryServiceTasks.RetrieveAllProspectsAsync(ListOfProspects);
+    // {
+    //     //List<ProspectMain> ListOfProspects = new List<ProspectMain>();
+    //     // return ListOfProspects = await _dropdownQueryServiceTasks
+    //     // //AFTER MAKING INTO A READONLYLIST HAVE TO IMPLICTLY CAST BACK TO A LIST
+    //     // .RetrieveAllProspectsAsync(ListOfProspects);
+
+    //     //TODO: HAD TO CHANGE THE SIGNATURE OF THE METHOD BEING CALLED - FIGURE OUT TF WHY????
+    //     await _dropdownQueryServiceTasks.RetrieveAllProspectsAsync();
+
+    //     return ListOfProspects;
+    // }
+}

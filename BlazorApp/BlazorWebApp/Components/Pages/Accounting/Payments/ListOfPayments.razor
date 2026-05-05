@@ -1,0 +1,105 @@
+﻿@page "/ListOfPayments"
+
+
+@using ApplicationLayer.Entities.NewPayments
+
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+<div class="row" align="center">
+    <div align="center">
+        <h3>Available Checks</h3>
+    </div>
+</div>
+<br />
+<div>
+    <GenDatabaseList Elements="getList">
+
+        <TableHeader>
+            <th>PaymentType</th>
+            <th>PropertyType</th>
+            <th>Formation</th>
+            @*  <th>Chain of Title</th>
+            <th>Book</th>
+            <th>Page</th> *@
+            @* <th>Volume</th> *@
+        </TableHeader>
+
+        <RowTemplate Context="entityModel">
+            <td><a href="@($"/checks/{Convert.ToString(entityModel.Id)}/{entityModel.TractId}/{entityModel.SubTractId}/{entityModel.PropertyType}")" class="nav-link">@entityModel.PaymentType</a></td>
+            <td>@entityModel.PropertyType</td>
+            <td>@entityModel.SubTractId</td>
+            @* <td>@contracts.CertifiedMailNo</td>
+            <td>@contracts.MainCompany</td>
+            <td>@contracts.Responsible</td> *@
+            @* <td>@contracts.Volume</td> *@
+        </RowTemplate>
+        <HrefEditModal>
+            <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+            </a>
+        </HrefEditModal>
+        <HrefDeleteModal>
+            <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+            </a>
+        </HrefDeleteModal>
+    </GenDatabaseList>
+</div>
+
+
+
+@code {
+
+    // Districts
+    // Regions
+    // Survey
+    // TwnRngSec
+
+    static string title = "CreateOrUpdateTractMainForm";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await PopulateTracts();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await Task.Run(() => PopulateList());
+    }
+
+    #region RETRIEVE LIST
+
+    List<NewPayment> getList { get; set; } = new List<NewPayment>();
+
+    async Task<List<NewPayment>> PopulateList(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "CheckMaster");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getList = await JsonSerializer.DeserializeAsync<List<NewPayment>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Tracts: {response.ReasonPhrase}";
+        }
+
+        return getList;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+}
+

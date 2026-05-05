@@ -1,0 +1,165 @@
+@page "/ListOfRelatedTractOwners"
+
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+@inject LeaseRelatedPageServices _leaseRelatedPageServices
+
+@inherits TractMorePageBase
+
+@{
+    TractOwnership _tractOwnership = new TractOwnership();
+
+    //if () { }
+    //if () { }
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@_tractOwnership">
+    <div class="form-row align-items-center m-3">
+        MINERAL OWNERS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="_tractOwnership.OwnerId"
+                   style="width:auto; max-width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <AddUpdateMineralOwnerComponent  @ref="popupRef" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in associatedTractOwnersViaTractId)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    @* <label class="opacity-50 form-control-sm mb-0">Owner: @item.OwnerId</label> *@
+                                    <a class="form-control-sm" href="@($"/tractOwnership/{Convert.ToString(@item.Id)}/{@item.OwnerId}/{@item.TractId}/{@item.FormationType}")">Owner: @item.OwnerId @item.FormationType</a>
+                                    @* <span class="badge badge-primary badge-pill">@item.OwnerId</span> *@
+                                </div>
+                            </div>
+                        </li>
+                        @*    <li>
+                            <div class="row m-1">
+                                <div class="list-group" role="listbox">
+                                    <div class="row m-1" style="align-content:normal" role="listitem">
+                                        <h8>Owner ID:  </h8>
+                                        <span class="badge badge-primary badge-pill">@item.OwnerId</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> *@
+                        @*      <li>
+                            <div class="container-fluid border border-top border-bottom" style="resize:both;">
+                                <div class="list-group" role="listbox" style="">
+                                    <div class="row m-1" style="align-content:start" role="listitem">
+                                        <h8>Owner ID:  </h8>
+                                        <span class="badge badge-primary badge-pill">@item.OwnerId</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li> *@
+                        @*              <div class="container-fluid border border-top border-bottom offset-4" style="aspect-ratio:auto">
+                            <div class="list-group align-items-baseline  " role="listbox" style="width:auto">
+                                <div class="row m-1" style="width:auto; align-content:start" role="listitem">
+                                    <h8>Owner:  </h8>
+                                    <span class="badge badge-primary badge-pill">@item.OwnerId</span>
+                                </div>
+                                <div class="row m-1" style="width:auto; align-content:start" role="listitem">
+                                    <h8>Formula:  </h8>
+                                    <span class="badge badge-primary badge-pill">@item.Formula</span>
+                                </div>
+                                <div class="row m-1" style="width:auto; align-content:start" role="listitem">
+                                    <h8>Lease:  </h8>
+                                    <span class="badge badge-primary badge-pill">@item.LeaseId</span>
+                                </div>
+                            </div>
+                        </div> *@
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    #region CASCADING PARAMS
+    [Parameter] public string? LeaseId { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    List<TractOwnership> associatedTractOwnersViaTractId { get; set; }
+        = new List<TractOwnership>();
+
+
+    // [Inject]
+    // LeaseRelatedPageServices _leaseRelatedPageServices { get; set; }
+
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractID != string.Empty)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"TractOwnership/SearchAllTractOwnershipByTractId/{TractID}");/*tractOwnership.*/
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                associatedTractOwnersViaTractId = await JsonSerializer
+                             .DeserializeAsync<List<TractOwnership>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Mineral Ownership Data: {response.ReasonPhrase}";
+            }
+        }
+
+        if (LeaseId != string.Empty)
+        {
+            associatedTractOwnersViaTractId = await _leaseRelatedPageServices
+                .RetreiveAllRelatedMineralOwnersByLeaseIdAsync(LeaseId);
+        }
+
+    }
+
+
+    private AddUpdateMineralOwnerComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+
+}

@@ -1,0 +1,267 @@
+﻿@using ApplicationLayer.Entities.Contracts
+
+@inherits ContractMainBase
+
+@{
+    //bool PerpetualOptionsClause = true;
+
+    ContractMainForm2 contractMainSeismic = new ContractMainForm2();
+    contractMainSeismic.OptionEffDate = DateTime.Today;
+    contractMainSeismic.OptionPeriod = "0";
+    contractMainSeismic.OptionExpire = "0";
+    contractMainSeismic.AdditionalLeaseDays = 0;
+    contractMainSeismic.MinimumAdverseConditionDays = 0;
+    contractMainSeismic.ActualAdverseConditionDays = 0;
+    contractMainSeismic.MinimumAcresRequired = 0.00M;
+    //contractMainSeismic.PerpetualOptionClause = string.Empty;
+    //Convert.ToBoolean(contractMainSeismic.PerpetualOptionClause = string.Empty);
+    contractMainSeismic.Frequency = 0;
+    contractMainSeismic.MinimumAcres = 0.00M;
+    contractMainSeismic.TotalAcres = 0.00M;
+    contractMainSeismic.PricePerAcre = 0;
+    contractMainSeismic.TotalAcres = 0.00M;
+    contractMainSeismic.PricePerAcre = 0;
+    contractMainSeismic.TotalAcres = 0.00M;
+    contractMainSeismic.PricePerAcre = 0;
+    contractMainSeismic.TotalAcres = 0.00M;
+    contractMainSeismic.PricePerAcre = 0;
+    contractMainSeismic.TotalAcres = 0.00M;
+    contractMainSeismic.PricePerAcre = 0;
+    contractMainSeismic.OptionNotes = string.Empty;
+
+
+}
+
+<EditForm Model="@contractMainSeismic">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="col">
+                @* <div class="card-header form-control" style="padding-bottom:1rem;">Interests Information</div> *@
+                @* <div class="card-body"> *@
+                <div class="form-row">
+
+                    <div class="col">
+                        <div class="border p-1 nt-4">
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Option Eff.</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputDate @bind-Value="contractMainSeismic.OptionEffDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Option Period</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputText @bind-Value="contractMainSeismic.OptionPeriod" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder=""></InputText>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Option Exp</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputText @bind-Value="contractMainSeismic.OptionExpire" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder=""></InputText>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Additional Lease Days</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.AdditionalLeaseDays" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Max. Extension Days</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.MaximumExtensionDays" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Min. Adv. Days</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.MinimumAdverseConditionDays" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Actual. Adv. Days</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.ActualAdverseConditionDays" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Min Acres Required</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.MinimumAcresRequired" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border p-1 nt-4">
+                            <div class="form-row">
+                                <div class="col" style="padding-bottom:3px;">
+                                    <input type="checkbox" name="PerpetualOptionsClauseCheckbox"
+                                           @bind-value="PerpetualOptionsClause"
+                                           onclick="@ConvertPerpetualOptionClauseToString(contractMainSeismic,PerpetualOptionsClause)"
+                                           @bind-value:event="@ConvertPerpetualOptionClauseToString(contractMainSeismic,PerpetualOptionsClause)" /> &nbsp; @(PerpetualOptionsClause ? "" : "Perpetual Options Clause?")
+                                </div>
+                                <InputCheckbox @bind-Value="@PerpetualOptionsClause"
+                                               onclick="@ConvertPerpetualOptionClauseToString(contractMainSeismic,PerpetualOptionsClause)">@(PerpetualOptionsClause ? "" : "Perpetual Options Clause?")</InputCheckbox>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Frequency</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.Frequency" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <label class="opacity-50 form-control-sm mb-0">Min. Acres</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    <InputNumber @bind-Value="contractMainSeismic.MinimumAcres" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                @* </div> *@
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <div class="border p-1 nt-4">
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">Total Acres</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.TotalAcres" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">$ Per Acre</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.PricePerAcre" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">Total Miles</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.TotalMiles" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder="0"></InputNumber>
+                            </div>
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">$ Per Mile</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.PricePerMile" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">Total Sections</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.TotalSections" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder="0"></InputNumber>
+                            </div>
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">$ Per Section</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.PricePerSection" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">Total Surveys</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.TotalSurveys" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder="0"></InputNumber>
+                            </div>
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">$ Per Survey</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.PricePerSurvey" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">Total Holes</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.TotalShotHoles" class="form-control-sm text-sm-right" style="align-self:center; width:50px;" placeholder="0"></InputNumber>
+                            </div>
+                            <div class="col">
+                                <label class="opacity-50 form-control-sm mb-0">$ Per Shot Hole</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="contractMainSeismic.PricePerShotHole" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00"></InputNumber>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">                
+                <div class="col-12" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Legal Description</div>
+                    <div class="border p-1 nt-4">
+                        <InputTextArea @bind-Value="contractMainSeismic.ContractDescription" class="form-control text-sm-right" style="align-self:center; " placeholder="(Ex. 0.00)"></InputTextArea>                                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+   
+
+    #region SEISMIC CHECKBOX
+
+    bool PerpetualOptionsClause { get; set; }
+
+    private string ConvertPerpetualOptionClauseToString(ContractMainForm2 contractMainSeismic, bool PerpetualOptionsClause)
+    {
+        if (PerpetualOptionsClause == true)
+        {
+            PerpetualOptionsClause = true;
+        }
+
+        var ConvertPerpetualOptionClause = Convert.ToString(contractMainSeismic.PerpetualOptionClause = PerpetualOptionsClause.ToString());
+
+        return ConvertPerpetualOptionClause;
+    }
+
+    #endregion SEISMIC CHECKBOX
+}
+
+
+

@@ -1,0 +1,259 @@
+﻿@using ApplicationLayer.Entities.Contracts
+
+@inherits ContractMainBase
+
+@{
+    contractMain.StateId = string.Empty;
+    contractMain.CountyId = string.Empty;
+    contractMain.StateId2 = string.Empty;
+    contractMain.CountyId2 = string.Empty;
+    //contractMain.ProspectId = string.Empty;
+    contractMain.DistrictId = string.Empty;
+    contractMain.RegionId = string.Empty;
+    contractMain.BasinId = string.Empty;
+
+    contractMain.Location = string.Empty;
+    contractMain.Area = string.Empty;
+    contractMain.MapReference = string.Empty;
+    contractMain.Country = string.Empty;
+
+    string selectedProspectId = string.Empty;
+
+    async Task OnProspectSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+        contractMain.ProspectId = selectedProspectId;
+
+    }
+
+}
+
+<EditForm Model="@contractMain">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-header form-control" style="padding-bottom:1rem;">Interests Information</div> *@
+                    @* <div class="card-body"> *@
+                    <div class="form-row">
+
+                        <div class="col-6">
+                            <div class="border p-1 nt-4">
+                                @* <input type="text" asp-for="State_ID" placeholder="State ID" /> *@
+                                <select asp-for="State_ID" class="form-control" style="padding-bottom:3px;" asp-items="Html.GetEnumSelectList<States>()">
+                                    @* role="presentation" *@
+                                    <option value="">Choose a State</option>
+                                    @* @Html.ValidationMessage("state") *@
+                                </select>
+                                @* <input type="text" asp-for="County_ID" placeholder="County ID " /> *@
+                                <select asp-for="County_ID" class="form-control" style="padding-bottom:3px;">
+                                    <option value="">Choose a County</option>
+                                    @*  @Html.ValidationMessage("state") *@
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="border p-1 nt-4">
+                                @* <input type="text" asp-for="State_ID" placeholder="State ID" /> *@
+                                <select asp-for="State_ID" class="form-control" style="padding-bottom:3px;" asp-items="Html.GetEnumSelectList<States>()">
+                                    @* role="presentation" *@
+                                    <option value="">Choose a State</option>
+                                    @* @Html.ValidationMessage("state") *@
+                                </select>
+                                @* <input type="text" asp-for="County_ID" placeholder="County ID " /> *@
+                                <select asp-for="County_ID" class="form-control" style="padding-bottom:3px;">
+                                    <option value="">Choose a County</option>
+                                    @*  @Html.ValidationMessage("state") *@
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="border p-1 nt-4">
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                        <datalist id="wellTypes">
+                                            <option value="0">Well Type</option>
+                                            @foreach (var item in wellTypes)
+                                            {
+                                                <option value="@item.">@item.</option>
+                                            }
+                                        </datalist> *@
+                                        @* @bind-value:event="oninput" *@@* @onselect=OnProspectSelected *@
+                                    <select id="soldToList" class="custom-select"
+                                        @onselectionchange="OnProspectSelected"
+                                        @bind="selectedProspectId"
+                                        @bind:event="OnProspectSelected">
+                                        <option value="0">Select a Prospect</option>
+                                        @foreach (var item in prospectList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                            selectedProspectId = item;
+                                        }
+                                        @if (!string.IsNullOrEmpty(selectedProspectId))
+                                        {
+                                            contractMain.ProspectId = selectedProspectId;
+                                        }
+                                    </select>
+
+                                }
+                                @if (!string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    <InputSelect @bind-Value="contractMain.ProspectId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                        <datalist id="wellTypes">
+                                            <option value="0">Well Type</option>
+                                            @foreach (var item in wellTypes)
+                                            {
+                                                <option value="@item.">@item.</option>
+                                            }
+                                        </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a District</option>
+                                        @foreach (var item in districtList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="contractMain.DistrictId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                        <datalist id="wellTypes">
+                                            <option value="0">Well Type</option>
+                                            @foreach (var item in wellTypes)
+                                            {
+                                                <option value="@item.">@item.</option>
+                                            }
+                                        </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Region</option>
+                                        @foreach (var item in regionsList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="contractMain.RegionId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                                @if (string.IsNullOrWhiteSpace(EntityID))
+                                {
+                                    @* <input list="wellTypes" id="wellTypesList" class="form-control" />
+                                        <datalist id="wellTypes">
+                                            <option value="0">Well Type</option>
+                                            @foreach (var item in wellTypes)
+                                            {
+                                                <option value="@item.">@item.</option>
+                                            }
+                                        </datalist> *@
+
+                                    <select id="soldToList" class="custom-select">
+                                        <option value="0">Select a Basin</option>
+                                        @foreach (var item in basinList)
+                                        {
+                                            <option value="@item.">@item.</option>
+                                        }
+                                    </select>
+
+                                }
+                                else
+                                {
+                                    <InputSelect @bind-Value="contractMain.BasinId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. Payout)"></InputSelect>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-6" style="align-items:center; align-content:center;">
+                            @* <div class="card-header form-control">Location</div> *@
+                            <div class="border p-1 nt-4">
+                                <div class="form-row">
+                                    <div class="col-xl-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Location</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="contractMain.Consideration" class="form-control-sm text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-xl-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Area</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="contractMain.OtherAmount1" class="form-control-sm text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-xl-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Map Ref.</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="contractMain.OtherAmount2" class="form-control-sm text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-xl-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="contractMain.OtherAmount2" class="form-control-sm text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    @* </div> *@
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control" style="padding-bottom:1rem;">Legal Description</div>
+                    <div class="border p-1 nt-4">
+                            <InputTextArea @bind-Value="contractMain.ContractLegalDescription" class="form-control text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00)"></InputTextArea>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    // [Parameter] public string? EntityID { get; set; } = string.Empty;
+    // [Parameter] public string? NewContractID { get; set; } = string.Empty;
+    // [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //wellModel.WellIdNo = EntityID;
+
+        await PopulateLocationPageDropdowns();
+    }
+
+    void oninput() { }
+}
+
+
+

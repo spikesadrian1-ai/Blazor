@@ -1,0 +1,112 @@
+﻿@page "/well"
+@page "/well/{IdFromListView}"
+@page "/well/{EntityID}/{IdFromListView}"
+
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellDates
+
+
+@inherits WellMainBase
+
+@{
+    // this.TractModel.TractId = "";
+    // TractID = this.TractModel.TractId;
+
+    //EntityID = "WEFASFVA";
+}
+
+<div class="tab-content" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <WellMain 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID"
+            WellId="@WellId">
+            </WellMain>
+        </TabPage>
+        <TabPage Text="DATES">
+            <BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellDates.Dates
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID"></BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellDates.Dates>
+        </TabPage>
+        <TabPage Text="LEGAL">
+            <Legal
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            />
+        </TabPage>
+        <TabPage Text="INTERESTS">
+            <Interests 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID"></Interests>
+        </TabPage>
+        <TabPage Text="ATTACHED TRACTS">
+            <AttachedTracts 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID" />
+        </TabPage>
+        <TabPage Text="CROSS-REFS">
+            <CrossRefs 
+            InitialState="@InitialState"
+            IdFromListView="@IdFromListView"
+            EntityID="@EntityID"/>
+        </TabPage>
+        <TabPage Text="UNITIZATIONS">
+            <Unitizations />
+        </TabPage>
+        <TabPage Text="Documents">
+            <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+        </TabPage>
+    </TabControl>
+</div>
+
+
+@code
+{
+    //[Parameter] public string EntityID { get; set; } = string.Empty;
+
+    //public string WellIDNo = "";/* WEFASFVA */
+
+    protected override async Task OnInitializedAsync()
+    {
+        //  NEW WELL ENTRY
+        if ((string.IsNullOrEmpty(EntityID)) && (string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = true;
+        }
+        else
+        //  RE-ROUTE FROM LISTOFWELLS COMPONENT
+        if ((!string.IsNullOrEmpty(EntityID)) && (!string.IsNullOrEmpty(IdFromListView)))
+        {
+            InitialState = false;
+            //  RE-ROUTE AFTER VIEWING A DIFFERENT WELL ASSOCIATED WITH A LEASE?? FIX
+            //  else
+            if (InitialState == false)
+            {
+                if ((WellId != null))
+                {
+                    // RESET IN ANTICIPATION FOR THE NEW WELL CHOSEN FROM SOME OTHER COMPONENT
+                    //WellId = "";
+                }
+                wellModel.Id = int.Parse(EntityID);
+                WellId = IdFromListView;
+                await _wellServices.PopulateFormBasedOnEntityID(t: wellModel);
+            }
+            wellModel.WellIdNo = WellId;
+        }
+        //  RE-ROUTE FROM LISTOFWELLS COMPONENT AFTER VIEWING A WELL
+        // else
+        // if (InitialState == false)
+        // {
+        //     EntityID.ToString();
+        //     WellId.ToString();
+        //     wellModel.Id.ToString();
+        //     wellModel.TractId.ToString();
+        // }
+    }
+}
+

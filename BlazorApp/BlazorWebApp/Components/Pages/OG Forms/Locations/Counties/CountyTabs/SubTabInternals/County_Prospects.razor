@@ -1,0 +1,149 @@
+﻿@page "/County_Prospects"
+
+@inherits CountyMain
+
+@using ApplicationLayer.Entities.Locations.Counties.Data
+@using System.Net.Http
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+<div class="container">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button class="m-1 btn btn-dark btn-outline-dark" Button>
+                    <NavLink href="Counties">
+                        BACK
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+
+<div class="container" align="center">
+    <br>
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav" align="center">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Prospects">
+                        Prospects
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Regions">
+                        Regions
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_States">
+                        States
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Tracts">
+                        Tracts
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Leases">
+                        Leases
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Wells">
+                        Wells
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<br>
+
+<div>
+    <GenDatabaseList Elements="GetProspectsWithinCounty">
+
+        <TableHeader>
+            <th>ID</th>
+            <th>Name</th>
+            <th>County</th>
+            <th>State</th>
+            <th>Status</th>
+            <th>Region</th>
+            <th>Gross Acres</th>
+            <th>Net Acres</th>
+        </TableHeader>
+
+        <RowTemplate Context="Prospects">
+            <td><a href="@($"/Prospects/{Prospects.ProspectId}")" class="nav-link">@Prospects.ProspectId</a></td>
+            <td><a href="@($"/Prospects/{Prospects.Name}")" class="nav-link">@Prospects.Name</a></td>
+            <td>@Prospects.CountyId</td>
+            <td>@Prospects.StateId</td>
+            <td>@Prospects.Status</td>
+            <td>@Prospects.Region</td>
+            <td>@Prospects.GrossAcres</td>
+            <td>@Prospects.NetAcres</td>
+        </RowTemplate>
+
+    </GenDatabaseList>
+</div>
+
+<br />
+<br />
+
+@*<Paginations TotalPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+                 SelectedPage="SelectedPage">
+    </Paginations>*@
+
+@code
+{
+    string countyId = "MONT";
+
+    private int totalPageQuantity;
+    private int currentPage = 1;
+
+    //private IEnumerable<ProspectsWithinCounty> GetProspectsWithinCounty = Array.Empty<ProspectsWithinCounty>();
+    List<ProspectsWithinCounty> GetProspectsWithinCounty { get; set; }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + $"ProspectMain/SearchAllProspectsByCountyId/{countyId}");
+        var client = _clientFactory.CreateClient();
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            //GetProspectsWithinCounty = await response.Content.ReadFromJsonAsync<PropertyMainForm>();  // SHUD BE 'ReadFromJsonAsync'
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            //GetProspectsWithinCounty = await JsonSerializer.DeserializeAsync<IEnumerable<ProspectsWithinCounty>>(responseStream);
+            GetProspectsWithinCounty = await JsonSerializer.DeserializeAsync<List<ProspectsWithinCounty>>(responseStream);
+
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"There was an error getting Prospects Data: { response.ReasonPhrase }";
+        }
+    }
+}
+

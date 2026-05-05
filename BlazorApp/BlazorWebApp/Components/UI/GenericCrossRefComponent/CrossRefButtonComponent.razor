@@ -1,0 +1,93 @@
+﻿
+
+@if (Parent.ActivePage == this)
+{
+    @ChildContent
+
+    @* @if (ChildContent.Target == this)
+    {
+        @DataGridChildContent
+    } *@
+}
+
+
+
+
+@code
+{
+    // @typeparam TElement
+    // @typeparam T
+
+    [CascadingParameter]
+    private CrossRefComponent@* <TElement, T> *@ Parent { get; set; }
+
+    CrossRefDatagridComponent@* <T> *@ crossRefDataGrid = new CrossRefDatagridComponent@* <T> *@();
+
+    /// <summary>
+    /// // [CascadingParameter]
+    /// private CrossRefDatagridComponent Grid { get; set; }
+    /// </summary>
+    
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (Parent == null)
+            throw new ArgumentNullException(nameof(Parent), "CrossRefComponent must exist within a SubTabControl");
+        base.OnInitialized();
+
+        Parent.AddPage(this, ActiveGrid);
+
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    public CrossRefButtonComponent@* <TElement, T> *@ ActivePage { get; set; }
+    List<CrossRefButtonComponent@* <TElement, T> *@> Button = new List<CrossRefButtonComponent@* <TElement, T> *@>();
+
+    internal void AddPage(CrossRefButtonComponent@* <TElement, T> *@ crossRefButton
+                        , CrossRefDatagridComponent crossRefGrid)
+    {
+        Button.Add(crossRefButton);
+        if (Button.Count == 1)
+            ActivePage = crossRefButton;
+            //AddGrid(crossRefGrid);
+            //ActiveGrid = crossRefGrid;
+        StateHasChanged();
+    }
+
+    // #region CROSSREF DATAGRID
+    // [Parameter]
+    // public RenderFragment DataGridChildContent { get; set; }
+
+    public CrossRefDatagridComponent@* <T> *@ ActiveGrid { get; set; }
+    List<CrossRefDatagridComponent@* <T> *@> Grid = new List<CrossRefDatagridComponent@* <T> *@>();
+
+    // internal void AddGrid(CrossRefDatagridComponent crossRefGrid)
+    // {
+    //     Grid.Add(crossRefGrid);
+    //     if (Grid.Count == 1)
+    //         ActiveGrid = crossRefGrid;
+    //     StateHasChanged();
+    // }
+
+    // string GetGridClass(GenDatabaseTableNoButtons gridButton)
+    // {
+    //     return gridButton == ActiveGrid ? "btn-primary" : "btn-secondary";
+    // }
+
+    void ActivateGrid(CrossRefDatagridComponent@* <T> *@ gridPage)
+    {
+        ActiveGrid = gridPage;
+    }
+    //#endregion CROSSREF DATAGRID
+}
+

@@ -1,0 +1,440 @@
+﻿@page "/tractOwnership/{ID}/{OwnerID}/{TractID}/{Formations}"
+
+@inherits TractOwnerBase
+
+@{
+    ownership.Id = int.Parse(ID);
+}
+
+<button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(ownership))"> Save </button>
+<button type="submit" class="btn btn-danger" style="width:150px;" @onclick="DeleteButton">Delete</button>
+<button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+
+<EditForm Model="@ownership">
+    <div class="container border border-top border-bottom m-1 auto">
+        <div class="card accent-card">
+            <form method="post" class="mt-3" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="card-header form-control-sm">
+                        @{
+                            if (InitialState == false)
+                            {
+                                <strong class="me-auto">Mineral @($"{OwnerID}") for Tract ID: @($"{TractID}")</strong>
+                            }
+                            else
+                            if (InitialState == true)
+                            {
+                                <strong class="me-auto">New Tract Information Form</strong>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col" style="align-items:center; align-content:center;">
+                        <div class="card accent-card mb-3">
+                            <div class="card-header form-control">Identification</div>
+                            <div class="card-body">
+                                <div class=form-row>
+                                    <div class="col">
+                                        <label>Tract</label>
+                                        @if (InitialState == false)
+                                        {
+                                            <InputText @bind-Value="TractID" class="form-control-sm" style="width:200px;"></InputText>
+                                        }
+                                        else
+                                        if (InitialState == true)
+                                        {
+                                            <select class="form-control" data-bind=" " style="width:200px;">
+                                                <option value="">Tract ID</option>
+                                            </select>
+                                        }
+                                    </div>
+
+                                    <div class="col">
+                                        <label>Type</label>
+                                        @if (InitialState == false)
+                                        {
+                                            <InputText @bind-Value="ownership.TractType" class="form-control-sm" style="width:200px;"></InputText>
+                                        }
+                                        else
+                                        if (InitialState == true)
+                                        {
+                                            <select class="form-control" data-bind=" " style="width:200px;">
+                                                <option value="">Tract Type</option>
+                                            </select>
+                                        }
+                                    </div>
+
+                                    <div class="col">
+                                        <label>Form</label>
+                                        @if (InitialState == false)
+                                        {
+                                            @* if (Convert.ToInt16(Formations) == 1)
+                                                {
+
+                                                }
+                                                else
+                                                if (Convert.ToInt16(Formations) = 1)
+                                                {
+
+                                                } *@
+                                            <InputText @bind-Value="Formations" class="form-control-sm" style="width:200px;"></InputText>
+                                        }
+                                        else
+                                        if (InitialState == true)
+                                        {
+                                            <select class="form-control" data-bind=" " style="width:200px;">
+                                                <option value="">Formation Type</option>
+                                            </select>
+                                        }
+
+                                    </div>
+
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary form-control-sm" style="width:175px;" @*onclick="OnPostCreateTract" *@> Formation Change </button>
+                                    </div>
+                                </div>
+                                <div class=form-row>
+                                    <label>Description</label>
+                                    <div class="col">
+                                        @if (InitialState == false)
+                                        {
+                                            <InputTextArea @bind-Value="ownership.LegalDescription" class="form-control-sm" style="width:350px; height:60px; overscroll-behavior-x:auto; padding-bottom:3px;" placeholder=""></InputTextArea>
+                                        }
+                                        else
+                                        if (InitialState == true)
+                                        {
+
+                                        }
+
+                                    </div>
+                                    <br />
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-primary form-control-sm text-wrap" style="width:200px; padding-bottom:3px; " @*onclick="OnPostCreateTract" *@> Add New Owner to New Formation </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    
+                                    <label>Owner</label>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        @if (InitialState == true)
+                                        {
+                                            @* <select id="ListOfTractStatuses" class="form-control-sm" style=" width:275px;">
+                                                <option value="0">Select Owner</option>
+                                                @foreach (var item in ListOfTractStatuses.Where(x => x.Length > 1))
+                                                {
+                                                    <option value="@item.">@item.</option>
+                                                }
+                                            </select> *@
+                                        }
+                                        else
+                                        if (InitialState == false)
+                                        {
+
+                                            <InputText @bind-Value="@OwnerID" class="form-control-sm text-sm-right" style="align-self:center; width:300px; overflow:auto;" placeholder="(Ex. Payout)"></InputText>
+                                            @* @foreach (var item in ListOfTractStatuses.Where(x => x.Length > 1))
+                                            {
+                                                TractModel.TractStatus = ListOfTractStatuses.Where(x => x.Contains(TractModel.TractStatus)).ToString();
+                                                <option value="@item.">@item.</option>
+                                            } *@
+                                        }
+                                    </div>
+                                    
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <button type="submit" class="btn btn-primary form-control-sm" style="width:200px;" @*onclick="OnPostCreateTract" *@> Transfer Interests </button>
+                                        @if (InitialState == true)
+                                        { }
+                                        else
+                                        if (InitialState == false)
+                                        {
+
+                                        }
+                                    </div>
+
+                                    <div class="col">
+                                        <label>Lease Status</label>
+                                        @if (InitialState == true)
+                                        {
+                                            <InputSelect @bind-Value="ownership.StatusOfLease" class="form-control-sm" style="width:175px;"></InputSelect>
+                                        }
+                                        else
+                                        if (InitialState == false)
+                                        {
+                                            <InputText @bind-Value="ownership.StatusOfLease" class="form-control-sm" style="width:175px;"></InputText>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <div class="card-header form-control">Ownership Interests</div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Int. Formula</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select State</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputTextArea @bind-Value="@ownership.Formula" class="form-control-sm text-sm-right" style="align-self:center; width:auto; height:60px;" placeholder="(Ex. 1/4 or .25000000)"></InputTextArea>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Mineral Int.</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:auto;">
+                                            <option value="0">Select County</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="ownership.MineralInterest" class="form-control-sm text-sm-right" style="align-self:center; width:auto;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Surface Int.</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:auto;">
+                                            <option value="0">Select District</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="ownership.SurfaceInterest" class="form-control-sm text-sm-right" style="align-self:center; width:auto;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Suspense</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                       @*  <select id="ListAllCounties" class="form-control" style="align-self:center; width:auto;">
+                                            <option value="0">Select Region</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="ownership.SuspenseCode" class="form-control-sm text-sm-right" style="align-self:center; width:auto;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Tenure</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:auto;">
+                                            <option value="0">Select Region</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="ownership.TenureCode" class="form-control-sm text-sm-right" style="align-self:center; width:auto;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="col-6" >
+                        <div class="card-header form-control">Owner Acreage</div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Lease</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select State</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="@ownership.LeaseId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. 1/4 or .25000000)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Total</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select State</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="@ownership.Total" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. 1/4 or .25000000)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Producing</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                       @*  <select id="ListAllCounties" class="form-control" style="align-self:center; width:200px;">
+                                            <option value="0">Select County</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="@ownership.Producing" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Non-Producing</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:200px;">
+                                            <option value="0">Select County</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="@ownership.NonProducing" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Other</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                       @*  <select id="ListAllCounties" class="form-control" style="align-self:center; width:200px;">
+                                            <option value="0">Select District</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="@ownership.Other" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Outside</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        @* <select id="ListAllCounties" class="form-control" style="align-self:center; width:200px;">
+                                            <option value="0">Select Region</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select> *@
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputNumber @bind-Value="@ownership.Outside" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. Payout)"></InputNumber>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</EditForm>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        ownership.Id = int.Parse(ID);
+        await PopulateForm(ownership);
+    }
+}

@@ -1,0 +1,45 @@
+@page "/TractMore"
+
+@using BlazorWebApp.Components.Pages.OG_Forms.Properties.Tracts.TractTabs.SubTabInternals.TractMorePage
+@* @inject TractMorePageBase tract *@
+
+@inherits TractMainPageBase
+
+<div class="row">
+    <div class="col-2">
+        <ConnectedTractLeases 
+        TractId="@TractId"
+        InitialState="@InitialState"
+        >
+
+        </ConnectedTractLeases>
+    </div>
+</div>
+
+
+
+@code
+{
+    /* [Inject] */ //private readonly TractMorePageBase tractMorePageBase { get; set; } 
+    //static string TractId = "OK01-NOR-001";
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    // private bool IsFirstCheckboxChecked { get; set; } = false;
+    // private bool IsSecondCheckboxChecked { get; set; } = false;
+    // private bool IsThirdCheckboxChecked { get; set; } = false;
+    // private bool IsFourthCheckboxChecked { get; set; } = false;
+    // private bool IsFifthCheckboxChecked { get; set; } = false;
+    // private string ButtonTwoStyle => IsFourthCheckboxChecked ? "" : "display:none";
+
+    static string title = "TractEasementModal";
+    protected override async Task OnInitializedAsync()
+    {
+        // //await tractMorePageBase.PopulateDataGrids();
+        // await tract.PopulateDataGrids();
+        // //// ADDED TO IMPLEMENT LOADING INDICATOR
+        // await Task.Run(tract.PopulateDataGrids());
+    }
+}

@@ -1,0 +1,207 @@
+﻿@using ApplicationLayer.Entities.Contracts
+
+@inherits ContractMainBase
+
+@{
+    if (string.IsNullOrEmpty(EntityID))
+    {
+        contractMain.ContractDate = DateTime.Today;
+        contractMain.EffectiveDate = DateTime.Today;
+        contractMain.AcquiredDate = DateTime.Today;
+        contractMain.SignatureDate = DateTime.Today;
+        contractMain.ObligationDate = DateTime.Today;
+        contractMain.ContractTerm = "";
+        contractMain.ExpireDate = DateTime.Today;
+        contractMain.ClosingDate = DateTime.Today;
+        contractMain.ApprovedDate = DateTime.Today;
+        contractMain.RevisedDate = DateTime.Today;
+        contractMain.LastAmended = DateTime.Today;
+        contractMain.DivestedDate = DateTime.Today;
+        contractMain.NextNotifyDate = DateTime.Today;
+        contractMain.NotifyDays = 0;
+        contractMain.InputDate = DateTime.Today;
+        contractMain.DrlgBeginDate = DateTime.Today;
+        contractMain.DrlgEndingDate = DateTime.Today;
+        contractMain.AssignmentClause = "";
+        contractMain.SpecialProvisionsNotes = "";
+
+    }
+    bool AssignmentClause = true;
+}
+
+
+<EditForm Model="@contractMain">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Important Dates</div>
+                    <br />
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    @* <div class="col-4">
+                                            <label class="opacity-50 form-control-sm mb-0">Contract</label>
+                                    </div> *@
+                                    <div class="col-12" style="padding-bottom:3px;">
+                                        Contract
+                                        <InputDate @bind-Value="contractMain.ContractDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @* <div class="col-4">
+                                            <label class="opacity-50 form-control-sm mb-0">Effective</label>
+                                    </div> *@
+                                    <div class="col-lg-12" style="padding-bottom:3px;">
+                                        Effective
+                                        <InputDate @bind-Value="contractMain.EffectiveDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @* <div class="col">
+                                            <label class="opacity-50 form-control-sm mb-0">Acquired</label>
+                                    </div> *@
+                                    <div class="col-md-12" style="padding-bottom:3px;">
+                                        Acquired
+                                        <InputDate @bind-Value="contractMain.AcquiredDate" class="form-control-sm text-sm-right" style="padding-left:inherit; align-self:center; width:125px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*  <div class="col-4">
+                                            <label class="opacity-50 form-control-sm mb-0">Signed</label>
+                                    </div> *@
+                                    <div class="col-sm-12" style="padding-bottom:3px;">
+                                        Signed
+                                        <InputDate @bind-Value="contractMain.SignatureDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*   <div class="col-4">
+                                            <label class="opacity-50 form-control-sm mb-0">Obliged</label>
+                                    </div> *@
+                                    <div class="col-xl-12" style="padding-bottom:3px;">
+                                        Obliged
+                                        <InputDate @bind-Value="contractMain.ExpireDate" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Term
+                                        <InputText @bind-Value="contractMain.ContractTerm" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Expire
+                                        <InputDate @bind-Value="contractMain.ExpireDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Closing
+                                        <InputDate @bind-Value="contractMain.ClosingDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Approved
+                                        <InputDate @bind-Value="contractMain.ApprovedDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Revised
+                                        <InputDate @bind-Value="contractMain.RevisedDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Amended
+                                        <InputDate @bind-Value="contractMain.LastAmended" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Divested
+                                        <InputDate @bind-Value="contractMain.DivestedDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Notify
+                                        <InputDate @bind-Value="contractMain.NextNotifyDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Notify Days
+                                        <InputNumber @bind-Value="contractMain.NotifyDays" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputNumber>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Input
+                                        <InputDate @bind-Value="contractMain.InputDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder=""></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Drlg Begin
+                                        <InputDate @bind-Value="contractMain.DrlgBeginDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputDate>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col" style="padding-bottom:3px;">
+                                        Drlg End
+                                        <InputDate @bind-Value="contractMain.DrlgEndingDate" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="form-row">
+                        <div class="border p-1 nt-4">
+                            <div class="col" style="padding-bottom:3px;">
+                                @* contractMainGasMarket. *@
+                                <input type="checkbox" name="PerpetualOptionsClause"
+                                       @bind-value="AssignmentClause"
+                                       @bind-value:event="input" /> &nbsp; @(AssignmentClause ? "Assignment Clause?" : "Active")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Special Provision Notes</div>
+                    <div class="border p-1 nt-4">
+                            <InputTextArea @bind-Value="contractMain.SpecialProvisionsNotes" class="form-control text-sm-right" style="align-self:center;" placeholder="(Ex. 0.00000000)"></InputTextArea>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    // [Parameter] public string? EntityID { get; set; } = string.Empty;
+    // [Parameter] public string? NewContractID { get; set; } = string.Empty;
+    // [Parameter] public bool? InitialState { get; set; } //= string.Empty;
+
+
+}

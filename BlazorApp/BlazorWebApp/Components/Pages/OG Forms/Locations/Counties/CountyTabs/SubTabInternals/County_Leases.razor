@@ -1,0 +1,149 @@
+﻿@page "/County_Leases"
+
+@inherits CountyMain
+
+@using ApplicationLayer.Entities.Locations.Counties.Data
+@using System.Net.Http
+
+@inject IJSRuntime jsRuntime
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+
+<div class="container">
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="Counties">
+                        BACK
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="container" align="center">
+    <br>
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav" align="center">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Prospects">
+                        Prospects
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Regions">
+                        Regions
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_States">
+                        States
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Tracts">
+                        Tracts
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Leases">
+                        Leases
+                    </NavLink>
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="County_Wells">
+                        Wells
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<br />
+
+<div>
+    <GenDatabaseList Elements="GetLeasesWithinCounty">
+
+        <TableHeader>
+            <th>County</th>
+            <th>State</th>
+            <th>Lease ID</th>
+            <th>Lease Name</th>
+            <th>Total Interest</th>
+            <th>Total Acreage</th>
+            <th>Leased</th>
+            <th>Unleased</th>
+        </TableHeader>
+
+        <RowTemplate Context="Leases">
+            <td>@Leases.CountyId</td>
+            <td>@Leases.StateId</td>
+            <td>@Leases.LeaseId</td>
+            <td>@Leases.LeaseName</td>
+            <td>@Leases.Total_Interest</td>
+            <td>@Leases.TotalAcreage</td>
+            <td>@Leases.Leased</td>
+            <td>@Leases.Unleased</td>
+        </RowTemplate>
+
+    </GenDatabaseList>
+</div>
+
+<br />
+<br />
+
+@*<Paginations TotalPagesQuantity="totalPageQuantity" CurrentPage="currentPage" Radius="2"
+             SelectedPage="SelectedPage">
+</Paginations>*@
+
+@code
+{
+    string countyId = "MONT";
+
+    private int totalPageQuantity;
+    private int currentPage = 1;
+
+    //private IEnumerable<LeasesWithinCounty> GetLeasesWithinCounty = Array.Empty<LeasesWithinCounty>(); string errorString;
+    List<LeasesWithinCounty> GetLeasesWithinCounty { get; set; }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        // TODO: MAKE CUSTOM PROC FOR LEASES WITHIN A CERTAIN COUNTY
+        /// API url goes inside ""  \\// "http://localhost:1397/"); OR "https://localhost:44300/"); OR "https://localhost:44300/api/LeasesInsideDistrict/GetAllLeases/");
+        _config["API_URL"] + $"LeaseMainForm2/SearchAllLeasesByCountyId/{countyId}");
+
+        var client = _clientFactory.CreateClient();
+
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            GetLeasesWithinCounty = await JsonSerializer.DeserializeAsync<List<LeasesWithinCounty>>(responseStream);
+
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"There was an error getting Districts: { response.ReasonPhrase }";
+        }
+    }
+}

@@ -1,0 +1,37 @@
+﻿@page "/ProspectMore"
+@page "/ProspectMore/{ProspectName}"
+
+@inherits ProspectMainBase
+
+@* <div class="container" align="center"> *@
+@* <div class="form-control-lg" align="left"> *@
+
+<div class="container" >
+    <BlazorWebApp.UI.NewFolder.SubTabControl>
+        @* <div class="row"> *@
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="TRACTS">
+            <Prospect_Tracts />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="LEASES">
+            <Prospect_Leases />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+
+        <BlazorWebApp.UI.NewFolder.SubTabPage Text="WELLS">
+            <Prospect_Wells />
+        </BlazorWebApp.UI.NewFolder.SubTabPage>
+        @* </div> *@
+    </BlazorWebApp.UI.NewFolder.SubTabControl>   
+</div>
+
+
+@code{
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+}
+

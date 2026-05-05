@@ -1,0 +1,252 @@
+
+@inherits LeaseMainBase
+
+@{
+    LeaseMainForm2? LeaseModel = new LeaseMainForm2();
+    LeaseModel.LeaseId = IdFromListView;
+
+
+}
+
+
+<br />
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible"
+          content="IE-edge" />
+    <meta name="viewport"
+          content="width=devices-width, initial-scale=1.0" />
+    @*   </ ....styling....> *@
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    @*   </ ....font: Poppins....> *@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" />
+
+    @*   </ ....icons: font Awesome 5.15....> *@
+
+</head>
+<body>
+    <EditForm Model="@LeaseModel">
+        <main>
+            <div class="dashboard-container">
+                <div class="form-row ">
+                    <div class="col-1 text-center "></div>
+                    <div class="col-5 text-center ">100% Acreage</div>
+                    <div class="col-1 text-center "></div>
+                    <div class="col-5 text-center ">Company Acreage</div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-center"></div>
+                    <div class="col-2 text-center">Gross Acres</div>
+                    <div class="col-2 text-center">Net Acres</div>
+                    <div class="col-2 text-center"></div>
+                    <div class="col-2 text-center">Gross Acres</div>
+                    <div class="col-2 text-center">Net Acres</div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Total Acreage</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Developed</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right"><label>Undeveloped</label></div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Other</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Outside</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">HBP Acreage</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Total Surface</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-2 text-sm-right">Surfaced Developed</div>
+
+                    @* 100% ACREAGE *@
+                    <div class="col-2 ">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+
+                    <div class="col-2"></div>
+
+                    @* COMPANY ACREAGE *@
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                    <div class="col-2 text-center">
+                        <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </EditForm>
+</body>
+</html>
+
+@code {
+
+    #region CASCADING PARAMS
+
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+
+    #endregion CASCADING PARAMS
+
+    // List<ApplicationLayer.Entities.WorkingInterests.WideckMaster> RelatedWIDeckMaster { get; set; } =
+    //     new List<ApplicationLayer.Entities.WorkingInterests.WideckMaster>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IdFromListView != string.Empty)
+        {
+            try
+            {
+                @*    RelatedWIDeckMaster = await _leaseRelatedPageServices
+                .RetrieveAllRelatedWorkingInterestsByLeaseIdAsync(LeaseID); *@
+
+            }
+            catch
+            {
+                //throw new Exception
+            }
+
+        }
+    }
+}

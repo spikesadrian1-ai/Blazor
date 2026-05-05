@@ -1,0 +1,208 @@
+﻿@inherits LeaseMainBase
+
+@{
+    var showClass = IsVisible ? "d-block" : "d-none";
+
+    //string RecordingInformationImage = "images/recordingInformation.jpg";
+}
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+
+@* <a class="btn m-1" style="color: aqua; font-size: 3rem; " @onclick="RedirectPage">DATES</a> *@
+@* <LeaseDates LeaseID="LeaseID"></LeaseDates> *@
+@* <LeaseDates LeaseID="@LeaseID"
+               @ref="popupRef" /> *@
+
+
+
+<div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+
+    <div class="container position-relative"
+         style="overflow:auto;
+                justify-content:left;
+                border-width:medium;
+                width:-webkit-fit-content;
+                height:auto;">
+
+        <div class="modal-body" style="align-content:center; width:-webkit-fit-content; height:auto;">
+
+            <div class="modal-content align-content-center" style="align-content:center; width:700px; height:-webkit-fit-content;">
+
+                <div class="modal-header">
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+
+                <div class="card" style="align-content:center; width:700px; height:max-content;">
+
+                    <div class="card-header">
+                        <strong class="me-auto">Lease Dates for @($"{IdFromListView}")</strong>
+                    </div>
+
+                    <div class="card-body m-auto" style="width:-webkit-fit-content;">
+                        <br />
+                        <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+
+                        <EditForm Model="@leaseModel">
+                            <main>
+                                @* <div class="container border border-top border-bottom m-1 auto"> *@
+                                <div class="dashboard-container auto">
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Acquired</div>
+
+                                        @* AcquiredDate *@
+                                        <div class="col-2 ">
+                                            @* <InputDate @bind-Value="leaseModel.AcquiredDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate> *@
+                                            <InputDate @bind-Value="leaseModel.AcquiredDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+
+                                        <div class="col-3"></div>
+
+                                        <div class="col-2 text-sm-right">Input</div>
+
+                                        @* InputDate *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.InputDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Lease</div>
+
+                                        @* LeaseDate *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.LeaseDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+
+                                        <div class="col-3"></div>
+
+                                        <div class="col-2 text-sm-right">Effective</div>
+
+                                        @* EffectiveDate *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.EffectiveDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Rental</div>
+
+                                        @* NextRentalDue *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.NextRentalDue" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+
+                                        <div class="col-3"></div>
+
+                                        <div class="col-2 text-sm-right">Check On</div>
+
+                                        @* CheckOn *@
+                                        <div class="col-2 text-center">
+                                            <InputDate @bind-Value="leaseModel.CheckOn" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Divested</div>
+
+                                        @* Divested *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.Divested" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+
+                                        <div class="col-3"></div>
+
+                                        <div class="col-2 text-sm-right">Surrender</div>
+
+                                        @* Surrendered *@
+                                        <div class="col-2 text-center">
+                                            <InputDate @bind-Value="leaseModel.Surrendered" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Other</div>
+
+                                        @* OtherDate *@
+                                        <div class="col-2 ">
+                                            <InputDate @bind-Value="leaseModel.OtherDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </main>
+                        </EditForm>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    #region CASCADE PARAMS
+
+    
+
+    #endregion CASCADE PARAMS
+
+    #region POPUP
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+
+    #endregion POPUP
+
+    #region LOAD DATES
+
+    //API CALL TO LOAD DATA BASED ON LEASEID
+    public new async Task OnInitializedAsync(LeaseMainForm2 leaseModel)
+    {
+        // await _leaseMainServices
+        // .RetrieveAllSpecificLeaseInformationByLeaseID(leaseModel);
+
+        // this.leaseModel.AcquiredDate = leaseModel.AcquiredDate;
+        // this.leaseModel.InputDate = leaseModel.InputDate;
+        // this.leaseModel.LeaseDate = leaseModel.LeaseDate;
+        // this.leaseModel.EffectiveDate = leaseModel.EffectiveDate;
+        // this.leaseModel.NextRentalDue = leaseModel.NextRentalDue;
+        // this.leaseModel.CheckOn = leaseModel.CheckOn;
+        // this.leaseModel.Divested = leaseModel.Divested;
+    }
+
+    #endregion LOAD DATES
+
+}

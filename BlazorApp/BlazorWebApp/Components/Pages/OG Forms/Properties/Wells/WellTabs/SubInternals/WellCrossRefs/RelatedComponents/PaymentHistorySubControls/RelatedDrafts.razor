@@ -1,0 +1,94 @@
+﻿@using ApplicationLayer.Entities.Checks
+
+@inject IHttpClientFactory _clientFactory
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+
+
+
+<div class="container-fluid m-1 auto"
+style="width:inherit;">    
+    <div class="form-row "
+    style="justify-self:flex-start;">
+        <strong class="me-auto">Related Drafts fro @WellId</strong>
+    </div>
+    <br />
+    <div>
+        <GenDatabaseList Elements="getList">
+
+            <TableHeader >
+                <th>Check Number</th>
+                <th>Certified Date</th>
+                <th>Certified No</th>
+            </TableHeader>
+
+            <RowTemplate Context="entityModel">
+                <td><a href="@($"/checks/{Convert.ToString(entityModel.Id)}/{entityModel.CheckNumber}")" class="nav-link">@entityModel.CheckNumber</a></td>
+                <td>@entityModel.CheckDate</td>
+                <td>@entityModel.CertifiedMailDate</td>
+            </RowTemplate>
+            <HrefEditModal>
+                <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                </a>
+            </HrefEditModal>
+            <HrefDeleteModal>
+                <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                    <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                </a>
+            </HrefDeleteModal>
+        </GenDatabaseList>
+    </div>
+</div>
+
+
+@code {
+
+    [Parameter] public string WellId { get; set; } = string.Empty;
+
+    static string title = "CreateOrUpdateTractMainForm";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await PopulateTracts();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await Task.Run(() => PopulateList());
+    }
+
+    #region RETRIEVE LIST
+
+    List<CheckMasterMainForm> getList { get; set; } = new List<CheckMasterMainForm>();
+
+    async Task<List<CheckMasterMainForm>> PopulateList(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "CheckMaster");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getList = await JsonSerializer.DeserializeAsync<List<CheckMasterMainForm>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Tracts: {response.ReasonPhrase}";
+        }
+
+        return getList;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+
+}

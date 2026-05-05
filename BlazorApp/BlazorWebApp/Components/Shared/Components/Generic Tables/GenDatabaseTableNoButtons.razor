@@ -1,0 +1,59 @@
+﻿@typeparam TItem
+
+@*@inherits GenDatabaseTableNoButtons*@
+
+
+<!--@if (Param == null) || (Param.underparam == null)
+{-->
+@*//// SPINNER ANIMATION*@
+<!--<div class="spinner"></div>
+}
+else
+{-->
+<body>
+    <div class="form-row">
+        <div class="container">
+            <div style="width:90%; margin:0 auto;">
+                <table id="districtOwners" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            
+                            @TableHeader
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Items)
+                         {
+                            <tr>
+                                @RowTemplate(item)                          
+                                <td>
+                                    @*<a href="#editTractMIOwnerModal" class="edit" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                                    </a>
+                                    <a href="#deleteTractMIOwnerModal" class="delete" data-toogle="modal">
+                                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                    </a>*@
+                                </td>
+                            </tr>
+                         }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+@*}*@
+
+@code
+{
+
+    [Parameter] public IReadOnlyList<TItem> Items { get; set; }
+
+    [Parameter] public RenderFragment TableHeader { get; set; }
+
+    [Parameter] public RenderFragment<TItem> RowTemplate { get; set; }
+
+    [Parameter] public RenderFragment GenDatabaseTableNoButons { get; set; }
+}
+

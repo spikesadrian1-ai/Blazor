@@ -1,0 +1,249 @@
+﻿@inherits ChainOfTitleBase
+
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+</div>
+
+<EditForm Model="@chainOfTitle">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Location</div> 
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">State</label>
+                            </div>
+                            <div class="col-8" style="padding-bottom:3px;">
+                                @if (InitialState == true)
+                                {
+                                    <InputText @bind-Value="chainOfTitle.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)">Enter an Instrument Id</InputText>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="chainOfTitle.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">County</label>
+                            </div>
+                            <div class="col-8" style="padding-bottom:3px;">
+                                @if (InitialState == true)
+                                {
+                                    <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                    <datalist id="ListOfGrantors">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                    </datalist>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="chainOfTitle.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Lot</label>
+                            </div>
+                            <div class="col-8">
+                                @if (InitialState == true)
+                                {
+                                    <InputTextArea @bind-Value="chainOfTitle.Lot" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. James Smith)"></InputTextArea>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputTextArea @bind-Value="chainOfTitle.Lot" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. James Smith)"></InputTextArea>
+
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Block</label>
+                            </div>
+                            <div class="col-8" style="padding-bottom:3px;">
+                                @if (InitialState == true)
+                                {
+                                    <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                    <datalist id="ListOfGrantors">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                    </datalist>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="chainOfTitle.Block" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Subdivision</label>
+                            </div>
+                            <div class="col-8" style="padding-bottom:3px;">
+                                @if (InitialState == true)
+                                {
+                                    <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                    <datalist id="ListOfGrantors">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                    </datalist>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="chainOfTitle.Subdivision" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                }
+                            </div>
+                            <div class="form-row">
+                                <div class="col-2">
+                                    <label class="opacity-50 form-control-sm mb-0">Twn-Rng-Sec</label>
+                                </div>
+                                <div class="col-8" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                        <datalist id="ListOfGrantors">
+                                            <option value="Choose Payout Code"></option>
+                                            <option value="Alter Casing Point"></option>
+                                        </datalist>
+                                    }
+                                    else
+                                    @if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="chainOfTitle.SurveyTwnRngSec" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-2">
+                                    <label class="opacity-50 form-control-sm mb-0">Abstract</label>
+                                </div>
+                                <div class="col-8" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                        <datalist id="ListOfGrantors">
+                                            <option value="Choose Payout Code"></option>
+                                            <option value="Alter Casing Point"></option>
+                                        </datalist>
+                                    }
+                                    else
+                                    @if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="chainOfTitle.Abstract" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Searches</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-md-4 form-control-sm">
+                                <label class="opacity-50 form-control-sm mb-0">Instrument</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="chainOfTitle.InstrumentDate" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 ">
+                                <label class="opacity-50 form-control-sm mb-0">Effective</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="chainOfTitle.EffectiveDate" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="(Ex. 1/5 or 0.09635655)"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0">Expiration</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="chainOfTitle.ExpirationDate" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0">Other Date</label>
+                            </div>
+                            <div class="col">
+                                <InputDate @bind-Value="chainOfTitle.OtherDate1" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0">Other Date 2</label>
+                            </div>
+                            <div class="col">
+                                <InputDate @bind-Value="chainOfTitle.OtherDate2" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputDate>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-header form-control">Conveyance</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputTextArea @bind-Value="chainOfTitle.Conveyance" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputTextArea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Acreage Search Fields</label>
+                            </div>
+                            <div class="col form-control-sm" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="chainOfTitle.Abstract" class="form-control text-sm-right" style="align-self:center; width:none;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <br />
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Grantee Info</label>
+                            </div>
+                            <div class="col form-control-sm" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="chainOfTitle.Abstract" class="form-control text-sm-right" style="align-self:center; width:none;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+}

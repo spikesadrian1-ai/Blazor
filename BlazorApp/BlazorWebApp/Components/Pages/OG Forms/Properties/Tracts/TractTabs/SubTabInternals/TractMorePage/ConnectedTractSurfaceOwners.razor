@@ -1,0 +1,126 @@
+@page "/ConnectedTractSurfaceOwners"
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits TractMorePageBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-items-center m-3">
+        SURFACE OWNERS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="OwnerSearch.OwnerId"
+                   style="width:auto; max-width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <AddUpdateMineralOwnerComponent TractID="@TractID" @ref="popupRef" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in TractSurfaceOwners)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row w-100 m-1" style="align-content:normal" role="listitem">
+                                    <h8>Surface ID:  </h8>
+                                    <a href="@($"/ListOfTractsComponent/{@item.TractId}")">@item.TractId</a>
+                                    @* <span class="badge badge-primary badge-pill" href="@($"/ListOfTractsComponent/{@item.SuaId}")">@item.SuaId</span> *@
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code
+{
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    static string title = "TractLeasesModal";
+    string ComponentName = "Lease(s)";
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+
+
+
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<ApplicationLayer.Entities.SurfaceOwners.SurfaceOwnership> TractSurfaceOwners { get; set; }
+        = new List<ApplicationLayer.Entities.SurfaceOwners.SurfaceOwnership>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // var request = new HttpRequestMessage(HttpMethod.Get,
+        // _config["API_URL"] + $"SurfaceOwnership/SearchAllSurfaceOwnershipByTractId/{TractId}");
+        // var client = _clientFactory.CreateClient();
+        // HttpResponseMessage response = await client.SendAsync(request);
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     using var responseStream = await response.Content.ReadAsStreamAsync();
+        //     TractSurfaceOwners = await JsonSerializer.DeserializeAsync<List<ApplicationLayer.Entities.SurfaceOwners.SurfaceOwnership>>(responseStream);
+
+        //     errorString = null;
+        // }
+        // else
+        // {
+        //     errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+        // }
+    }
+
+    private AddUpdateMineralOwnerComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+
+}

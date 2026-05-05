@@ -1,0 +1,411 @@
+﻿@using ApplicationLayer.Entities.Grantor_Grantees
+@using ApplicationLayer.Entities.Property
+
+@{
+    ///
+    LeaseMainForm2? LeaseModel = new LeaseMainForm2();
+
+    PropertyMainForm propertyEntity = new PropertyMainForm();
+    //owners.OwnerId = OwnerID;
+}
+
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+</div>
+<br />
+<EditForm Model="@propertyEntity">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (OwnerID != null)
+                        {
+                            <strong class="me-auto">Interest Information for {@propertyEntity.PropertyId}</strong>
+                        }
+                        // else
+                        if (OwnerID == null)
+                        {
+                            <strong class="me-auto">New Interest Information for {@propertyEntity.PropertyId}</strong>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Interests</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    @* <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">Surface</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:1rem;">
+                                        <label class="opacity-50 form-control-sm mb-0">Surface</label>
+                                        <InputText @bind-Value="propertyEntity.Address" class="form-control-sm text-sm-right" style="width:100px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @* <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">Mineral</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:1rem;">
+                                        <label class="opacity-50 form-control-sm mb-0">Mineral</label>
+                                        <InputSelect @bind-Value="propertyEntity.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @* <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">Royalty</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:1rem;">
+                                        <label class="opacity-50 form-control-sm mb-0">Royalty</label>
+                                        <InputSelect @bind-Value="propertyEntity.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    @*          <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">City</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:3px;">
+                                        <label class="opacity-50 form-control-sm mb-0">City</label>
+                                        <InputText @bind-Value="propertyEntity.City" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*  <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">ZIP</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:3px;">
+                                        <label class="opacity-50 form-control-sm mb-0">ZIP</label>
+                                        <InputText @bind-Value="propertyEntity.Zip" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*  <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                    </div> *@
+                                    <div class="col form-control-sm" style="padding-bottom:1rem;">
+                                        <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                        <InputText @bind-Value="propertyEntity.Country" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    @* <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">City</label>
+                                    </div> *@
+                                    <label class="opacity-50 form-control-sm mb-0">City</label>
+                                    <div class="col form-control-sm" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.City" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*        <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">ZIP</label>
+                                    </div> *@
+                                    <label class="opacity-50 form-control-sm mb-0">ZIP</label>
+                                    <div class="col form-control-sm" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.Zip" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    @*   <div class="col">
+                                        <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                    </div> *@
+                                    <label class="opacity-50 form-control-sm mb-0">Country</label>
+                                    <div class="col form-control-sm">
+                                        <InputText @bind-Value="propertyEntity.Country" class="form-control-sm text-sm-right" style="align-self:center; width:100px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Surface:</label>
+                                    </div>
+                                    <div class="col-3 form-control-sm" style="padding-bottom:6px;">
+                                        <InputText @bind-Value="propertyEntity.Address" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Mineral:</label>
+                                    </div>
+                                    <div class="col-3 form-control-sm" style="padding-top:3px;">
+                                        <InputSelect @bind-Value="propertyEntity.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-2">
+                                        <label class="opacity-50 form-control-sm mb-0">Royalty:</label>
+                                    </div>
+                                    <div class="col-2 form-control-sm">
+                                        <InputSelect @bind-Value="propertyEntity.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputSelect>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Subsidence:</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.City" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">ORRI:</label>
+                                    </div>
+                                    <div class="col-3" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.Zip" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Net Revenue:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <InputText @bind-Value="propertyEntity.Country" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Interest 1:</label>
+                                    </div>
+                                    <div class="col-2" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.City" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Interest 2:</label>
+                                    </div>
+                                    <div class="col-2" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.Zip" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Interest 3:</label>
+                                    </div>
+                                    <div class="col-2" style="padding-bottom:3px;">
+                                        <InputText @bind-Value="propertyEntity.Country" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Interest 4:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <InputText @bind-Value="propertyEntity.Country" class="form-control-sm text-sm-right" style="align-self:center; width:125px;" placeholder="0.00000000"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Acreage Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <main>
+                            <div class="dashboard-container">
+                                <div class="col">
+                                    <div class="form-row">
+                                        <div class="col-2 text-center"></div>
+                                        <div class="col-2 text-center">Gross Acres</div>
+                                        <div class="col-2 text-center">Net Acres</div>
+                                        <div class="col-2 text-center"></div>
+                                        <div class="col-2 text-center">Gross Acres</div>
+                                        <div class="col-2 text-center">Net Acres</div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Total Mineral</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">ORRI</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Producing</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">ORRI Prod.</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right"><label>Leased</label></div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">ORRI Leased</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Royalty</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">Other</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Prod. Royalty</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">Producing</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Lease Royalty</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">Other Leased</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col-2 text-sm-right">Surface</div>
+
+                                        @* 100% ACREAGE *@
+                                        <div class="col-2 ">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+
+                                        <div class="col-2">Subsidence</div>
+
+                                        @* COMPANY ACREAGE *@
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <InputNumber @bind-Value="LeaseModel.GrossAcres" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="0.00000000"></InputNumber>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+    [Parameter] public string? OwnerID { get; set; } = string.Empty;
+
+
+}

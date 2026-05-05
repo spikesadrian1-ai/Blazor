@@ -1,0 +1,33 @@
+﻿@typeparam TBackLink
+
+<div class="container">
+    <nav class="navbar navbar-expand-sm bg-light navbar-dark">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <button class="m-1 btn btn-light btn-outline-primary" Button>
+                    <NavLink href="@Link">
+                        @ChildContent
+                    </NavLink>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@code {
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    //[Parameter] public RenderFragment NavLink { get; set; }
+
+    //[Parameter] public RenderFragment Back { get; set; }
+
+    [Parameter] public RenderFragment Text { get; set; }
+
+    //[Parameter] public RenderFragment TBackLink { get; set; }
+
+    [Parameter] public RenderFragment RouteText { get; set; }
+
+    [Parameter] public RenderFragment<TBackLink> Link { get; set; }
+
+}

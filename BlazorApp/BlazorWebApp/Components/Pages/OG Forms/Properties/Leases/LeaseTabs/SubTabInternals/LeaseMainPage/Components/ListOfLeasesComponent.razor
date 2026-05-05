@@ -1,0 +1,273 @@
+﻿@page "/ListOfLeasesComponent"
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inherits LeaseMainBase
+
+@{
+    //leaseModel.Lease_ID = string.Empty;
+    ///
+    var showClass = IsVisible ? "d-block" : "d-none";
+    //var captureNewLeaseID = LeaseIdSelected; // ? NewLeaseID : Leasei
+    //string leaseId = leaseModel.Lease_ID.ToString();
+
+}
+
+@* <CascadingParameter
+    LeaseID="@leaseModel.Lease_ID"
+    ID="@leaseModel.Id">
+
+</CascadingParameter> *@
+
+<div class="modal p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000" style="align-self:center; ">
+    <div class="container position-relative"
+    style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:450px;">
+
+        <div class="modal-body" style="align-self:center">
+            <div class="modal-content align-content-center">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+                </div>
+                <div class="card" style="align-content:center; width:-webkit-fit-content; height:max-content">
+
+                    @* <BackButtonComponent></BackButtonComponent> *@
+
+                    <div class="container">
+
+                        <BackButtonComponent></BackButtonComponent>
+
+                        <div class="row" align="center">
+                            <h3>Available Leases</h3>
+                        </div>
+                        <div class="row" align="left">
+                            <br />
+                            <NavLink class="btn btn-primary" style="width:auto;" href="@($"/Leases")">
+                                Create New Lease
+                            </NavLink>
+                            <br />
+                        </div>
+                        <GenDatabaseList Elements="getLeases">
+                            <HrefModalName>
+                                <div class="col-4" align="right">
+                                    @*   <button class="btn btn-primary" style="width:150px;" href="@($"{LeasePage}")">@($"Attach to {ComponentName}")</button>
+                                    <NavLink class="edit" href="@($"{LeasePage}")" data-toogle="modal">
+                                    <span class="oi oi-list-rich" aria-hidden="true"></span>
+                                    @($"Attach to {ComponentName}")
+                                    </NavLink> *@
+                                    @* <NavLink class="btn btn-primary" style="width:auto;" href="@($"{LeasePage}")">
+                                        @($"Attach to {ComponentName}")
+                                    </NavLink> *@
+                                </div>
+                            </HrefModalName>
+                            <TableHeader>
+                                @* <th>ID</th> *@
+                                <th>Lease ID</th>
+                                <th>Name</th>
+                                <th>Lessee</th>
+                                <th>Lessor</th>
+                            </TableHeader>
+                            <RowTemplate Context="Leases">
+                                @* <td><a href="@($"/Leases/{Convert.ToString(Leases.Id)}")" class="nav-link">@Leases.Id</a></td> *@
+                                @* <td><a href="@($"/CreateOrUpdateLeaseComponent/{leaseModel.Lease_ID}")" class="nav-link">@leaseModel.Lease_ID</a></td> *@
+
+                                @* @leaseId @captureNewLeaseID"*@@* @onselect="(() => SelectedLeaseIdEvent(Leases.Lease_ID))" 
+                                    @onchange="OnSelectedChange"
+                                *@
+                                <td>
+                                    <a @onclick="Close"
+                                    href="@($"/Leases/{Leases.Id}/{Leases.LeaseId}")" class="nav-link">@Leases.LeaseId</a>
+                                    @{
+                                        InitialState = false;
+                                        LeaseTablePK = Convert.ToString(Leases.Id);
+                                        IdFromListView = Leases.LeaseId;
+
+                                        //SelectedLeaseIdEvent(IdFromListView);
+                                    }
+                                </td>
+                                <td>@Leases.LeaseId</td>
+                                <td>@Leases.LesseeId</td>
+                                <td>@Leases.LessorId</td>
+                            </RowTemplate>
+                            <HrefEditModal>
+                                <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                                    <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                                </a>
+                            </HrefEditModal>
+                            <HrefDeleteModal>
+                                <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                                    <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                                </a>
+                            </HrefDeleteModal>
+                        </GenDatabaseList>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    public LeaseMainForm2 Leases { get; set; } = new LeaseMainForm2();
+
+    static string title = "TractLeasesModal";
+
+    string errorString;
+
+
+    protected override async Task OnInitializedAsync() => await Task.Run(() => PopulateLeases());
+
+    #region Popup
+
+    [Parameter] public bool IsVisible { get; set; }
+
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter] public string? HeaderText { get; set; }
+
+    [Parameter] public string? BodyText { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        //LeaseTablePK = Convert.ToString(leaseModel.Id); // MAKES IT ZERO OUT
+        //IdFromListView = leaseModel.LeaseId;            // MAKES IT NULL
+        //OnSelectedChanged();
+        //SelectedLeaseIdEvent(IdFromListView);
+        //InitialState = false;
+    }
+
+    #endregion Popup
+
+    #region PAGINATION
+
+    private int totalPageQuantity;
+    private int currentPage = 1;
+    private async Task SelectedPage(int page)
+    {
+        currentPage = page;
+        await PopulateLeases(page);
+    }
+
+    #endregion PAGINATION
+
+    #region RETRIEVE LIST OF LEASES
+
+    List<LeaseMainForm2> getLeases { get; set; } = new List<LeaseMainForm2>();
+
+    async Task<List<LeaseMainForm2>> PopulateLeases(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+      _config["API_URL"] + "LeaseMainForm2");
+        var client = _clientFactory.CreateClient();
+        HttpResponseMessage response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getLeases = await JsonSerializer.DeserializeAsync<List<LeaseMainForm2>>(responseStream);
+
+            errorString = null;
+        }
+        else
+        {
+            errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+        }
+
+        return getLeases;
+    }
+
+    #endregion RETRIEVE LIST OF TRACTS
+
+    #region LeaseID Selected Event
+
+    [Parameter] public IEnumerable<LeaseMainForm2> availLeases { get; set; }
+
+    [Parameter] public EventCallback<string> OnLeaseIdSelected { get; set; }
+
+    private string _leaseIdSelected;
+
+    public string SelectedLeaseIdEvent(string LeaseID)
+    {
+
+        _leaseIdSelected = LeaseID;
+        //IdFromListView = LeaseID;
+
+        OnLeaseIdSelected.InvokeAsync(_leaseIdSelected);
+        //OnLeaseIdSelected.InvokeAsync(IdFromListView);
+
+        // availLeases = (IEnumerable<string>)getLeases;
+        // _leaseIdSelected = /* LeaseID; */ availLeases.FirstOrDefault();
+
+        // if (_leaseIdSelected == true)
+        // {
+        //     if (!string.IsNullOrEmpty(LeaseID))
+        //     {
+        //         IdFromListView = LeaseID;
+        //     }
+
+
+        // }
+
+        return _leaseIdSelected;
+    }
+
+
+    private void OnSelectedChanged(ChangeEventArgs args)
+    {
+        var leaseSelected = args.Value.ToString();
+        if (leaseSelected != null && leaseSelected != _leaseIdSelected)
+        {
+            _leaseIdSelected = leaseSelected;
+
+            OnLeaseIdSelected.InvokeAsync(leaseSelected);
+        }
+        //leaseModel.Lease_ID = Leases.Lease_ID;
+        //IdFromListView = leaseModel.Lease_ID;
+        //SelectedLeaseIdEvent(IdFromListView);
+        //Close();
+
+    }
+
+    #endregion LeaseID Selected Event
+
+    //[Parameter] public IEnumerable<string> Items {get; set; }
+
+    // public EventCallback<string> OnItemSelected { get; set; }
+
+    // private string? _selectedItem;
+
+    // protected override void OnInitialized()
+    // {
+    //     _selectedItem = Items.FristOrDefault();       
+
+    // }
+
+    // private void OnSelectedChanged(ChangeEventArgs args)
+    // {
+    //     var selectedItem = args.Value.ToString();
+    //     if (selectedItem != null && selectedItem != _selectedItem)
+    //     {
+    //         _selectedItem = selectedItem;
+    //     }
+    // }
+}

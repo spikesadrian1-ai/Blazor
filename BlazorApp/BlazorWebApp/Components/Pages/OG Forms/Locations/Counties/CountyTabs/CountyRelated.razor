@@ -1,0 +1,81 @@
+﻿@page "/CountyRelated/{CName}"
+
+
+
+@inherits TractMorePageBase
+
+<!-- List Group -->
+<div style="width:40%; margin:50px auto;">
+    <div class="list-group" id="myList" role="tablist" align="left">
+        <a class="list-group-item list-group-item-action active" data-toggle="list" href="TractFormations" role="tab">Prospects</a>
+        @foreach (var item in TractDepth)
+        {
+            DepthNumber = TractDepth.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@DepthNumber</span>
+        <!-- #region name -->
+
+
+
+        <!-- #endregion -->
+     @*    <a class="list-group-item list-group-item-action" data-toggle="list" href="#Tracts" role="tab">Tracts</a>
+        @foreach (var item in associatedTractOwnersViaTractId)
+        {
+            NumberOfLeases = associatedTractOwnersViaTractId.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@NumberOfLeases</span>
+ *@
+        <a class="list-group-item list-group-item-action" data-toggle="list" href="#Leases" role="tab">Leases</a>
+        @foreach (var item in TractDepth)
+        {
+            testNumber = TractDepth.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@testNumber</span>
+
+        <a class="list-group-item list-group-item-action" data-toggle="list" href="#ROWs" role="tab">ROWs</a>
+        @foreach (var item in TractDepth)
+        {
+            testNumber = TractDepth.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@testNumber</span>
+
+        <a class="list-group-item list-group-item-action" data-toggle="list" href="#SUAs" role="tab">SUAs</a>
+        @foreach (var item in TractDepth)
+        {
+            testNumber = TractDepth.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@testNumber</span>
+
+        <a class="list-group-item list-group-item-action" data-toggle="list" href="#Wells" role="tab">Wells</a>
+        @foreach (var item in TractDepth)
+        {
+            testNumber = TractDepth.Count.ToString();
+        }
+        <span class="badge badge-primary badge-pill">@testNumber</span>
+    </div>
+</div>
+
+<br />
+
+<!-- Tab Panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="Prospects" role="tabpanel">...</div>
+    <div class="tab-pane" id="Tracts" role="tabpanel">...</div>
+    <div class="tab-pane" id="Leases" role="tabpanel">...</div>
+</div>
+
+@code {
+
+    public string DepthNumber;
+    public string NumberOfLeases;
+    public string testNumber;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await PopulateDataGrids();
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        //await Task.Run(PopulateDistricts);
+    }
+
+}

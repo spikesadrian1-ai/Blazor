@@ -1,0 +1,133 @@
+﻿@page "/ConnectedTractWIDetails"
+@using ApplicationLayer.Services.Assets.Leases.LeaseRelated
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@inject LeaseRelatedPageServices _leaseRelatedPageServices;
+
+@inherits TractMainPageBase
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-sclae=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+<link href="~/css/style.css" rel="stylesheet" />
+
+<EditForm Model="@OwnerSearch">
+    <div class="form-row align-items-center m-3">
+        W.I. DETAILS
+    </div>
+    <div class="row m-1">
+        <InputText id="OwnerSearchTextbox"
+                   @bind-Value="OwnerSearch.OwnerId"
+                   style="width:auto; max-width:160px;"
+                   class="m-1"
+                   placeholder="Search">
+        </InputText>
+        @if (fromLeaseFormState == true)
+        {
+            <a class="btn btn-primary m-1" >EXPAND</a>
+            <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" />
+        }
+        else
+        {
+            <a class="btn btn-primary m-1">EXPAND</a>
+            @* <AddUpdateTractWorkingInterestComponent LeaseID="@LeaseID" /> *@
+        }
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark position-relative"
+                 style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+             <ol class="">
+                @foreach (var item in TractWideckInterests)
+                    {         
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                            @* <h8>Deck Name:  </h8> *@
+                                    <a class="form-control-sm" href="@($"/ListOfTractsComponent/{@item.DeckName}")">
+                                            Deck: @item.DeckName 
+                                            Type: @item.InterestType
+                                        Interest: @item.Interest
+                                    </a>
+                                            @* <span class="badge badge-primary badge-pill">@item.DeckName</span> *@
+                                </div>
+                            </div>
+                        </li>
+                
+                    }
+             </ol>
+            
+        </div>
+    </div>    
+    </div>
+</EditForm>
+
+@code
+{
+    static string title = "TractWorkingInterestModal";
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? TractID { get; set; } = string.Empty;
+    [Parameter] public string? LeaseID { get; set; } = string.Empty;
+    [Parameter] public bool? fromTractFormState { get; set; } //= string.Empty;
+    [Parameter] public bool? fromLeaseFormState { get; set; } //= string.Empty;
+    #endregion CASCADING PARAMS
+
+    string ComponentName = "Working Interest(s)";
+    //string LeasePage = $"TractWorkingInterestDetailsPopup/{TractId}";
+    public TractOwnership OwnerSearch { get; set; } =
+    new TractOwnership(); //= null;
+
+    // private int totalPageQuantity;
+    // private int currentPage = 1;
+
+    List<ApplicationLayer.Entities.WorkingInterests.WideckInterest> TractWideckInterests { get; set; } =
+        new List<ApplicationLayer.Entities.WorkingInterests.WideckInterest>();
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (TractId != string.Empty)
+        {
+            fromTractFormState = true;
+
+            var request = new HttpRequestMessage(HttpMethod.Get,
+            _config["API_URL"] + $"WIDeckInterest/SearchAllWideckInterestByTractId/{TractId}");
+            var client = _clientFactory.CreateClient();
+            HttpResponseMessage response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                TractWideckInterests = await JsonSerializer.DeserializeAsync<List<ApplicationLayer.Entities.WorkingInterests.WideckInterest>>(responseStream);
+
+                errorString = null;
+            }
+            else
+            {
+                errorString = $"There was an error getting Prospects Data: {response.ReasonPhrase}";
+            }
+        }
+        else if (LeaseID != string.Empty)
+        {
+            fromLeaseFormState = true;
+
+            TractWideckInterests = await _leaseRelatedPageServices
+                .RetrieveAllRelatedWorkingInterestsDetailsByLeaseIdAsync(LeaseID);
+        }
+        //else ((LeaseId != null) && (TractId != null)) ListOfWellsViaLeaseId = await _leaseRelatedPageServices.RetrieveAllRelatedWellsByLeaseIdAsync(LeaseId);
+
+    }
+
+}

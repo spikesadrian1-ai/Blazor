@@ -1,0 +1,197 @@
+﻿
+@inherits WellMainBase
+
+<div class="container-fluid m-1 auto"
+     style="width:inherit; height:;">
+    <div class="card accent-card">
+        <div class="card-body" style="width:inherit; height:;">
+            <div class="card-header form-control-lg">
+                <strong class="me-auto">Related TwnRngSections</strong>
+            </div>
+            <br />
+            @* <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveNewLeaseAsync(leaseModel))"> Payments </button>
+            <button type="submit" class="btn btn-danger" style="width:150px;">Drafts</button>
+            <button type="button" class="btn btn-primary" style="width:150px;" @onclick="OnPostCreateTract">History</button>
+            <div class="form-row-sm" style="align-content:center;">
+
+            </div> *@
+            <br />
+            <div class="form-row">
+                <div class="col-2">
+                    <div class="card-body"
+                         style="width:100px;
+                                height:;
+                                ">
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control-sm" style="width:150px; height:auto;"
+                                    @onselect="ShowRelatedPayments"
+                                    @onclick="ShowRelatedPayments">
+                                Payments
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control-sm" style="width:150px; height:auto;"
+                                    @onclick="ShowRelatedDrafts">
+                                Drafts
+                            </button>
+                        </div>
+                        <div class="form-row" style="">
+                            <button type="submit" class="btn btn-primary form-control-sm" style="width:none; height:auto;"
+                                    @onclick="ShowRelatedHistory">
+                                History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="container-fluid position-relative"
+                         style="overflow-x:hidden;
+                                        overflow-y:;
+                                        max-width:650px;
+                                        min-width:100px;
+                                        height:300px;">
+                        <div class="card-body"
+                             style="align-items:center;
+                                            align-content:center;
+                                            width:min-content;
+                                            height:contain;">
+                            @if (showHistoricalPayments == true)
+                            {
+                                @*  <BlazorWebApp.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents.PaymentHistorySubControls.HistoricalPayments>
+
+                                        </BlazorWebApp.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents.PaymentHistorySubControls.HistoricalPayments> *@
+                                //<RelatedContracts @onreadystatechan-9ge="()=>ShowRelatedContracts()" @ref="popupRefContracts" />
+
+                                <RelatedPayments />
+                            }
+                            @if (showRelatedDrafts == true)
+                            {
+                                <RelatedDrafts WellId="@WellId" />
+                                //<RelatedLeases @ref="popupRefLeases" />
+                            }
+                            @if (showRelatedHistory == true)
+                            {
+                                <RelatedHistorys />
+                            }
+
+                        </div>
+                    </div>
+                    @* </div> *@
+                </div>
+                @* <div class="container-fluid border border-top border-bottom m-1"
+                     style="width:inherit; height:;"> 
+                </div> *@
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    //
+    // [Parameter] public string WellId { get; set; } = string.Empty;
+
+    bool showHistoricalPayments;
+    bool showRelatedDrafts = false;
+    bool showRelatedHistory = false;
+
+
+    // async Task ShowRelatedPayments()
+    // {
+    //     if ((showRelatedDrafts = true) || (showRelatedHistory = true))
+    //     {
+    //         showRelatedDrafts = false;
+    //         showRelatedHistory = false;
+    //     }
+
+    //     /* return */
+    //     showPayments = true;
+    // }
+
+    private void ShowRelatedPayments()
+    {
+        // if ((showRelatedDrafts == true) || (showRelatedHistory == true))
+        // {
+        //     showRelatedDrafts = false;
+        //     showRelatedHistory = false;
+        // }
+
+        // showHistoricalPayments = true;
+
+        if (showHistoricalPayments == false)
+        {
+            showRelatedDrafts = false;
+            showRelatedHistory = false;
+
+            //StateHasChanged();
+        }
+
+        showHistoricalPayments = true;
+
+        // Shows the popup at the center of the screen
+        //popupRefContracts.Show("Popup body text");
+    }
+
+    async Task ShowRelatedDrafts()
+    {
+        if ((showHistoricalPayments = true) || (showRelatedHistory = true))
+        {
+            showHistoricalPayments = false;
+            showRelatedHistory = false;
+        }
+
+        /* return */
+        showRelatedDrafts = true;
+    }
+
+    async Task ShowRelatedHistory()
+    {
+        if ((showHistoricalPayments = true) || (showRelatedHistory = true))
+        {
+            showHistoricalPayments = false;
+            showRelatedDrafts = false;
+        }
+
+        /* return */
+        showRelatedHistory = true;
+    }
+
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; } = new EventCallback<bool>();
+
+    [Parameter]
+    public string? HeaderText { get; set; }
+
+    [Parameter]
+    public string? BodyText { get; set; }
+
+    // [Parameter]
+    // public IHandleAfterRender handleAfterRender { get; set; }
+
+    public void Show(string bodyText, string headerText = "")
+    {
+        HeaderText = headerText;
+        BodyText = bodyText;
+        IsVisible = true;
+        //handleAfterRender.OnAfterRenderAsync();
+        //StateHasChanged();
+
+    }
+
+    private void Close()
+    {
+        HeaderText = string.Empty;
+        BodyText = string.Empty;
+        IsVisible = false;
+        StateHasChanged();
+    }
+
+    void OnAfterRenderAsync()
+    {
+        StateHasChanged();
+    }
+}

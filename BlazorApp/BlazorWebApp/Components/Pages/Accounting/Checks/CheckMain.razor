@@ -1,0 +1,407 @@
+﻿@page "/CheckMain"
+
+
+@using ApplicationLayer.Entities.Checks
+
+@inherits CheckBase
+
+@{
+    CheckMasterMainForm checkMasterMain = new CheckMasterMainForm();
+}
+
+
+<TabControl>
+    <TabPage Text="Documents">
+        <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+    </TabPage>
+</TabControl>
+
+<div class="form-row" style="">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(t: checkModelEntity))"> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfChecks")"> View Contracts</NavLink>
+</div>
+<br />
+<EditForm Model="@checkModelEntity">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (string.IsNullOrEmpty(EntityID))
+                        {
+                            <strong class="me-auto">Check</strong>
+                        }
+                        //else
+                        if (!string.IsNullOrEmpty(EntityID))
+                        {
+                            <strong class="me-auto">Information for Check No. {@checkModelEntity.CheckNumber}</strong>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Identification</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Property Type:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrEmpty(EntityID))
+                                {
+                                    <input list="ListOfPropertyTypes" id="PayoutCodes" class="form-control"
+                                           @onselect="PropertyTypeSelectedEvent"
+                                           @onchange="PropertyTypeSelectedEvent" />
+                                    <datalist id="ListOfPropertyTypes">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                        @*                       <option value="2">BPO / APO</option>
+                                    <option value="3">After Payout</option>
+                                    <option value="4">After Payout 2</option>
+                                    <option value="5">After Payout 3</option>
+                                    <option value="6">After Project Payout</option>
+                                    <option value="7">Before Casing Point</option>
+                                    <option value="8">Before Payout</option> *@
+                                        <option value="Before Prospect Payout"></option>
+                                        @*           <option value="10">Interest 1</option>
+                                    <option value="11">Interest 2</option>
+                                    <option value="12">Interest 3</option>
+                                    <option value="13">Record Title</option>
+                                    <option value="14">Well Revenue</option>
+                                    <option value="15">Oil</option>
+                                    <option value="16">O&G</option>
+                                    <option value="17">Gas</option>
+                                    <option value="18">Condensate</option>
+                                    <option value="19">Casinghead Gas</option> *@
+                                    </datalist>
+                                }
+
+                                @if (!string.IsNullOrEmpty(EntityID))
+                                {
+                                    <InputSelect @bind-Value="checkModelEntity.PropertyType" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. JM001)"></InputSelect>
+                                }
+                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Property ID:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrEmpty(EntityID))
+                                {
+                                    <input list="ListOfPropertyIds" id="PayoutCodes" class="form-control"
+                                           @onselect="PropertyIdSelectedEvent"
+                                           @onchange="PropertyIdSelectedEvent" />
+                                    <datalist id="ListOfPropertyIds">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                        @*                       <option value="2">BPO / APO</option>
+                                    <option value="3">After Payout</option>
+                                    <option value="4">After Payout 2</option>
+                                    <option value="5">After Payout 3</option>
+                                    <option value="6">After Project Payout</option>
+                                    <option value="7">Before Casing Point</option>
+                                    <option value="8">Before Payout</option> *@
+                                        <option value="Before Prospect Payout"></option>
+                                        @*           <option value="10">Interest 1</option>
+                                    <option value="11">Interest 2</option>
+                                    <option value="12">Interest 3</option>
+                                    <option value="13">Record Title</option>
+                                    <option value="14">Well Revenue</option>
+                                    <option value="15">Oil</option>
+                                    <option value="16">O&G</option>
+                                    <option value="17">Gas</option>
+                                    <option value="18">Condensate</option>
+                                    <option value="19">Casinghead Gas</option> *@
+                                    </datalist>
+                                }
+
+                                @if (!string.IsNullOrEmpty(EntityID))
+                                {
+                                    <InputSelect @bind-Value="checkModelEntity.PropertyId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputSelect>
+                                }
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Payment Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Payor Bank:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="checkModelEntity.PayorBankNo" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Check No:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="checkModelEntity.CheckNumber" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. jamessmith@gmail.com)"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Check Status:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                @if (string.IsNullOrEmpty(EntityID))
+                                {
+                                    <input list="ListOfCheckStatusTypes" id="CheckStatusTypes" class="form-control"
+                                           @onselect="CheckStatusSelectedEvent"
+                                           @onchange="CheckStatusSelectedEvent" />
+                                    <datalist id="ListOfCheckStatusTypes">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                        @*                       <option value="2">BPO / APO</option>
+                                    <option value="3">After Payout</option>
+                                    <option value="4">After Payout 2</option>
+                                    <option value="5">After Payout 3</option>
+                                    <option value="6">After Project Payout</option>
+                                    <option value="7">Before Casing Point</option>
+                                    <option value="8">Before Payout</option> *@
+                                        <option value="Before Prospect Payout"></option>
+                                        @*           <option value="10">Interest 1</option>
+                                    <option value="11">Interest 2</option>
+                                    <option value="12">Interest 3</option>
+                                    <option value="13">Record Title</option>
+                                    <option value="14">Well Revenue</option>
+                                    <option value="15">Oil</option>
+                                    <option value="16">O&G</option>
+                                    <option value="17">Gas</option>
+                                    <option value="18">Condensate</option>
+                                    <option value="19">Casinghead Gas</option> *@
+                                    </datalist>
+                                }
+
+                                @if (!string.IsNullOrEmpty(EntityID))
+                                {
+                                    <InputSelect @bind-Value="checkModelEntity.CheckStatus" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. JM001)"></InputSelect>                       
+                                }
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Check Date:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="checkModelEntity.CheckDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="mm/dd/YYYY"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Fed. Withheld:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="checkModelEntity.FederalTaxWithheld" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder=""></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Bank Charges:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="checkModelEntity.BankCharges" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0">Payee:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="checkModelEntity.PayeeId" class="form-control-sm text-sm-right" style="align-self:center; width:250px;" placeholder="(Ex. James Smith)"></InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Address Information</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        @* <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0">Type:</label>
+                                <label class="form-control-sm">Owner:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="owners.AddressType" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder="(Ex. JM001)"></InputSelect>
+                            </div>
+                        </div> *@
+                        
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Total Amount</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="checkModelEntity.TotalAmount" class="form-control-sm text-sm-right" style="align-self:center; width:200px; padding-bottom:3px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Fed Tax Withheld</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <InputNumber @bind-Value="checkModelEntity.FederalTaxWithheld" class="form-control-sm text-sm-right" style="align-self:center; width:200px; padding-bottom:3px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Bank Charges</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col">
+                                        <InputNumber @bind-Value="checkModelEntity.BankCharges" class="form-control-sm text-sm-right" style="align-self:center; width:200px;  padding-bottom:3px;" placeholder="(Ex. 0.00000000)"></InputNumber>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-4">
+                                        <label class="opacity-50 form-control-sm mb-0">Payee ID</label>
+                                        @* <label class="form-control-sm">Email:</label> *@
+                                    </div>
+                                    <div class="col">
+                                        @if (string.IsNullOrEmpty(EntityID))
+                                        {
+                                            <input list="ListOfPayees" id="PayeeList" class="form-control"
+                                                   @onselect="PayeeSelectedEvent"
+                                                   @onchange="PayeeSelectedEvent" />
+                                            <datalist id="ListOfPayees">
+                                                <option value="Choose Payout Code"></option>
+                                                <option value="Alter Casing Point"></option>
+                                                @*                       <option value="2">BPO / APO</option>
+                                                <option value="3">After Payout</option>
+                                                <option value="4">After Payout 2</option>
+                                                <option value="5">After Payout 3</option>
+                                                <option value="6">After Project Payout</option>
+                                                <option value="7">Before Casing Point</option>
+                                                <option value="8">Before Payout</option> *@
+                                                            <option value="Before Prospect Payout"></option>
+                                                            @*           <option value="10">Interest 1</option>
+                                                <option value="11">Interest 2</option>
+                                                <option value="12">Interest 3</option>
+                                                <option value="13">Record Title</option>
+                                                <option value="14">Well Revenue</option>
+                                                <option value="15">Oil</option>
+                                                <option value="16">O&G</option>
+                                                <option value="17">Gas</option>
+                                                <option value="18">Condensate</option>
+                                                <option value="19">Casinghead Gas</option> *@
+                                            </datalist>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(EntityID))
+                                        {
+                                            <InputSelect @bind-Value="checkModelEntity.PayeeId" class="form-control-sm text-sm-right" style="align-self:center; width:200px;" placeholder=""></InputSelect>
+                                        }                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card-header form-control">Draft Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Cert Mail No</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="checkModelEntity.CertifiedMailNo" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Cert Mail Date</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="checkModelEntity.CertifiedMailDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Draft No</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="checkModelEntity.DraftIdNumber" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Draft Date</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputDate @bind-Value="checkModelEntity.DraftDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder="(Ex. 123-45-6789)"></InputDate>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Paid Date</label>
+                            </div>
+                            <div class="col">
+                                <InputDate @bind-Value="checkModelEntity.PaidDate" class="form-control-sm text-sm-right" style="align-self:center; width:150px;" placeholder=""></InputDate>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-header form-control">Banking Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-3 ">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Default:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputSelect @bind-Value="checkModelEntity.DepBankId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputSelect>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" asp-for="TotalAcreage">Bank @* Account *@No:</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="checkModelEntity.AccountNo" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. 123-45-6789)"></InputText>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+
+}

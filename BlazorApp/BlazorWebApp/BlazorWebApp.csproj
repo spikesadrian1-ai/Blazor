@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Akka.DependencyInjection" Version="1.5.67" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection.AzureFunctions" Version="7.2.0.92" />
+    <PackageReference Include="Azure.Core" Version="1.54.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.14" />
@@ -15,6 +21,20 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+    <PackageReference Include="Polly.Extensions" Version="8.6.6" />
+    <PackageReference Include="Scrutor" Version="6.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.15" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="11.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\OG_Blazor-App\ApplicationLayer\ApplicationLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\UI\" />
   </ItemGroup>
 
 </Project>

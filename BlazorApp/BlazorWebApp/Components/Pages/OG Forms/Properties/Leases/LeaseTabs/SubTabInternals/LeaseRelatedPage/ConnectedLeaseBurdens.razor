@@ -1,0 +1,86 @@
+@page "/ConnectedLeaseBurdens"
+
+
+@inject ApplicationLayer.Services.Assets.Leases.LeaseRelated.LeaseRelatedPageServices leaseRelatedPageServices;
+
+@inherits LeaseMainBase
+
+@{
+    Burdens _burden = new Burdens();
+    //_burden.SearchBurdens(LeaseID);
+}
+
+<EditForm Model="@_burden">
+    <div class="form-row align-items-center m-3">
+        BURDENS
+    </div>
+    <div class="row m-1">
+        @*  *@
+        <InputText id="OwnerSearchTextbox"
+        @bind-Value="_burden.OwnerId"
+        style="width:160px;"
+        class="m-1"
+        placeholder="Search">
+        </InputText>
+
+           <a class="btn btn-primary m-1" @onclick="RedirectPage">NEW</a>
+
+        <AddUpdateBurdenComponent LeaseID="@LeaseTablePK" TractID="@TractID" @ref="popupRef" />
+        <div class="row m-1">
+            <div class="container border border-top border-bottom border-dark "
+            style="overflow:scroll;
+                        -webkit-overflow-scrolling:auto;
+                        justify-content:left;
+                        border-width:medium;
+                        width:-webkit-fit-content;
+                        height:175px;">
+                <ol>
+                    @foreach (var item in ListAllBurdensViaLeaseId)
+                    {
+                        <li>
+                            <div class="list-group" role="listbox">
+                                <div class="row m-1" style="align-content:normal" role="listitem">
+                                    <h8>Burden Type:  </h8>
+                                    <span class="badge badge-primary badge-pill">@item.BurdenType</span>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    #region CASCADING PARAMS
+    //[Parameter] public string? LeaseID { get; set; } = string.Empty;
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+
+    //LeaseRelatedPageServices leaseRelatedPageServices;
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (LeaseTablePK != null)
+        {
+            ListAllBurdensViaLeaseId = await leaseRelatedPageServices.RetrieveAllRelatedBurdensByLeaseIdAsync(LeaseTablePK);
+        }
+
+        // if (TractID != null)
+        // {
+        //     ListAllBurdensViaLeaseId = await leaseRelatedPageServices.RetrieveAllRelatedBurdensByLeaseIdAsync(LeaseID);
+        // }
+    }
+
+    private AddUpdateBurdenComponent popupRef;
+
+    private void RedirectPage()
+    {
+        // Shows the popup at the center of the screen
+        popupRef.Show("Popup body text");
+    }
+}

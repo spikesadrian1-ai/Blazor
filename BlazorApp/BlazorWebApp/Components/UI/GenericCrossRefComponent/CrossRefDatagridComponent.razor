@@ -1,0 +1,80 @@
+﻿@* @typeparam T *@
+@* @typeparam TElement *@
+
+
+@* @if (Parent.ActiveGrid == this)
+{
+    @ChildContent
+
+    
+
+} *@
+
+@code {
+
+    // [CascadingParameter]
+    // private CrossRefComponent<TElement> Parent { get; set; }
+
+    // [CascadingParameter]
+    // private CrossRefDatagridComponent Grid { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    // [Parameter]
+    // public string GridLabel { get; set; } 
+
+    /// <summary>
+    ///
+    /// </summary>
+    // protected override void OnInitialized()
+    // {
+    //     if (Parent == null)
+    //         throw new ArgumentNullException(nameof(Parent), "CrossRefComponent must exist within a SubTabControl");
+    //     base.OnInitialized();
+
+    //     Parent.AddGrid(this/* , ActiveGrid */);
+
+    // }
+
+    #region CROSSREF DATAGRID
+    [Parameter]
+    public RenderFragment DataGridChildContent { get; set; }
+
+    //public CrossRefDatagridComponent ActiveGrid { get; set; }
+    //List<CrossRefDatagridComponent> Grid = new List<CrossRefDatagridComponent>();
+
+    // internal void AddGrid(CrossRefDatagridComponent crossRefGrid)
+    // {
+    //     Grid.Add(crossRefGrid);
+    //     if (Grid.Count == 1)
+    //         ActiveGrid = crossRefGrid;
+    //     StateHasChanged();
+    // }
+
+    // string GetGridClass(CrossRefDatagridComponent gridButton)
+    // {
+    //     return gridButton == ActiveGrid ? "btn-primary" : "btn-secondary";
+    // }
+
+    // void ActivateGrid(CrossRefDatagridComponent gridPage)
+    // {
+    //     ActiveGrid = gridPage;
+    // }
+    #endregion CROSSREF DATAGRID
+
+    // [Parameter] public IReadOnlyList<TItem> Items { get; set; }
+
+    // [Parameter] public RenderFragment TableHeader { get; set; }
+
+    // [Parameter] public RenderFragment<TItem> RowTemplate { get; set; }
+
+    // [Parameter] public RenderFragment GenDatabaseTableNoButons { get; set; }
+
+    @* [Parameter] public RenderFragment<T> RowTemplate { get; set; } *@
+
+    @* [Parameter] public List<T> Elements { get; set; } *@
+
+    @* [Parameter] public RenderFragment TableHeader { get; set; } *@
+
+}

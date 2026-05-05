@@ -1,0 +1,509 @@
+@page "/CreateOrUpdateTractMainForm"
+@page "/CreateOrUpdateTractMainForm/{TractID}"
+@* @page "/TractMainForm/{TractID}" *@
+
+@using ApplicationLayer.Entities.DropDownList
+@using ApplicationLayer.Entities.Locations.Regions
+@using ApplicationLayer.Entities.Locations.States
+@using ApplicationLayer.Services.Assets.Tracts.TractStatus
+@using ApplicationLayer.Services.Locations.CountyServices
+@using ApplicationLayer.Services.DropdownLists
+@using DomainLayer.Entities.Assets.Tracts
+
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+@inject IStatusOfTracts _statusOfTracts //{ get; set; }
+@inject IDropdownQueryServiceTasks _dropdownQueryServiceTasks //{ get; set; }
+@inject ICountyQueryServiceTasks _countyQueryServiceTasks //{ get; set; }
+
+@inherits TractMainPageBase
+
+<button type="submit" class="btn btn-primary" style="width:150px;" @onclick="(() => SaveButton(TractModel))"> Save </button>
+<button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+<button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+@* <button type="submit" class="btn btn-primary" style="width:150px;" href="/ListOfLeasesComponent"> View Tract </button> *@
+<NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfTractsComponent")"> View Tracts</NavLink>
+
+<EditForm Model="@TractModel">
+    <div class="container border border-top border-bottom m-1 auto">
+        <div class="card accent-card">
+            <form method="post" class="mt-3" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div class="card-header form-control-sm">
+                        @{
+                            if (InitialState == false)
+                            {
+                                <strong class="me-auto">Information for Tract: @IdFromListView.ToString()
+
+                                </strong>
+                            }
+                            else
+                            if (InitialState == true)
+                            {
+                                <strong class="me-auto">New Tract Information Form</strong>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col" style="align-items:center; align-content:center;">
+                        <div class="card accent-card mb-3">
+                            <div class="card-header form-control">Identification</div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Tract ID</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        @if (InitialState == false)
+                                        {
+                                            /// COMMENT: USER HAS CHOSEN A TRACT FROM LIST COMPONENT
+                                            var testName2 = "";
+
+                                            if (TractModel.TractId == null)
+                                            {
+                                                testName2 = IdFromListView;
+                                                //TractModel.TractId = IdFromListView;
+                                            }
+                                            else
+                                            { 
+                                                testName2 = TractModel.TractId.ToString();
+                                                TractModel.TractId = IdFromListView;
+                                                getTracts.TractId = IdFromListView;
+
+                                            }
+
+                                            /// COMMENT: WHEN USER HAS ALREADY SELECTED A TRACT THEN VIEWED A LEASE AND HAS NOW CHOSEN TO VIEW A DIFFERENT TRACT
+                                            /// PURPOSE: TO ENSURE LEASE MODEL HAS BEEN CLEARED AND REHYDRATED WITH THE "NEW" ONE
+                                            /// PROBLEM SOLVED: LOSS/MISSING DATA
+
+                                            var testName3 = getTracts.TractId.ToString();
+
+                                            /// COMMENT: CHECK VARIABLES AND IF DIFF THEN USE NEW VARIABLE INSTEAD
+                                            if (testName2 != testName3)
+                                            {
+                                                getTracts.TractId = getTracts.TractId.ToString();
+                                                TractModel.TractId = IdFromListView; //getTracts.TractId.ToString();
+                                                //PopulateFormBasedOnEntityID(getTracts);
+                                            }
+                                            else    //USER SELECTED LISTOFTRACTS COMPONENT TO SELECT A DIFFERENT TRACT - SHUD CHECK IF TRACTID INSTEAD OF AND OR ADDED TO
+                                            if (TractId == TractModel.TractId)
+                                            {
+                                                TractId = getTracts.TractId.ToString();
+                                                TractModel.TractId = IdFromListView; //getTracts.TractId.ToString();
+                                                
+                                            }
+
+                                            <InputText @bind-Value="TractModel.TractId" class="form-control text-sm-right" style="align-self:; width:275px;" placeholder="(Ex. JM001)"></InputText>
+                                            <DataAnnotationsValidator></DataAnnotationsValidator>
+                                            <ValidationSummary></ValidationSummary>
+                                        }
+                                        else
+                                        if (InitialState == true)
+                                        { 
+                                            <input type="text" data-bind="@TractModel.TractId" class="form-control" value="@TractModel.TractId" style="align-self:center; width:275px;" placeholder="Enter Tract ID" />
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Status</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        @if (InitialState == true)
+                                        {
+                                            <select id="ListOfTractStatuses" class="form-control-sm" style=" width:275px;">
+                                                <option value="0">Select Tract Status</option>
+                                                @foreach (var item in ListOfTractStatuses.Where(x => x.Length > 1))
+                                                {
+                                                    <option value="@item.">@item.</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        if (InitialState == false)
+                                        {
+
+                                            <InputText @bind-Value="@TractModel.TractStatus" class="form-control-sm text-sm-right" style="align-self:center; width:275px;" placeholder="(Ex. Payout)"></InputText>
+                                            @* @foreach (var item in ListOfTractStatuses.Where(x => x.Length > 1))
+                                            {
+                                                TractModel.TractStatus = ListOfTractStatuses.Where(x => x.Contains(TractModel.TractStatus)).ToString();
+                                                <option value="@item.">@item.</option>
+                                            } *@
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Description</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        @* <input type="text" data-bind="@TractModel.ShortDescription" value="@TractModel.ShortDescription" placeholder="Short Description" style=" width:275px;" class="form-control" /> *@
+                                        <InputText @bind-Value="TractModel.ShortDescription" class="form-control" style="width:275px; overscroll-behavior-x:auto;"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0"> Full Desc.</label>
+                                    </div>
+                                    <div class="col">
+                                        @* <input type="text" data-bind="@TractModel.FullDescription" value="@TractModel.FullDescription" style="height:100px; width:275px; overscroll-behavior-x:auto;" class="form-control" /> *@
+                                        <InputText @bind-Value="TractModel.FullDescription" class="form-control" style="height:100px; width:275px; overscroll-behavior-x:auto;"></InputText>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col" style="align-items:center; align-content:center;">
+                        <div class="card accent-card mb-3">
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="card-header form-control">
+                                        Depth(s)
+                                    </div>
+                                </div>
+                                <div class="col" style="padding-top:;">
+                                    @* <div class="card-header"> *@
+                                    <button type="button" class="btn btn-dark text-right" style="width:125px;">Formation(s)</button>
+                                    @* </div> *@
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Beginning</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <input type="text" style="width:275px;;" data-bind="@TractModel.BeginningDepth" value="@TractModel.EndingDepth" role="presentation" class="form-control" placeholder="0" />
+
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0" data-bind="DepthNotes">Notes</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        @* <input type="text" style="height:100px; width:fit-content; overscroll-behavior-x:auto;" data-bind="@TractModel.Notes" value="@TractModel.Notes" role="presentation" class="form-control" /> *@
+                                        <InputText @bind-Value="TractModel.Notes" class="form-control" style="height:100px; width:275px; overscroll-behavior-x:auto;"></InputText>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        <label class="opacity-50 form-control-sm mb-0">Ending</label>
+                                    </div>
+                                    <div class="col" style="padding-bottom:3px;">
+                                        <input type="text" style="width:275px;" data-bind="@TractModel.EndingDepth" value="@TractModel.EndingDepth" role="presentation" class="form-control" placeholder="50,000" />
+
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col" style="align-items:center; align-content:center;">
+                        <div class="card-header form-control">Location</div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">State</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select State</option>
+                                            @foreach (var item in ListOfStates)
+                                            {
+                                                <option value="@item.Id">@item.State</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="@TractModel.StateId" class="form-control-sm text-sm-right" style="align-self:center; width:275px;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">County</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select County</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.CountyName</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="@TractModel.CountyId" class="form-control-sm text-sm-right" style="align-self:center; width:275px;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">District</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select District</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="@TractModel.DistrictId" class="form-control-sm text-sm-right" style="align-self:center; width:275px;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-3">
+                                    <label class="opacity-50 form-control-sm mb-0">Region</label>
+                                </div>
+                                <div class="col" style="padding-bottom:3px;">
+                                    @if (InitialState == true)
+                                    {
+                                        <select id="ListAllCounties" class="form-control" style="align-self:center; width:275px;">
+                                            <option value="0">Select Region</option>
+                                            @foreach (var item in ListAllCounties)
+                                            {
+                                                <option value="@item.Id">@item.</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    if (InitialState == false)
+                                    {
+                                        <InputText @bind-Value="@TractModel.RegionId" class="form-control-sm text-sm-right" style="align-self:center; width:275px;" placeholder="(Ex. Payout)"></InputText>
+                                    }
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                    <div class="col" style="align-items:center; align-content:center;">
+                        <div class="card-header form-control">Acreage(s)</div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="has-validation">
+                                    <div class="form-floating">
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="opacity-50 form-control-sm mb-0" data-bind="TotalAcreage">Total</label>
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" id="TotalAcreage"
+                                                data-bind="@TractModel.TotalAcreage"
+                                                value="@TractModel.TotalAcreage"
+                                                name="TotalAcreage"
+                                                class="form-control-sm"
+                                                autocomplete="off" placeholder="0.00000000" style="padding-bottom:3px; width:275px;" />
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="opacity-50 form-control-sm mb-0" data-bind="TotalAcreage">Developed</label>
+                                            </div>
+                                            <div class="col">
+                                                <div class="has-validation">
+                                                    <div class="form-floating">
+                                                        <input type="number" id="Developed"
+                                                        data-bind="@TractModel.Developed"
+                                                        value="@TractModel.Developed"
+                                                        name="Developed"
+                                                        class="form-control-sm"
+                                                        autocomplete="off" placeholder="0.00000000" style="padding-bottom:3px;width:275px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="opacity-50 form-control-sm mb-0" data-bind="TotalAcreage">Undeveloped</label>
+                                            </div>
+                                            <div class="col">
+                                                <div class=" has-validation">
+                                                    <div class="form-floating">
+                                                        <input type="number"
+                                                        id="Undeveloped"
+                                                        data-bind="@TractModel.Undeveloped"
+                                                        value="@TractModel.Undeveloped"
+                                                        name="Undeveloped" 
+                                                        class="form-control-sm"
+                                                        autocomplete="off" placeholder="0.00000000" style="padding-bottom:3px;width:275px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="opacity-50 form-control-sm mb-0" data-bind="TotalAcreage">Other</label>
+                                            </div>
+                                            <div class="col">
+                                                <div class="has-validation">
+                                                    <div class="form-floating">
+                                                        <input type="number"
+                                                        asp-area=""
+                                                        asp-controller=""
+                                                        data-selector=""
+                                                        data=""
+                                                        name="Other"
+                                                        oncuechange=""
+                                                        uiactions="valuechange"
+                                                        itemscope=""
+                                                        itemid="Other"
+                                                        id="Other"
+                                                        data-bind="@TractModel.Other"
+                                                        value="@TractModel.Other"
+                                                        class="form-control-sm" autocomplete="off" placeholder="0.00000000" style="padding-bottom:3px;width:275px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="opacity-50 form-control-sm mb-0" data-bind="Outside">Outside</label>
+                                            </div>
+                                            <div class="col">
+                                                <div class=" has-validation">
+                                                    <div class="form-floating">
+                                                        <input type="number" id="Outside"
+                                                        data-bind="@TractModel.Outside"
+                                                        value="@TractModel.Outside"
+                                                        class="form-control-sm" autocomplete="off" placeholder="0.00000000" style="padding-bottom:3px;width:275px;" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    
+    public TractMainForm? getTracts = new TractMainForm();
+
+    int selectedStateId = 0;
+    int selectedStatusId = 0;
+
+    private void Add() { }
+
+    private async Task OnCountySelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    private async Task OnStateSelected()
+    {
+
+        // CALL SERVICES METHOD W/PARAMS WITH STATE INFO
+        // CLEAR STATE SELECTION IF NEEDED
+        // RESET ANY PARAMS TO AVOID UNEXPECTED ERRORS
+    }
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (InitialState == false)
+        {
+            getTracts.Id = int.Parse(EntityID);
+            getTracts.TractId = IdFromListView;
+            TractModel.TractId = IdFromListView;
+            //TO DO: FIX getTracts.Id being null, SEEMS LIKE A MIX-UP BETWEEN TractModel and getTracts
+            await Task.WhenAll(PopulateFormBasedOnEntityID(getTracts), PopulateDropdowns());
+            //await PopulateDropdowns();
+
+        }
+        else
+        if (InitialState == true)
+        { 
+            await PopulateDropdowns(); 
+        }
+
+    }
+       
+    #region DROPDOWNS
+
+    public async Task<List<string>> PopulateDropdowns()
+    {
+        var getAlltractStatusesTasks = RetrieveAllTractStatusAsync();
+        var getAllcountyTasks = RetreiveAllCountiesAsync();
+        var getAllstateTasks = RetrieveAllStatesAsync();
+        var getAllDistrictTasks = RetrieveAllDistrictsAsync();
+        var getAllregionTasks = RetrieveAllRegionsAsync();
+
+        await Task.WhenAll(
+                           getAlltractStatusesTasks
+                         , getAllcountyTasks
+                         , getAllstateTasks
+                         , getAllDistrictTasks
+                         , getAllregionTasks
+                        );
+
+        var report = $"TractStatuses: {getAlltractStatusesTasks.Result}," +
+                     $"County: {getAllcountyTasks.Result}," +
+                     $"States: {getAllstateTasks.Result}," +
+                     $"Districts: {getAllDistrictTasks.Result}," +
+                     $"Regions: {getAllregionTasks.Result},";
+
+        return new List<string> { report };
+    }
+
+    public List<string> ListOfTractStatuses { get; set; } = new List<string>();
+    public async Task<List<string>> RetrieveAllTractStatusAsync() =>
+       ListOfTractStatuses = await _statusOfTracts
+       .RetrieveAllTractStatusAsync();
+
+    public List<StateMainForm> ListOfStates { get; set; } = new List<StateMainForm>();
+    public async Task<List<StateMainForm>> RetrieveAllStatesAsync() =>
+        ListOfStates = await _dropdownQueryServiceTasks
+        .RetrieveAllStatesAsync();
+
+    public List<CountyMasterMainForm> ListAllCounties { get; set; } = new List<CountyMasterMainForm>();
+    public async Task</*IReadOnly*/List<CountyMasterMainForm>> RetreiveAllCountiesAsync() =>
+        ListAllCounties = await _countyQueryServiceTasks
+        .RetrieveAllCountiesAsync((List<CountyMasterMainForm>)ListAllCounties);
+
+    public List<string> ListOfRegions { get; set; } = new List<string>();
+    public async Task<List<string>> RetrieveAllRegionsAsync() =>
+        ListOfRegions = await _dropdownQueryServiceTasks
+        .RetrieveAllRegionsAsync(ListOfRegions);
+
+    public List<string> ListOfDistricts = new List<string>();
+    public async Task<List<string>> RetrieveAllDistrictsAsync() =>
+        ListOfDistricts = await _dropdownQueryServiceTasks
+        .RetrieveAllDistrictsAsync(ListOfDistricts);
+
+    #endregion DROPDOWNS
+
+
+}

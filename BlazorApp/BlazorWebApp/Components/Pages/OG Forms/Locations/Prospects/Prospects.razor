@@ -1,0 +1,32 @@
+﻿@page "/Prospects"
+
+@using BlazorWebApp.Components.UI.Tabs
+@using BlazorWebApp.Components.Pages.OG_Forms.Locations.Prospects.ProspectTabs
+
+<div class="container" align="center">
+    <TabControl>
+        <TabPage Text="MAIN">
+            <ProspectMain />
+        </TabPage>
+        <TabPage Text="STATISTICS">
+            <ProspectMore />
+        </TabPage>
+        @* <TabPage Text="CROSS-REFS">
+            <ProspectCrossRefs />
+        </TabPage>
+        <TabPage Text="RELATED">
+            <ProspectRelated />
+        </TabPage>
+        <TabPage Text="CHARTS / GRAPHS">
+        </TabPage> *@
+    </TabControl>
+    <br />
+</div>
+<br />
+<br />
+
+
+@code {
+
+}
+

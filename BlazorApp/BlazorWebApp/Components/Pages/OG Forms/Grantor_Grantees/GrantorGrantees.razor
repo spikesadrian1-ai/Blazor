@@ -1,0 +1,245 @@
+﻿@page "/Grantors"
+@page "/Grantors/{ID}"
+
+@inherits GrantorGranteeBase
+
+@using ApplicationLayer.Entities.Grantor_Grantees
+
+@{
+
+}
+
+
+<TabControl>
+    <TabPage Text="Documents">
+        <RelatedNotes EntityID="@EntityID"></RelatedNotes>
+    </TabPage>
+</TabControl>
+
+<div class="form-row">
+    <button type="submit" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@> Save </button>
+    <button type="submit" class="btn btn-danger" style="width:150px;" @*onclick="OnPostCreateTract" *@>Delete</button>
+    <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>Print</button>
+    <NavLink id="" name="ViewTractListBttn" class="btn btn-primary" style="width:150px;" href="@($"/ListOfGrantorsAndGrantees")"> View Grantees/Grantors</NavLink>
+</div>
+<br />
+<EditForm Model="@grantorsGrantees">
+
+    <div class="container border border-top border-bottom m-1 auto">
+        @* border-dark *@
+        <div class="card accent-card">
+            <div class="card-body">
+                <div class="card-header form-control-sm">
+                    @{
+                        if (InitialState == false) //(!string.IsNullOrEmpty(GrantorID))
+                        {
+                            <strong class="me-auto">Information for @IdFromListView</strong>
+                        }
+                        else
+                        if (InitialState == true) //(string.IsNullOrEmpty(GrantorID))
+                        {
+                            <strong class="me-auto">New Grantor / Grantee Information</strong>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    <div class="card-header form-control">Owner Information</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Grantor</label>
+                            </div>
+                            <div class="col-8" style="padding-bottom:3px;">
+                                @if (InitialState == true)
+                                {
+                                    <input list="ListOfGrantors" id="GrantorList" class="form-control" />
+                                        <datalist id="ListOfGrantors">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                    </datalist>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="grantorsGrantees.GrantorId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. JM001)"></InputText>
+                                }                                
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0">Grantee</label>
+                            </div>
+                            <div class="col-8">
+                                @if (InitialState == true)
+                                {
+                                    <input list="ListOfGrantees" id="GranteeList" class="form-control" />
+                                    <datalist id="PayoutCodesList">
+                                        <option value="Choose Payout Code"></option>
+                                        <option value="Alter Casing Point"></option>
+                                    </datalist>
+                                }
+                                else
+                                @if (InitialState == false)
+                                {
+                                    <InputText @bind-Value="grantorsGrantees.GranteeId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. James Smith)"></InputText>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col" style="align-items:center; align-content:center;">
+                    @* <div class="card-body"> *@
+                    <div class="card-header form-control">Mineral Interests</div>
+                    @* </div> *@
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-md-4 form-control-sm">
+                                <label class="opacity-50 form-control-sm mb-0">Gross Mineral Interest</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="grantorsGrantees.GrossAcresMineralsMi" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 ">
+                                <label class="opacity-50 form-control-sm mb-0">Mineral Interest</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="grantorsGrantees.MineralInterestTextMi" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="(Ex. 1/5 or 0.09635655)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0">Mineral Interest</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="grantorsGrantees.MineralInterestMi" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0">Net Acres Mineral</label>
+                            </div>
+                            <div class="col">
+                                <InputNumber @bind-Value="grantorsGrantees.NetAcresMineralsMi" class="form-control-sm text-sm-right" style="align-self:center; width:225px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card-header form-control">Surface Interest</div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-md-4 ">
+                                <label class="opacity-50 form-control-sm mb-0" >Gross Acres Minerals</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="grantorsGrantees.GrossAcresMineralsSi" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0" >Surface Interest </label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="grantorsGrantees.SurfaceInterestTextSi" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. 1/5 or 0.09635655)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0" >Surface Interest</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="grantorsGrantees.SurfaceInterestSi" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label class="opacity-50 form-control-sm mb-0" >Net Acres Surface</label>
+                            </div>
+                            <div class="col">
+                                <InputNumber @bind-Value="grantorsGrantees.NetAcresSurfaceSi" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-header form-control">Payment Obligation Conveyance</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <label class="opacity-50 form-control-sm mb-0" >Description</label>
+                            </div>
+                            <div class="col form-control-sm" style="padding-bottom:3px;">
+                                <InputTextArea @bind-Value="grantorsGrantees.PaymentObligationText" class="form-control text-sm-right" style="align-self:center; width:none;" placeholder="(Ex. EIN NUMBER)"></InputTextArea>
+                            </div>
+                        </div>
+                        <br />                        
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col">
+                        <div class="form-row">
+                            <div class="col-2 ">
+                                <label class="opacity-50 form-control-sm mb-0">Obligation</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="grantorsGrantees.PaymentObligation" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2 ">
+                                <label class="opacity-50 form-control-sm mb-0" >Bank</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputText @bind-Value="grantorsGrantees.BankId" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="(Ex. EIN NUMBER)"></InputText>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0" >Acct</label>
+                            </div>
+                            <div class="col" style="padding-bottom:3px;">
+                                <InputNumber @bind-Value="grantorsGrantees.BankAcctNo" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-2">
+                                <label class="opacity-50 form-control-sm mb-0" >Fees</label>
+                            </div>
+                            <div class="col">
+                                <InputNumber @bind-Value="grantorsGrantees.BankFees" class="form-control-sm text-sm-right" style="align-self:center; width:300px;" placeholder="0.00000000"></InputNumber>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+@code {
+
+    
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+
+}
+

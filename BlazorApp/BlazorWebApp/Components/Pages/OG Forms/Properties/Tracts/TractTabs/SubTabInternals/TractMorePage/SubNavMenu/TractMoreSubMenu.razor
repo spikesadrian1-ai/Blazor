@@ -1,0 +1,23 @@
+﻿@inherits TractMorePageBase
+
+
+
+<TabControl2>
+    <TabPage2 Text="LEASES">
+        @* <ConnectedTractLeases TractID="@TractID"></ConnectedTractLeases> *@
+    </TabPage2>
+    <TabPage2 Text="EASEMENTS">
+        @* <ConnectedTractEasements TractID="@TractID"></ConnectedTractEasements> *@
+    </TabPage2>
+    <TabPage2 Text="SUAS">
+    </TabPage2>
+    <TabPage2 Text="ROWS">
+    </TabPage2>
+</TabControl2>
+
+@code {
+
+    #region CASCADING PARAMS
+    [Parameter] public string? TractID { get; set; } = string.Empty;
+    #endregion CASCADING PARAMS
+}

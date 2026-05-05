@@ -1,0 +1,108 @@
+﻿@page "/ListOfGrantorsAndGrantees"
+@using ApplicationLayer.Entities.Grantor_Grantees
+
+@inject IJSRuntime jsRuntime
+@inject Microsoft.Extensions.Configuration.IConfiguration _config
+@inject IHttpClientFactory _clientFactory
+
+@* @{
+    GrantorsGrantees grantorsGrantees = new GrantorsGrantees();
+} *@
+
+@* <EditForm Model="@grantorsGrantees">
+    <div class="dashboard-container">
+        <br />
+        <div class="form-row"> *@
+            <GenDatabaseList Elements="getList">
+
+                <HrefModalName>
+                    <div class="col">
+                        <div class="justify-content-center">
+                            <h4>List of Grantors and Grantees</h4>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <button type="button" class="btn btn-primary" style="width:150px;" @*onclick="OnPostCreateTract" *@>New</button>
+                    </div>
+                </HrefModalName>
+
+                <TableHeader>
+                    <th>Grantors</th>
+                    <th>Grantees</th>
+                    <th>GrossAcresMineralsMi</th>
+                    <th>MineralInterestMi</th>
+                    <th>MineralInterestTextMi</th>
+                    <th>NetAcresMineralsMi</th>
+                </TableHeader>
+
+                <RowTemplate Context="grantorsGrantees">
+                    <td><a href="@($"/GrantorsGrantees/{Convert.ToString(grantorsGrantees.Id)}/{grantorsGrantees.GrantorId}")" class="nav-link">@grantorsGrantees.GrantorId</a></td>
+                    <td>@grantorsGrantees.GranteeId</td>
+                    <td>@grantorsGrantees.GrossAcresMineralsMi</td>
+                    <td>@grantorsGrantees.MineralInterestMi</td>
+                    <td>@grantorsGrantees.MineralInterestTextMi</td>
+                    <td>@grantorsGrantees.NetAcresMineralsMi</td>
+                </RowTemplate>
+
+                <HrefEditModal>
+                    <a href="@($"#edit{title}")" class="edit" data-toogle="modal">
+                        <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                    </a>
+                </HrefEditModal>
+
+                <HrefDeleteModal>
+                    <a href="@($"#delete{title}")" class="delete" data-toogle="modal">
+                        <i class="material-icons" data-toogle="tooltip" title="Delete">&#xE872;</i>
+                    </a>
+                </HrefDeleteModal>
+
+            </GenDatabaseList>
+        @* </div>
+    </div>
+</EditForm> *@
+
+@code
+{
+    static string title = "CreateOrUpdateTractMainForm";
+
+    string errorString;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await Task.Run(() => PopulateList());
+               
+    }
+
+    List<GrantorsGrantees> getList { get; set; }
+       = new List<GrantorsGrantees>();
+
+    async Task<List<GrantorsGrantees>> PopulateList(int page = 1, int quantityPerPage = 10)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+        _config["API_URL"] + "GrantorGrantee");
+        var client = _clientFactory.CreateClient();
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            // PART OF THE LOADING INDICATOR
+            System.Threading.Thread.Sleep(0);
+
+            //totalPageQuantity = int.Parse(response.Headers.GetValues("pagesQuantity").FirstOrDefault());
+
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            getList = await JsonSerializer.DeserializeAsync<List<GrantorsGrantees>>(responseStream);
+
+            errorString = null;
+
+        }
+        else
+        {
+            errorString = $"There was an error getting Tracts: {response.ReasonPhrase}";
+        }
+
+        return getList;
+    }
+}
+

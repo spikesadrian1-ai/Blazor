@@ -1,0 +1,177 @@
+﻿@using ApplicationLayer.Entities.Contracts
+@using ApplicationLayer.Interfaces.ApiQueries.Assets.Wells.WellCrossRefs
+
+@* @inject  IHandleAfterRender handleAfterRender *@
+
+@* @inject GenericCrossRefForm<ContractMainForm2> genericCrossRefForm *@
+
+@inherits GenericCrossRefForm<ContractMainForm2>
+@typeparam T
+
+
+@{
+    //Task ShouldRender() { }
+    //handleAfterRender.OnAfterRenderAsync();
+
+    //var showClass = IsVisible ? "d-block" : "d-none";
+
+    // public Task ShowRelatedContracts() { 
+    //     return wellCrossRefs.RetrieveRelatedContracts();
+    // }
+
+    // public async Task OnInitializedAsync()
+    // {
+    //     //await wellCrossRefs.RetrieveRelatedContracts();
+    // }
+@* TableData="@getList" *@
+}
+
+<GenericCrossRefForm
+    T="ContractMainForm2"
+    EntityModelName="EntityModel" 
+    Title="@TitleName"
+    API_RouteAddress="@Route"
+    
+    EditModalHrefName="@EditHrefName"
+    DeleteModalHrefName="@DeleteHrefName">
+</GenericCrossRefForm>
+
+<div class="">
+    <h5>RelatedContracts</h5>
+    <div class="form-row">
+        <div class="card-body border border-dark" style="width:min-content; height:auto;">
+            <div class="dashboard-container justify-content-md-start align-content-start" style="height:inherit; width:none; justify-items:left; align-content:start; overflow:scroll">
+                <EditForm Model="@relatedContracts">
+                    <GenDatabaseList Elements="getList">
+                        <TableHeader>
+                            <th>Tract</th>
+                            <th>Developed</th>
+                        </TableHeader>
+                        <RowTemplate Context="connectedContracts">
+                            <td><a href="@($"/Tracts/{connectedContracts.TractId}")" class="nav-link">@connectedContracts.TractId</a></td>
+                            <td>@connectedContracts.ContractLegalDescription</td>
+                        </RowTemplate>
+                        <HrefEditModal>
+                            <a href="@($"#edit")" class="edit" data-toogle="modal">
+                                <i class="material-icons" data-toogle="tooltip" title="Edit">&#xE254;</i>
+                            </a>
+                        </HrefEditModal>
+                    </GenDatabaseList>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+
+
+    public ContractMainForm2 relatedContracts = new ContractMainForm2();
+
+    [Parameter] public List<ContractMainForm2> getList { get; set; } = new List<ContractMainForm2>();
+
+
+    public string Route = "ContractMainForm";
+    public List<ContractMainForm2> contractMainForm2 { get; set; } = new List<ContractMainForm2>();
+    public string EditHrefName = "EditContract";
+    public string DeleteHrefName = "DeleteContract";
+    public string TitleName = "Contracts";
+
+
+    [Parameter] public string? EntityID { get; set; } = string.Empty;
+
+
+    // [Parameter]
+    // public bool IsVisible { get; set; }
+
+    // [Parameter]
+    // public EventCallback<bool> IsVisibleChanged { get; set; } //= new EventCallback<bool>();
+
+    // [Parameter]
+    // public string? HeaderText { get; set; }
+
+    // [Parameter]
+    // public string? BodyText { get; set; }
+
+    // [Parameter]
+    // public IHandleAfterRender handleAfterRender { get; set; }
+
+    // public void Show(string bodyText, string headerText = "")
+    // {
+    //     HeaderText = headerText;
+    //     BodyText = bodyText;
+    //     IsVisible = true;
+    //     //handleAfterRender.OnAfterRenderAsync();
+    //     //StateHasChanged();
+
+    // }
+
+    // private void Close()
+    // {
+    //     HeaderText = string.Empty;
+    //     BodyText = string.Empty;
+    //     IsVisible = false;
+    //     StateHasChanged();
+    // }
+
+    // void OnAfterRenderAsync()
+    // {    
+    //     StateHasChanged();
+    // }
+
+
+    protected override async Task/* <List<ContractMainForm2>> */ OnInitializedAsync()
+    {   
+        base.Title = TitleName;
+        base.API_RouteAddress = Route;
+        //base.TableData = getList;
+
+        //// ADDED TO IMPLEMENT LOADING INDICATOR
+        await base.PopulateData(Route /* , contractMainForm2 */);
+        contractMainForm2 = base.TableData;
+        return; // base.TableData;
+    }
+
+    // public new async Task OnInitializedAsync()
+    // {
+    //     // //base.SetParametersAsync(EntityID);
+    //     // //base.InvokeAsync(Test);
+    //     // // base.StateHasChanged();
+    //     // await base.OnParametersSetAsync();
+    //     // // base.ShouldRender();
+
+    //     base.API_RouteAddress = Route;
+    //     base.Title = Title;
+    //     base.TableData = getList;
+    //     await base.PopulateData(Route, getList);
+
+    //     // GenericCrossRefFormBase<ContractMainForm2> genericCrossRefFormBase 
+    //     //     = new GenericCrossRefFormBase<ContractMainForm2>();
+    //     //await genericCrossRefForm.PopulateData(Route, getList);
+
+
+    //     // genericCrossRefFormBase.API_RouteAddress = Route
+    //     //     , genericCrossRefFormBase.TableData = getList;
+    //     //genericCrossRefFormBase.TableData.Add(item: getList);
+
+    // }
+
+    public async Task OnAfterRenderAsync()
+    {
+        // base.StateHasChanged();
+        // await base.OnParametersSetAsync();
+        // base.ShouldRender();
+    }
+
+    // Action Test() 
+    // {
+    //     throw new Exception();
+    // } 
+    // public async Task OnInitializedAsync()
+    // {
+
+    // }
+}
+
+
