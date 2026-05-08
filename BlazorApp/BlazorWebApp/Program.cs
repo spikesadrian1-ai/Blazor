@@ -43,7 +43,6 @@ using ApplicationLayer.Interfaces.ApiQueries.RelatedProperties.SpecialObligation
 using ApplicationLayer.Interfaces.ApiQueries.RelatedProperties.SpecialProvision;
 using ApplicationLayer.Interfaces.ApiQueries.RelatedProperties.WorkingInterest;
 using ApplicationLayer.Interfaces.ApiQueries.RelatedProperties.WorkingInterest.zWorkingInterestDetails;
-using ApplicationLayer.Interfaces.UnitOfWork;
 using ApplicationLayer.Services.Accounting.Check;
 using ApplicationLayer.Services.Accounting.Draft;
 using ApplicationLayer.Services.Accounting.Payments;
@@ -88,14 +87,11 @@ using BlazorWebApp.Components.Account;
 using BlazorWebApp.Components.Pages.OG_Forms.Properties.Wells.WellTabs.SubInternals.WellCrossRefs.RelatedComponents;
 using BlazorWebApp.Components.Shared.Components.Generic_Cross_Ref_Form;
 using BlazorWebApp.Data;
+using MediatR;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using System.Configuration;
-using MediatR;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -116,7 +112,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("UserDBConnection") ?? throw new InvalidOperationException("Connection string 'UserDBConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -128,15 +124,13 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-//public IConfiguration Configuration { get; }
-
 #region AZURE AUTH
 
 /// <summary>
 /// ADDING AZURE AD AUTHENTICATION
 /// TODO: FIX AZURE CONNECTION AFTER RENEWING ACCOUNT
 /// </summary>
-//services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+//builder.Services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
 //    .AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
 #endregion AZURE AUTH
@@ -147,18 +141,18 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 /// <summary>
 /// ADDING HTTP CLIENT
 /// </summary>
-builder.Services.AddHttpClient();
+//builder.Services.AddHttpClient();
 
 //string Uri = Configuration.GetValue<string>("WebAPI"); MAY NOT NEED
 builder.Services.AddHttpClient("WebAPI", c =>
 {
     c.BaseAddress = new Uri("http://localhost:7000/api/");
-    //c.DefaultRequestHeaders.Add("Accept", "application/.json");
+    c.DefaultRequestHeaders.Add("Accept", "application/.json");
 
     /// OR
     //c.BaseAddress = new Uri(Configuration.GetValue<string>("WebAPI"));
 
-    /// OR
+    // OR
     //c.BaseAddress = new Uri(Configuration.GetConnectionString("API_URL"));
 
     //c.DefaultRequestHeaders.Accept.Clear();
@@ -224,6 +218,11 @@ builder.Services.AddControllersWithViews()
         jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;  // Pascal Case
     });
 
+//builder.Services.AddHybridCache(options =>
+//{
+//    options.UseMemoryCache();
+//    options.UseDistributedCache();
+//});
 
 #endregion JSON
 

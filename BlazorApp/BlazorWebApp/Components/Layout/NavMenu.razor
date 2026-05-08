@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BlazorWebApp</a>
+        <a class="navbar-brand" href="">O&G Land Management</a>
     </div>
 </div>
 
@@ -13,24 +13,6 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
             <NavLink class="nav-link" href="auth">
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
             </NavLink>
@@ -38,6 +20,126 @@
 
         <AuthorizeView>
             <Authorized>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+
+@*                 <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="counter">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="weather">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                    </NavLink>
+                </div> *@
+
+                <NavLink class="nav-link" @onclick="() => expandOwnerSubNav = !expandOwnerSubNav">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Owners
+                </NavLink>
+                @if (expandOwnerSubNav)
+                {
+                    <NavLink class="expand-menu" href="Owner">
+                        <span>Associates</span>
+                    </NavLink>
+                    <NavLink class="" href="Recordings">
+                        <span>Filings</span>
+                    </NavLink>
+                    <NavLink class="" href="GrantorsGrantees">
+                        <span>Grantors / Grantees</span>
+                    </NavLink>
+                    <NavLink class="" href="ChainOfTitles">
+                        <span>Chain of Title</span>
+                    </NavLink>
+                }
+
+                <NavLink class="nav-link" @onclick="() => expandLocationsSubNav = !expandLocationsSubNav">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Locations
+                </NavLink>
+                @if (expandLocationsSubNav)
+                {
+                    //class="oi oi-list-rich" aria-hidden="true"
+                    @*  <NavLink class="expand-menu" href="state">
+                    <span>State</span>
+                </NavLink>
+                <NavLink class="" href="counties">
+                    <span class=""></span> County
+                </NavLink> *@
+                    <NavLink class="" href="districts">
+                        <span class="">Districts</span>
+                    </NavLink>
+                    <NavLink class="" href="regions">
+                        <span>Regions</span>
+                    </NavLink>
+                    <NavLink class="" href="surveys">
+                        <span>Survey</span>
+                    </NavLink>
+                    <NavLink class="" href="townRingSecs">
+                        <span>Twn-Rng-Sec</span>
+                    </NavLink>
+                }
+
+                <NavLink class="nav-link" @onclick="() => expandAssetsSubNav = !expandAssetsSubNav">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Assets
+                </NavLink>
+                @if (expandAssetsSubNav)
+                {
+                    <NavLink class="" href="contracts">
+                        <span>Contracts</span>
+                    </NavLink>
+                    <NavLink class="" href="leases">
+                        <span>Leases</span>
+                    </NavLink>
+                    <NavLink class="expand-menu" href="properties">
+                        <span class="">Properties</span>
+                    </NavLink>
+                    <NavLink class="" href="prospects">
+                        <span>Prospects</span>
+                    </NavLink>
+                    @*      <NavLink class="" href="easements">
+                    <span>Easements</span>
+                </NavLink> *@
+                    @*      <NavLink class="" href="rightOfWays">
+                    <span>Right of Ways</span>
+                </NavLink>
+                <NavLink class="" href="surfaceUses">
+                    <span>Surface Uses</span>
+                </NavLink> *@
+                    <NavLink class="" href="tracts">
+                        <span>Tracts</span>
+                    </NavLink>
+                    <NavLink class="" href="well">
+                        <span>Wells</span>
+                    </NavLink>
+                }
+
+                <NavLink class="nav-link" @onclick="() => expandAccountingSubNav = !expandAccountingSubNav">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Accounting
+                </NavLink>
+                @if (expandAccountingSubNav)
+                {
+                    <NavLink class="" href="drafts">
+                        <span>Drafts</span>
+                    </NavLink>
+                    <NavLink class="" href="checks">
+                        <span>Checks</span>
+                    </NavLink>
+                    <NavLink class="" href="payments">
+                        <span>Payments</span>
+                    </NavLink>
+                    @*         <NavLink class="" href="dois">
+                    <span>DOIs</span>
+                </NavLink>
+                <NavLink class="" href="npis">
+                    <span>NPIs</span>
+                </NavLink> *@
+                }
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
@@ -70,6 +172,21 @@
 </div>
 
 @code {
+
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private bool expandLocationsSubNav;
+    private bool expandAssetsSubNav;
+    private bool expandOwnerSubNav;
+    private bool expandAccountingSubNav;
+
     private string? currentUrl;
 
     protected override void OnInitialized()
